@@ -1,0 +1,92 @@
+.label-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.parameters-tab {
+    padding-top: 2ex;
+}
+
+.parameters {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 25%;
+    min-width: 300px;
+    max-width: 100vw;
+    background: var(--panel-background-color);
+    box-shadow: 0 0 1em #000;
+    z-index: 10;
+    transition-duration: 250ms;
+    transition-timing-function: ease-out;
+    transition-property: transform, opacity;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+
+    padding: 1ex;
+    color: var(--menu-text);
+}
+
+.parameters .tab-content, .filtration .tab-content {
+    padding-top: 2ex;
+}
+
+.parameters.parameters-closed {
+    transform: translate3d(25%, 0, 0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.parameters-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    margin: 0.2em 0.125em;
+    width: 2.5em;
+    height: 2.5em;
+    background-image: url('./toggle-icon.svg');
+    background-size: 60% 60%;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    z-index: 11;
+    cursor: pointer;
+    border-radius: 0.25em;
+    background-color: transparent;
+    transition-duration: 250ms;
+    transition-timing-function: ease-out;
+    transition-property: background-color;
+}
+
+.parameters-toggle.parameters-open {
+    background-color: transparent;
+}
+
+.parameters .nav-link.active {
+    color: var(--primary);
+}
+
+.parameters .nav-link:not(.active) {
+    color: var(--menu-text);
+}
+
+.parameters-search {
+    border-radius: 1em;
+    border: 0;
+    outline: 0;
+    box-sizing: border-box;
+    padding: 0.4em 0.5em;
+    margin-top: 0.5em;
+    margin-left: 0.75em;
+    width: calc(100% - 3.5em);
+    background: var(--widget-background-color);
+    color: var(--widget-text-color);
+    box-shadow: inset 0 0.125em 0.25em #000;
+    -webkit-appearance: none;
+}
+
+.parameters-search-results {
+    margin-top: 2ex;
+}

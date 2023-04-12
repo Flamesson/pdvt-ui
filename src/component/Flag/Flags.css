@@ -1,0 +1,28 @@
+#flag-dropdown {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+#flag-dropdown .dropdown-toggle {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+#flag-dropdown .dropdown-menu.show {
+    background-color: var(--header);
+}
+
+#flag-dropdown .dropdown-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+
+#flag-dropdown .dropdown-item:hover {
+    background-color: var(--intermediate2);
+}
+
+img.flag-to-pickup {
+    width: 64px;
+    height: 64px;
+}

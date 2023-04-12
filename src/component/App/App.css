@@ -1,0 +1,33 @@
+.App {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  height: 100%;
+  width: 100%;
+}
+
+#body {
+  height: 100%;
+  width: 100%;
+}
+
+.graph-parameter-container {
+  padding-top: 1ex;
+  padding-bottom: 1ex;
+}
+
+.graph-parameter {
+  max-width: 90%;
+
+  align-self: center;
+  overflow: hidden;
+}
+
+.graph-parameter.input-only {
+  width: 90%;
+}
+
+.graph-parameter-caption {
+  padding-right: 1ex;
+}

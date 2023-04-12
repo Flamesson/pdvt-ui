@@ -1,0 +1,30 @@
+.types-container {
+    height: 100%;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.input-data-type {
+    width: 50%;
+    height: 100%;
+    border: 1px solid black;
+}
+
+.input-data-type .text-area-zone {
+    padding-top: 4ex;
+}
+
+.input-data-type .text-area-zone-internal {
+    padding: 2ex;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.input-data-type .text-area-zone-internal textarea {
+    min-height: 24ex;
+    height: 72ex;
+    margin-bottom: 2ex;
+}
