@@ -1,5 +1,5 @@
-import EventEmitter from 'eventemitter3';
 import Objects from "../../utils/Objects";
+import AppEvents from "../../utils/AppEvents";
 
 const layoutPadding = 10;
 const animationDuration = 500;
@@ -8,15 +8,16 @@ const easing = 'ease';
 const delayPromise = duration => new Promise(resolve => setTimeout(resolve, duration));
 
 class Controller {
-    constructor(cy) {
-        this.bus = new EventEmitter();
+    constructor(hub) {
         this.highlightPath = [];
-        this.setCy(cy);
+        hub.on(AppEvents.CY_UPDATE, cy => {
+            this.setCy(cy);
+        });
     }
 
     setCy(cy) {
         this.cy = cy;
-        if (Objects.isCorrect(cy)) {
+        if (Objects.isCorrect(cy) && Objects.isNotCorrect(this.nodes)) {
             this.nodes = cy.nodes();
         }
     }
@@ -101,7 +102,6 @@ class Controller {
             });
         };
 
-        this.bus.emit('highlight', node);
 
         return (
             Promise.resolve()
@@ -111,7 +111,6 @@ class Controller {
                 .then(showOthersFaded)
                 .then(() => {
                     this.highlightInProgress = false;
-                    this.bus.emit('highlightend', node);
                 })
         );
     }
@@ -127,8 +126,6 @@ class Controller {
 
         cy.stop();
         allNodes.stop();
-
-        this.bus.emit('unhighlight');
 
         let promises = this.highlightPath
             .map(node => {

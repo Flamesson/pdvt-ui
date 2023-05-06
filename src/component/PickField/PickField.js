@@ -9,6 +9,7 @@ import Objects from "../../utils/Objects";
 import Optional from "../../utils/Optional";
 
 import "./PickField.css";
+import AppEvents from "../../utils/AppEvents";
 
 const { colors } = defaultTheme;
 
@@ -48,7 +49,7 @@ class PickField extends Component {
             this.options.push(resetOption);
         }
 
-        this.props.hub.on("locale changed", ignored => {
+        this.props.hub.on(AppEvents.LOCALE_CHANGED, ignored => {
             this.options = this.optionsSupplier();
             if (Objects.isCorrect(this.state) && Objects.isCorrect(this.state.option)) {
                 this.pickByValue(this.state.option.value);

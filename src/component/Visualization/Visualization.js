@@ -11,6 +11,7 @@ import ParametersPanel from "../ParametersPanel/ParametersPanel";
 import Controller from "./Controller";
 import logger from "../../utils/Logger";
 import Tap from "./Tap";
+import AppEvents from "../../utils/AppEvents";
 
 Cytoscape.use(COSEBilkent);
 
@@ -22,29 +23,41 @@ class Visualization extends Component {
 
     constructor(props) {
         super(props);
-        this.controller = new Controller();
+        this.controller = new Controller(this.props.hub);
 
         this.onTap = this.onTap.bind(this);
         this.layout = this.layout.bind(this);
         this.getElements = this.getElements.bind(this);
         this.stylesheet = this.stylesheet.bind(this);
-        this.cyCallback = this.cyCallback.bind(this);
         this.updateElements = this.updateElements.bind(this);
+        this.emitCy = this.emitCy.bind(this);
     }
 
     componentDidMount() {
         let dataManager: DataManager  = new DataManager();
         dataManager.getElements().then(this.updateElements);
 
-        this.props.hub.on('layout change', layout => {
+        let hub = this.props.hub;
+        hub.on(AppEvents.LAYOUT_CHANGE, layout => {
             this.setState({
                 _layout: layout
             });
         });
+        hub.on(AppEvents.CY_UPDATE, cy => {
+            this.cy = cy;
+            this.tap = new Tap(cy, this.controller);
+
+            cy.removeListener(AppEvents.TAP, this.onTap);
+            cy.on(AppEvents.TAP, this.onTap);
+
+            cy.layout(this.layout()).run();
+        })
     }
 
     componentWillUnmount() {
-        this.cy.removeListener('tap', this.onTap);
+        if (Objects.isCorrect(this.cy)) {
+            this.cy.removeListener(AppEvents.TAP, this.onTap);
+        }
     }
 
     getElements(): Elements {
@@ -70,9 +83,6 @@ class Visualization extends Component {
     }
 
     onTap(e): void {
-        //TODO: add highlighting for: most long path and so on
-        //TODO: add highlighting for dangerous-license components (add license info input)
-        //TODO: hide/show unlinked components
         if (Objects.isNotCorrect(this.tap)) {
             logger.warn("A field is undefined. The field - tap.");
             return;
@@ -85,8 +95,17 @@ class Visualization extends Component {
         this.setState({
             elements: elements
         }, () => {
-            this.props.hub.emit('elements update');
+            this.props.hub.emit(AppEvents.ELEMENTS_UPDATE);
         });
+    }
+
+    emitCy(key: String, cy: *): void {
+        if (Objects.isNotCorrect(this.props.hub)) {
+            logger.warn("A field is undefined. The field - hub.");
+            return;
+        }
+
+        this.props.hub.emit(key, cy);
     }
 
     render() {
@@ -97,22 +116,11 @@ class Visualization extends Component {
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
                                 stylesheet={this.stylesheet()}
-                                cy={this.cyCallback}/>
+                                cy={cy => this.emitCy(AppEvents.CY_UPDATE, cy)}/>
             <ParametersPanel hub={this.props.hub} cy={this.cy} controller={this.controller}
                              tap={this.tap}
                              elementsSupplier={() => this.getElements()}/>
         </div>
-    }
-
-    cyCallback(cy) {
-        this.cy = cy;
-        this.controller.setCy(cy);
-        this.tap = new Tap(cy, this.controller);
-
-        cy.removeListener('tap', this.onTap);
-        cy.on('tap', this.onTap);
-
-        cy.layout(this.layout()).run();
     }
 
     stylesheet() {

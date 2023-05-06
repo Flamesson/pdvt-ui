@@ -12,6 +12,7 @@ import "./ParametersPanel.css";
 import NodeInfo from "../NodeInfo/NodeInfo";
 import Strings from "../../utils/Strings";
 import logger from "../../utils/Logger";
+import AppEvents from "../../utils/AppEvents";
 
 const minMetricValue = 0.25;
 const minSimilarityValue = 0;
@@ -51,7 +52,7 @@ class ParametersPanel extends Component {
             open: false
         });
         this.changeLayout("breadthfirst");
-        this.props.hub.on('elements update', () => {
+        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, () => {
             this.adjustParameters();
         });
     }
@@ -71,7 +72,7 @@ class ParametersPanel extends Component {
                 this.setState({
                     _layout: layout
                 }, () => {
-                    this.props.hub.emit('layout change', layout);
+                    this.props.hub.emit(AppEvents.LAYOUT_CHANGE, layout);
                 });
             });
         });
@@ -80,7 +81,7 @@ class ParametersPanel extends Component {
         this.setState({
             _layout: layout
         }, () => {
-            this.props.hub.emit('layout change', layout);
+            this.props.hub.emit(AppEvents.LAYOUT_CHANGE, layout);
             this.adjustParameters();
         });
     }

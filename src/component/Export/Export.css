@@ -1,5 +1,5 @@
-#flag-dropdown {
-    grid-column: 1;
+#export-dropdown {
+    grid-column: 2;
     grid-row: 3;
 
     display: flex;
@@ -7,26 +7,33 @@
     align-items: center;
 }
 
-#flag-dropdown .dropdown-toggle {
+#export-icon {
+    max-height: 48px;
+}
+
+#export-dropdown .dropdown-toggle {
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);
 }
 
-#flag-dropdown .dropdown-menu.show {
+#export-dropdown .dropdown-menu.show {
     background-color: var(--header);
 }
 
-#flag-dropdown .dropdown-item {
+#export-dropdown .dropdown-item {
+    color: var(--menu-text);
+
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
 
-#flag-dropdown .dropdown-item:hover {
+#export-dropdown .dropdown-item:hover {
     background-color: var(--intermediate2);
+
+    border-radius: 1em;
 }
 
-img.flag-to-pickup {
-    width: 64px;
-    height: 64px;
+#export-dropdown .dropdown-item:active {
+    color: white;
 }

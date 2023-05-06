@@ -20,8 +20,12 @@ _________
 * [ ] Create React-plugin for generation pdvt-file.
 * [ ] Remember input settings in storage.
 * [ ] Add flexible context system for links, nodes. (f.e. - show as different api, implementation, runtime dependencies Gradle types)
-* [ ] Add export -> png/jpg.
+* [X] Add export -> png/jpg.
 * [ ] Interpret input data as plain UML components diagram (without context).
+* [ ] Add versioned components parser.
+* [ ] Add highlighting for possible versions collisions.
+* [ ] Hide/show unlinked components
+* [ ] Update filtering logic. Now it is searching, must be filtering.
 * [ ] Allow to configure base properties:
     * [ ] Node color;
     * [ ] Node border color;

@@ -6,7 +6,8 @@ import {withTranslation} from "react-i18next";
 import PathSource from "./PathSource";
 import i18next from "i18next";
 import "./Flags.css";
-import ImageWrapper from "./ImageWrapper";
+import ReactNodeWrapper from "../../utils/ReactNodeWrapper";
+import AppEvents from "../../utils/AppEvents";
 
 class Flags extends Component {
     constructor(props) {
@@ -23,11 +24,11 @@ class Flags extends Component {
     updateLocale(newLocaleCode: String) {
         this.props.i18n.changeLanguage(newLocaleCode)
             .then(r => {
-                this.props.hub.emit("locale changed", newLocaleCode);
+                this.props.hub.emit(AppEvents.LOCALE_CHANGED, newLocaleCode);
             });
     }
 
-    getLocales(): ImageWrapper[] {
+    getLocales(): ReactNodeWrapper[] {
         let i18n = this.props.i18n;
         let currentLocaleCode = i18n.resolvedLanguage;
         let pathSource = new PathSource();
@@ -37,7 +38,7 @@ class Flags extends Component {
             .map(localeCode =>  {
                 let image = <Image key={localeCode} className={"flag-to-pickup"} src={pathSource.getPath(localeCode)}/>;
                 let onClick = ignored => this.updateLocale(localeCode);
-                return new ImageWrapper(image, onClick, localeCode);
+                return new ReactNodeWrapper(image, localeCode, onClick);
             });
     }
 
@@ -48,9 +49,9 @@ class Flags extends Component {
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-                { this.getLocales().map(imageWrapper => {
-                    return <DropdownItem key={imageWrapper.key} onClick={imageWrapper.onClick}>
-                        { imageWrapper.image }
+                { this.getLocales().map(nodeWrapper => {
+                    return <DropdownItem key={nodeWrapper.key} onClick={nodeWrapper.onClick}>
+                        { nodeWrapper.node }
                     </DropdownItem>
                 }) }
             </Dropdown.Menu>
