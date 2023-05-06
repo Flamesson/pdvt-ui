@@ -5,7 +5,7 @@
 /.pnp
 .pnp.js
 
-/samples
+/privatesamples
 
 # testing
 /coverage

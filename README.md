@@ -25,6 +25,7 @@ _________
     * [ ] Labels width;
     * [ ] Labels text size;
 * [ ] Add deployment.
+* [ ] Fill help.
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.

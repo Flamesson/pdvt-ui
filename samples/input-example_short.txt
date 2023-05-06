@@ -1,0 +1,9 @@
+[unversioned][1]
+[dictionary]
+org.izumi.sample=a;
+org.izumi.sample2=b;
+org.springframework.core=c;
+org.springframework.ioc=d;
+[mappings]
+a->b;b->c;
+a->c;
