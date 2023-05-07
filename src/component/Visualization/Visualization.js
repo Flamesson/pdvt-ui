@@ -11,7 +11,7 @@ import ParametersPanel from "../ParametersPanel/ParametersPanel";
 import Controller from "./Controller";
 import logger from "../../utils/Logger";
 import Tap from "./Tap";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
 
 Cytoscape.use(COSEBilkent);
 
@@ -30,7 +30,7 @@ class Visualization extends Component {
         this.getElements = this.getElements.bind(this);
         this.stylesheet = this.stylesheet.bind(this);
         this.updateElements = this.updateElements.bind(this);
-        this.emitCy = this.emitCy.bind(this);
+        this.emit = this.emit.bind(this);
     }
 
     componentDidMount() {
@@ -99,13 +99,13 @@ class Visualization extends Component {
         });
     }
 
-    emitCy(key: String, cy: *): void {
+    emit(key: String, arg: *): void {
         if (Objects.isNotCorrect(this.props.hub)) {
             logger.warn("A field is undefined. The field - hub.");
             return;
         }
 
-        this.props.hub.emit(key, cy);
+        this.props.hub.emit(key, arg);
     }
 
     render() {
@@ -116,9 +116,8 @@ class Visualization extends Component {
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
                                 stylesheet={this.stylesheet()}
-                                cy={cy => this.emitCy(AppEvents.CY_UPDATE, cy)}/>
-            <ParametersPanel hub={this.props.hub} cy={this.cy} controller={this.controller}
-                             tap={this.tap}
+                                cy={cy => this.emit(AppEvents.CY_UPDATE, cy)}/>
+            <ParametersPanel hub={this.props.hub} controller={this.controller} tap={this.tap}
                              elementsSupplier={() => this.getElements()}/>
         </div>
     }

@@ -7,21 +7,40 @@ import PathSource from "./PathSource";
 import i18next from "i18next";
 import "./Flags.css";
 import ReactNodeWrapper from "../../utils/ReactNodeWrapper";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
+import extLocalStorage from "../../utils/ext.local.storage";
+import AppStorage from "../../AppStorage";
 
 class Flags extends Component {
+    static DEFAULT_LOCALE_CODE = "ru";
+
     constructor(props) {
         super(props);
 
+        this.getCurrentLocaleCode = this.getCurrentLocaleCode.bind(this);
         this.updateLocale = this.updateLocale.bind(this);
         this.getLocales = this.getLocales.bind(this);
     }
 
     componentDidMount() {
-        this.updateLocale("ru");
+        if (extLocalStorage.isAbsent(AppStorage.CURRENT_LOCALE_CODE)) {
+            this.updateLocale(Flags.DEFAULT_LOCALE_CODE);
+        } else {
+            let localeCode: String = extLocalStorage.getItem(AppStorage.CURRENT_LOCALE_CODE);
+            this.updateLocale(localeCode);
+        }
     }
 
-    updateLocale(newLocaleCode: String) {
+    getCurrentLocaleCode(): String {
+        return this.props.i18n.language;
+    }
+
+    updateLocale(newLocaleCode: String): void {
+        let currentLocaleCode = this.getCurrentLocaleCode();
+        if (currentLocaleCode === newLocaleCode) {
+            return;
+        }
+
         this.props.i18n.changeLanguage(newLocaleCode)
             .then(r => {
                 this.props.hub.emit(AppEvents.LOCALE_CHANGED, newLocaleCode);

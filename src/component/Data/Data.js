@@ -5,12 +5,12 @@ import "./Data.css";
 import FileManage from "../FileManage";
 import {Button, ButtonGroup} from "react-bootstrap";
 import extLocalStorage from "../../utils/ext.local.storage";
-import Constants from "../../Constants";
 import {toast} from "react-toastify";
 import ParserFactory from "../../parser/ParserFactory";
 import Objects from "../../utils/Objects";
 import Strings from "../../utils/Strings";
 import Buttons from "../../utils/Buttons";
+import AppStorage from "../../AppStorage";
 
 class Data extends Component {
     static MOCK_TEXT_DATA = "[unversioned][1]\n" +
@@ -37,8 +37,8 @@ class Data extends Component {
         this.updateClearTextButtonState = this.updateClearTextButtonState.bind(this);
     }
     componentDidMount() {
-        if (extLocalStorage.isPresent(Constants.TEXT_DATA_KEY)) {
-            let content = extLocalStorage.getItem(Constants.TEXT_DATA_KEY);
+        if (extLocalStorage.isPresent(AppStorage.DATA_TEXT)) {
+            let content = extLocalStorage.getItem(AppStorage.DATA_TEXT);
             document.getElementById(this.textAreaId).value = content;
         }
 
@@ -48,8 +48,8 @@ class Data extends Component {
 
     applyText(ignored) {
         let content = document.getElementById(this.textAreaId).value;
-        extLocalStorage.removeFile(Constants.GRAPH_FILE_KEY);
-        extLocalStorage.setItem(Constants.TEXT_DATA_KEY, content);
+        extLocalStorage.removeFile(AppStorage.DATA_FILE);
+        extLocalStorage.setItem(AppStorage.DATA_TEXT, content);
 
         const t = this.props.t;
         toast.success(t('apply-text.success.toast'));
@@ -61,7 +61,7 @@ class Data extends Component {
 
     clearText(ignored) {
         this.setText('');
-        extLocalStorage.remove(Constants.TEXT_DATA_KEY);
+        extLocalStorage.remove(AppStorage.DATA_TEXT);
 
         const t = this.props.t;
         toast.success(t('clear-text.success.toast'));

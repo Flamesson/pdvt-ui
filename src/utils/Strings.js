@@ -84,6 +84,22 @@ class Strings {
             return 0;
         }
     }
+
+    static countCommonLength(s1, s2): Number {
+        let common: Number = 0;
+        let until: Number = Math.min(s1.length, s2.length);
+        for (let i = 0; i < until; i++) {
+            let char1 = s1.charAt(i);
+            let char2 = s2.charAt(i);
+            if (char1 !== char2) {
+                return common;
+            }
+
+            common += 1;
+        }
+
+        return common;
+    }
 }
 
 export default Strings;

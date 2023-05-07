@@ -2,7 +2,8 @@ import React, {Component} from "react";
 import {Image} from "react-bootstrap";
 import Objects from "../../utils/Objects";
 import PathSource from "./PathSource";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
+import {withTranslation} from "react-i18next";
 
 class Flag extends Component {
     componentDidMount() {
@@ -11,6 +12,17 @@ class Flag extends Component {
                 localeCode: localeCode
             });
         });
+
+        let currentLocaleCode: String = this.getCurrentLocaleCode();
+        if (Objects.isCorrect(currentLocaleCode)) {
+            this.setState({
+                localeCode: currentLocaleCode
+            });
+        }
+    }
+
+    getCurrentLocaleCode(): String {
+        return this.props.i18n.language;
     }
 
     render() {
@@ -27,4 +39,4 @@ class Flag extends Component {
     }
 }
 
-export default Flag;
+export default withTranslation()(Flag);

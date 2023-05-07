@@ -75,6 +75,16 @@ class Params {
 
         return layout;
     }
+
+    findByCode(code): Optional {
+        for (let parameter of this.parameters) {
+            if (parameter.code === code) {
+                return Optional.of(parameter);
+            }
+        }
+
+        return Optional.empty();
+    }
 }
 
 export default Params;

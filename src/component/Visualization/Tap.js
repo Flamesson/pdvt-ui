@@ -8,6 +8,10 @@ class Tap {
     }
 
     onTapLayout(): void {
+        if (!this.controller.hasHighlight()) {
+            return;
+        }
+
         this.controller.unhighlight().then(ignored => {
             this.cy.fit();
         });

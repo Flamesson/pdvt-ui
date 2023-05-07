@@ -18,14 +18,14 @@ _________
 * [ ] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
 * [ ] Update data visualization - show current source in UI.
 * [ ] Create React-plugin for generation pdvt-file.
-* [ ] Remember input settings in storage.
+* [X] Remember input settings in storage.
 * [ ] Add flexible context system for links, nodes. (f.e. - show as different api, implementation, runtime dependencies Gradle types)
 * [X] Add export -> png/jpg.
 * [ ] Interpret input data as plain UML components diagram (without context).
 * [ ] Add versioned components parser.
 * [ ] Add highlighting for possible versions collisions.
 * [ ] Hide/show unlinked components
-* [ ] Update filtering logic. Now it is searching, must be filtering.
+* [X] Update filtering logic. Now it is searching, must be filtering.
 * [ ] Allow to configure base properties:
     * [ ] Node color;
     * [ ] Node border color;

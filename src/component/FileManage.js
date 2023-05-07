@@ -1,12 +1,12 @@
 import React, {ChangeEvent, Component} from "react";
 import extLocalStorage from "../utils/ext.local.storage";
-import Constants from "../Constants";
 import Objects from "../utils/Objects";
 import {Button, ButtonGroup} from "react-bootstrap";
 import {withTranslation} from "react-i18next";
 import {toast} from "react-toastify";
 import Buttons from "../utils/Buttons";
 import Strings from "../utils/Strings";
+import AppStorage from "../AppStorage";
 
 class FileManage extends Component {
     constructor(props) {
@@ -21,8 +21,8 @@ class FileManage extends Component {
     }
 
     componentDidMount() {
-        if (extLocalStorage.isPresent(Constants.GRAPH_FILE_KEY)) {
-            let file = extLocalStorage.getFile(Constants.GRAPH_FILE_KEY);
+        if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+            let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
             this.setState({
                 file: file
             });
@@ -39,7 +39,7 @@ class FileManage extends Component {
     deleteFile(ignored) {
         let toDelete: File = this.state.file;
 
-        extLocalStorage.removeFile(Constants.GRAPH_FILE_KEY);
+        extLocalStorage.removeFile(AppStorage.DATA_FILE);
         this.setState({
             file: null
         }, () => {
@@ -60,7 +60,7 @@ class FileManage extends Component {
         }
 
         let file = e.target.files[0];
-        extLocalStorage.saveFile(Constants.GRAPH_FILE_KEY, file, () => {
+        extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
             this.updateRemoveFileButtonState();
         });
         this.setState({
@@ -71,7 +71,7 @@ class FileManage extends Component {
     updateRemoveFileButtonState() {
         Buttons.updateState(
             document.getElementById("delete-file-button"),
-            extLocalStorage.isPresent(Constants.GRAPH_FILE_KEY)
+            extLocalStorage.isPresent(AppStorage.DATA_FILE)
         );
     }
 

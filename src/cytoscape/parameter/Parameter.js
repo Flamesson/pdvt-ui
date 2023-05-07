@@ -16,6 +16,10 @@ class Parameter {
         return this._value;
     }
 
+    setValue(value: *): void {
+        this._value = value;
+    }
+
     hasCompleteUi(): Boolean {
         return false;
     }

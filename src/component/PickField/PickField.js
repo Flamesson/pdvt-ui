@@ -9,7 +9,7 @@ import Objects from "../../utils/Objects";
 import Optional from "../../utils/Optional";
 
 import "./PickField.css";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
 
 const { colors } = defaultTheme;
 

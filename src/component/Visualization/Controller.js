@@ -1,5 +1,5 @@
 import Objects from "../../utils/Objects";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
 
 const layoutPadding = 10;
 const animationDuration = 500;

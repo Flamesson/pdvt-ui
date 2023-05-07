@@ -5,7 +5,7 @@ import icon from "./export.svg";
 import "./Export.css";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import ReactNodeWrapper from "../../utils/ReactNodeWrapper";
-import AppEvents from "../../utils/AppEvents";
+import AppEvents from "../../AppEvents";
 
 class Export extends Component {
     constructor(props) {
