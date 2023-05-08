@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from 'cytoscape';
-import "./Visualization.css";
 import Objects from "../../utils/Objects";
 import Elements from "../../cytoscape/Elements";
 import DataManager from "../../service/DataManager";
@@ -12,6 +11,9 @@ import Controller from "./Controller";
 import logger from "../../utils/Logger";
 import Tap from "./Tap";
 import AppEvents from "../../AppEvents";
+import Style from "./Style";
+
+import "./Visualization.css";
 
 Cytoscape.use(COSEBilkent);
 
@@ -28,7 +30,6 @@ class Visualization extends Component {
         this.onTap = this.onTap.bind(this);
         this.layout = this.layout.bind(this);
         this.getElements = this.getElements.bind(this);
-        this.stylesheet = this.stylesheet.bind(this);
         this.updateElements = this.updateElements.bind(this);
         this.emit = this.emit.bind(this);
     }
@@ -115,91 +116,11 @@ class Visualization extends Component {
         return <div className={"visualization-container"}>
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
-                                stylesheet={this.stylesheet()}
+                                stylesheet={new Style().get()}
                                 cy={cy => this.emit(AppEvents.CY_UPDATE, cy)}/>
             <ParametersPanel hub={this.props.hub} controller={this.controller} tap={this.tap}
                              elementsSupplier={() => this.getElements()}/>
         </div>
-    }
-
-    stylesheet() {
-        return [
-            {
-                selector: 'edge',
-                style: {
-                    'curve-style': 'bezier'
-                }
-            },
-            {
-                selector: 'node.selected',
-                style: {
-                    'min-zoomed-font-size': 0,
-                    'z-index': 9999
-                }
-            },
-            {
-                selector: 'edge.selected',
-                style: {
-                    opacity: 0.8,
-                    width: 4,
-                    'z-index': 9999
-                }
-            },
-            {
-                selector: '.faded',
-                style: {
-                    events: 'no'
-                }
-            },
-            {
-                selector: 'node.faded',
-                style: {
-                    opacity: 0.08
-                }
-            },
-            {
-                selector: 'edge.faded',
-                style: {
-                    opacity: 0.06
-                }
-            },
-            {
-                selector: '.hidden',
-                style: {
-                    display: 'none'
-                }
-            },
-            {
-                selector: 'node[NodeType="default"]',
-                style: {
-                    'background-color': 'green',
-                    'font-size': '12px',
-                    width: '30px',
-                    height: '30px',
-                    color: 'blue',
-                    'text-wrap': 'wrap',
-                    'text-max-width': '100px',
-                    'text-overflow-wrap': 'anywhere',
-                    'border-color': 'black',
-                    'border-width': '1px',
-                    'text-valign': 'top',
-                    'text-halign': 'center',
-                    'label': 'data(label)'
-                }
-            },
-            {
-                selector: 'edge[EdgeType="default"]',
-                style: {
-                    width: '1px',
-                    'line-color': 'black',
-                    'text-max-width': '10px',
-                    'target-arrow-fill': 'hollow',
-                    'target-arrow-color': 'black',
-                    'target-arrow-shape': 'triangle',
-                    'target-distance-from-node': '5px'
-                }
-            }
-        ];
     }
 }
 

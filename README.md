@@ -15,7 +15,7 @@ _________
 * [ ] Add highlighting for most long path in graph (allow to configure the start node, by default - most depended node).
 * [ ] Add highlighting for dangerous-license components (add license info input).
 * [ ] Add highlighting for circular dependencies.
-* [ ] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
+* [X] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
 * [ ] Update data visualization - show current source in UI.
 * [ ] Create React-plugin for generation pdvt-file.
 * [X] Remember input settings in storage.
@@ -39,3 +39,4 @@ _________
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
+* [ ] **(Optional)** Add search

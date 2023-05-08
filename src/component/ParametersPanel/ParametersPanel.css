@@ -71,22 +71,3 @@
 .parameters .nav-link:not(.active) {
     color: var(--menu-text);
 }
-
-.parameters-search {
-    border-radius: 1em;
-    border: 0;
-    outline: 0;
-    box-sizing: border-box;
-    padding: 0.4em 0.5em;
-    margin-top: 0.5em;
-    margin-left: 0.75em;
-    width: calc(100% - 3.5em);
-    background: var(--widget-background-color);
-    color: var(--widget-text-color);
-    box-shadow: inset 0 0.125em 0.25em #000;
-    -webkit-appearance: none;
-}
-
-.parameters-search-results {
-    margin-top: 2ex;
-}
