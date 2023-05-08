@@ -9,6 +9,7 @@ class AppStorage {
     static PARAMETERS_OPENED = "parameters opened";
     static PARAMETERS_ACTIVE_TAB = "parameters active tab";
     static SEARCH_QUERY = "search query";
+    static GENERAL_PARAMETERS = "general parameters";
 }
 
 export default AppStorage;

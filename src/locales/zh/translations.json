@@ -7,6 +7,7 @@
   "button.clear.caption": "清除",
   "button.upload.caption": "下载",
   "button.delete.caption": "删除",
+  "button.reset.caption": "重置",
   "textarea.input-data.placeholder": "您可以在此处插入数据",
   "h3.simple-input-data.caption": "简单输入",
   "h3.file-upload-input.caption": "上传文件",
@@ -42,5 +43,15 @@
   "placeholder.begin-input.message": "开始打字",
   "layout.breadthfirst.label": "广度优先",
   "layout.grid.label": "以网格的形式",
-  "layout.concentric.label": "同心"
+  "layout.concentric.label": "同心",
+  "parameters.general.caption": "一般的",
+  "parameters.graph.caption": "图形",
+  "parameter.general.node-color.caption": "节点颜色",
+  "parameter.general.node-border-color.caption": "节点边框颜色",
+  "parameter.general.node-size.caption": "节点大小，像素",
+  "parameter.general.edge-color.caption": "边缘颜色",
+  "parameter.general.edge-width.caption": "边缘宽度，像素",
+  "parameter.general.label-max-width.caption": "最大字幕宽度，像素",
+  "parameter.general.label-font-size.caption": "标签文字大小，像素",
+  "parameter.general.label-font-color.caption": "标签文字颜色"
 }

@@ -7,6 +7,7 @@
   "button.clear.caption": "Clear",
   "button.upload.caption": "Upload",
   "button.delete.caption": "Delete",
+  "button.reset.caption": "Reset",
   "textarea.input-data.placeholder": "You can insert Data here",
   "h3.simple-input-data.caption": "Simple input",
   "h3.file-upload-input.caption": "File upload",
@@ -42,5 +43,15 @@
   "placeholder.begin-input.message": "Start typing",
   "layout.breadthfirst.label": "Breadth first",
   "layout.grid.label": "Grid",
-  "layout.concentric.label": "Concentric"
+  "layout.concentric.label": "Concentric",
+  "parameters.general.caption": "General",
+  "parameters.graph.caption": "Graph",
+  "parameter.general.node-color.caption": "Node Color",
+  "parameter.general.node-border-color.caption": "Node border color",
+  "parameter.general.node-size.caption": "Node size, pixels",
+  "parameter.general.edge-color.caption": "Edge Color",
+  "parameter.general.edge-width.caption": "Edge width, pixels",
+  "parameter.general.label-max-width.caption": "Maximum caption width, pixels",
+  "parameter.general.label-font-size.caption": "Label text size, pixels",
+  "parameter.general.label-font-color.caption": "Label Text Color"
 }

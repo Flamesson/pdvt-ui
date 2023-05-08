@@ -14,6 +14,9 @@ import AppEvents from "../../AppEvents";
 import Style from "./Style";
 
 import "./Visualization.css";
+import CyStyle from "./CyStyle";
+import extLocalStorage from "../../utils/ext.local.storage";
+import AppStorage from "../../AppStorage";
 
 Cytoscape.use(COSEBilkent);
 
@@ -27,11 +30,15 @@ class Visualization extends Component {
         super(props);
         this.controller = new Controller(this.props.hub);
 
+        this.loadCyStyle = this.loadCyStyle.bind(this);
+        this.saveCyStyle = this.saveCyStyle.bind(this);
         this.onTap = this.onTap.bind(this);
         this.layout = this.layout.bind(this);
         this.getElements = this.getElements.bind(this);
         this.updateElements = this.updateElements.bind(this);
         this.emit = this.emit.bind(this);
+
+        this.cyStyle = this.loadCyStyle();
     }
 
     componentDidMount() {
@@ -52,13 +59,38 @@ class Visualization extends Component {
             cy.on(AppEvents.TAP, this.onTap);
 
             cy.layout(this.layout()).run();
-        })
+        });
+        hub.on(AppEvents.CY_STYLE_CHANGED, ignored => {
+            this.forceUpdate();
+            this.saveCyStyle();
+        });
     }
 
     componentWillUnmount() {
         if (Objects.isCorrect(this.cy)) {
             this.cy.removeListener(AppEvents.TAP, this.onTap);
         }
+    }
+
+    loadCyStyle(): CyStyle {
+        if (extLocalStorage.isAbsent(AppStorage.GENERAL_PARAMETERS)) {
+            return new CyStyle();
+        }
+
+        let stored = extLocalStorage.getParsedJson(AppStorage.GENERAL_PARAMETERS);
+        return new CyStyle()
+            .withNodeColorIfValid(stored.nodeColor)
+            .withNodeBorderColorIfValid(stored.nodeBorderColor)
+            .withNodeSizeIfValid(stored.nodeSize)
+            .withEdgeColorIfValid(stored.edgeColor)
+            .withEdgeWidthIfValid(stored.edgeWidth)
+            .withLabelColorIfValid(stored.labelColor)
+            .withLabelMaxWidthIfValid(stored.labelMaxWidth)
+            .withLabelFontSizeIfValid(stored.labelFontSize);
+    }
+
+    saveCyStyle(): void {
+        extLocalStorage.setAsJson(AppStorage.GENERAL_PARAMETERS, this.cyStyle);
     }
 
     getElements(): Elements {
@@ -116,10 +148,13 @@ class Visualization extends Component {
         return <div className={"visualization-container"}>
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
-                                stylesheet={new Style().get()}
+                                stylesheet={new Style(this.cyStyle).get()}
                                 cy={cy => this.emit(AppEvents.CY_UPDATE, cy)}/>
-            <ParametersPanel hub={this.props.hub} controller={this.controller} tap={this.tap}
-                             elementsSupplier={() => this.getElements()}/>
+            <ParametersPanel hub={this.props.hub}
+                             controller={this.controller}
+                             tap={this.tap}
+                             elementsSupplier={() => this.getElements()}
+                             cyStyle={this.cyStyle}/>
         </div>
     }
 }

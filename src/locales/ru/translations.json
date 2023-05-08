@@ -7,6 +7,7 @@
   "button.clear.caption": "Очистить",
   "button.upload.caption": "Загрузить",
   "button.delete.caption": "Удалить",
+  "button.reset.caption": "Сбросить",
   "textarea.input-data.placeholder": "Сюда можно вставить данные",
   "h3.simple-input-data.caption": "Простой ввод",
   "h3.file-upload-input.caption": "Загрузка файла",
@@ -42,5 +43,15 @@
   "placeholder.begin-input.message": "Начните ввод",
   "layout.breadthfirst.label": "В ширину",
   "layout.grid.label": "Сетка",
-  "layout.concentric.label": "Концентрический"
+  "layout.concentric.label": "Концентрический",
+  "parameters.general.caption": "Общее",
+  "parameters.graph.caption": "Граф",
+  "parameter.general.node-color.caption": "Цвет узла",
+  "parameter.general.node-border-color.caption": "Цвет границы узла",
+  "parameter.general.node-size.caption": "Размер узла, пикселей",
+  "parameter.general.edge-color.caption": "Цвет ребра",
+  "parameter.general.edge-width.caption": "Ширина ребра, пикселей",
+  "parameter.general.label-max-width.caption": "Максимальная ширина надписи, пикселей",
+  "parameter.general.label-font-size.caption": "Размер текста надписи, пикселей",
+  "parameter.general.label-font-color.caption": "Цвет текста надписи"
 }

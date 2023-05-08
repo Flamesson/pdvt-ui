@@ -83,7 +83,9 @@ class ParametersPanel extends Component {
                           this.forceUpdate();
                       }}>
                     <Tab eventKey={"parameters"} title={t("tab.parameters.caption")} className={"parameters-tab"}>
-                        <Parameters hub={this.props.hub} elementsSupplier={this.props.elementsSupplier}/>
+                        <Parameters hub={this.props.hub}
+                                    elementsSupplier={this.props.elementsSupplier}
+                                    cyStyle={this.props.cyStyle}/>
                     </Tab>
                     <Tab eventKey={"filtration"} title={t("tab.filtration.caption")} className={"filtration-tab"}>
                         <Filtration hub={this.props.hub}/>

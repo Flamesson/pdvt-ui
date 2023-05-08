@@ -14,7 +14,7 @@ class SpacingFactor extends RangeParameter {
     }
 
     toUi(t): React.ReactNode {
-        return <div className={"flex-vertical-center-center margin-10px"}>
+        return <div className={"flex-vertical-center-center margin-inside-10px"}>
             <input className={"graph-parameter input-only"} type={"range"} min={this.min()} max={this.max()}
                    onChange={ev => this.acceptChange(ev)}
                    value={this.getValue()}/>

@@ -10,6 +10,8 @@ import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import AppEvents from "../../AppEvents";
 import Elements from "../../cytoscape/Elements";
+import GeneralParameters from "../GeneralParameters/GeneralParameters";
+import GraphParameters from "../GraphParameters/GraphParameters";
 
 class Parameters extends Component {
     static DEFAULT_LAYOUT = "grid";
@@ -185,7 +187,7 @@ class Parameters extends Component {
 
     render() {
         const t = this.props.t;
-        return <div>
+        return <div className={"vertical-scrollable"}>
             <div className={"label-container"}>
                 <PickField hub={this.props.hub}
                            optionsSupplier={() => this.getOptions()}
@@ -206,6 +208,11 @@ class Parameters extends Component {
                     </div>
                 }
             })}
+
+            <hr/>
+            <GraphParameters hub={this.props.hub}/>
+            <hr/>
+            <GeneralParameters hub={this.props.hub} cyStyle={this.props.cyStyle}/>
         </div>;
     }
 }

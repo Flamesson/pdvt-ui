@@ -1,4 +1,10 @@
+import type CyStyle from "./CyStyle";
+
 class Style {
+    constructor(cyStyle: CyStyle) {
+        this.cyStyle = cyStyle;
+    }
+
     get(): * {
         return [
             {
@@ -49,15 +55,15 @@ class Style {
             {
                 selector: 'node[NodeType="default"]',
                 style: {
-                    'background-color': 'green',
-                    'font-size': '12px',
-                    width: '30px',
-                    height: '30px',
-                    color: 'blue',
+                    'background-color': this.cyStyle.nodeColor,
+                    'font-size': this.cyStyle.labelFontSize + "px",
+                    width: this.cyStyle.nodeSize + "px",
+                    height: this.cyStyle.nodeSize + "px",
+                    color: this.cyStyle.labelColor,
                     'text-wrap': 'wrap',
-                    'text-max-width': '100px',
+                    'text-max-width': this.cyStyle.labelMaxWidth + "px",
                     'text-overflow-wrap': 'anywhere',
-                    'border-color': 'black',
+                    'border-color': this.cyStyle.nodeBorderColor,
                     'border-width': '1px',
                     'text-valign': 'top',
                     'text-halign': 'center',
@@ -67,8 +73,8 @@ class Style {
             {
                 selector: 'edge[EdgeType="default"]',
                 style: {
-                    width: '1px',
-                    'line-color': 'black',
+                    width: this.cyStyle.edgeWidth + "px",
+                    'line-color': this.cyStyle.edgeColor,
                     'text-max-width': '10px',
                     'target-arrow-fill': 'hollow',
                     'target-arrow-color': 'black',

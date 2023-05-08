@@ -26,14 +26,14 @@ _________
 * [ ] Add highlighting for possible versions collisions.
 * [ ] Hide/show unlinked components
 * [X] Update filtering logic. Now it is searching, must be filtering.
-* [ ] Allow to configure base properties:
-    * [ ] Node color;
-    * [ ] Node border color;
-    * [ ] Line color;
-    * [ ] Line width;
-    * [ ] Node size;
-    * [ ] Labels width;
-    * [ ] Labels text size;
+* [X] Allow to configure base properties:
+    * [X] Node color;
+    * [X] Node border color;
+    * [X] Line color;
+    * [X] Line width;
+    * [X] Node size;
+    * [X] Labels width;
+    * [X] Labels text size;
 * [ ] Add deployment.
 * [ ] Fill help.
 * [ ] **(Optional)** Add users (+ backend).
