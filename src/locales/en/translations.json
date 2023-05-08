@@ -53,5 +53,6 @@
   "parameter.general.edge-width.caption": "Edge width, pixels",
   "parameter.general.label-max-width.caption": "Maximum caption width, pixels",
   "parameter.general.label-font-size.caption": "Label text size, pixels",
-  "parameter.general.label-font-color.caption": "Label Text Color"
+  "parameter.general.label-font-color.caption": "Label Text Color",
+  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Hide unconnected nodes"
 }

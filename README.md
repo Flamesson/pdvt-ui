@@ -24,7 +24,7 @@ _________
 * [ ] Interpret input data as plain UML components diagram (without context).
 * [ ] Add versioned components parser.
 * [ ] Add highlighting for possible versions collisions.
-* [ ] Hide/show unlinked components
+* [X] Hide/show unlinked components
 * [X] Update filtering logic. Now it is searching, must be filtering.
 * [X] Allow to configure base properties:
     * [X] Node color;

@@ -10,6 +10,7 @@ class AppStorage {
     static PARAMETERS_ACTIVE_TAB = "parameters active tab";
     static SEARCH_QUERY = "search query";
     static GENERAL_PARAMETERS = "general parameters";
+    static PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY = "toggle unlinked nodes visibility";
 }
 
 export default AppStorage;

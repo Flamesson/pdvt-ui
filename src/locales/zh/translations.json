@@ -53,5 +53,6 @@
   "parameter.general.edge-width.caption": "边缘宽度，像素",
   "parameter.general.label-max-width.caption": "最大字幕宽度，像素",
   "parameter.general.label-font-size.caption": "标签文字大小，像素",
-  "parameter.general.label-font-color.caption": "标签文字颜色"
+  "parameter.general.label-font-color.caption": "标签文字颜色",
+  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "隐藏未连接的节点"
 }

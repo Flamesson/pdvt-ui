@@ -100,6 +100,10 @@ class Strings {
 
         return common;
     }
+
+    static asBoolean(s: String): Boolean {
+        return s === "true";
+    }
 }
 
 export default Strings;

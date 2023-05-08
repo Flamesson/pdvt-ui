@@ -53,5 +53,6 @@
   "parameter.general.edge-width.caption": "Ширина ребра, пикселей",
   "parameter.general.label-max-width.caption": "Максимальная ширина надписи, пикселей",
   "parameter.general.label-font-size.caption": "Размер текста надписи, пикселей",
-  "parameter.general.label-font-color.caption": "Цвет текста надписи"
+  "parameter.general.label-font-color.caption": "Цвет текста надписи",
+  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Спрятать несвязанные узлы"
 }
