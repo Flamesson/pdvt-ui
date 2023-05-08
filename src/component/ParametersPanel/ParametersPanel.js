@@ -7,6 +7,7 @@ import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import Filtration from "../Filtration/Filtration";
 import Parameters from "../Parameters/Parameters";
+import Search from "../Search/Search";
 
 class ParametersPanel extends Component {
     static DEFAULT_LAYOUT = "grid";
@@ -81,11 +82,14 @@ class ParametersPanel extends Component {
                           extLocalStorage.setItem(AppStorage.PARAMETERS_ACTIVE_TAB, key);
                           this.forceUpdate();
                       }}>
-                    <Tab eventKey={"parameters"} title={t("parameters.caption")} className={"parameters-tab"}>
+                    <Tab eventKey={"parameters"} title={t("tab.parameters.caption")} className={"parameters-tab"}>
                         <Parameters hub={this.props.hub} elementsSupplier={this.props.elementsSupplier}/>
                     </Tab>
-                    <Tab eventKey={"filtration"} title={t("filtration.caption")} className={"filtration-tab"}>
-                        <Filtration hub={this.props.hub} tap={this.props.tap}/>
+                    <Tab eventKey={"filtration"} title={t("tab.filtration.caption")} className={"filtration-tab"}>
+                        <Filtration hub={this.props.hub}/>
+                    </Tab>
+                    <Tab eventKey={"search"} title={t("tab.search.caption")} className={"search-tab"}>
+                        <Search hub={this.props.hub} tap={this.props.tap}/>
                     </Tab>
                 </Tabs>
             </div>

@@ -39,4 +39,4 @@ _________
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
-* [ ] **(Optional)** Add search
+* [X] **(Optional)** Add search

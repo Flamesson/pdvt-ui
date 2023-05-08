@@ -1,13 +1,13 @@
-.node-info {
+.search-node-info {
     padding: 1ex;
 }
 
-.node-info:hover {
+.search-node-info:hover {
     margin-left: 1ex;
     border-radius: 1em;
     background-color: var(--widget-background-color);
 }
 
-.node-info:active {
+.search-node-info:active {
     color: white;
 }

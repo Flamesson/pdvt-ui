@@ -1,5 +1,4 @@
 import React, {Component} from "react";
-import NodeInfo from "../NodeInfo/NodeInfo";
 import Objects from "../../utils/Objects";
 import debounce from 'lodash.debounce';
 import memoize from 'lodash.memoize';
@@ -7,9 +6,12 @@ import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import Optional from "../../utils/Optional";
 import Strings from "../../utils/Strings";
-import logger from "../../utils/Logger";
 import AppEvents from "../../AppEvents";
 import {withTranslation} from "react-i18next";
+
+import "./Filtration.css";
+import FilterNodeInfo from "../FilterNodeInfo/FilterNodeInfo";
+import logger from "../../utils/Logger";
 
 class Filtration extends Component {
     constructor(props) {
@@ -21,7 +23,6 @@ class Filtration extends Component {
         this.updateFilter = this.updateFilter.bind(this);
         this.updateFilterFromField = this.updateFilterFromField.bind(this);
         this.updateFilter_ = this.updateFilter_.bind(this);
-        this.selectNode = this.selectNode.bind(this);
         this.getFilteredNodes = this.getFilteredNodes.bind(this);
     }
 
@@ -29,12 +30,7 @@ class Filtration extends Component {
         this.setState({
             filteredNodes: [],
         });
-        document.getElementById("parameters-search").value = this.getStoredFilterQuery();
-        if (extLocalStorage.isPresent(AppStorage.PARAMETERS_ACTIVE_TAB)) {
-            this.activeTab = extLocalStorage.getItem(AppStorage.PARAMETERS_ACTIVE_TAB);
-        } else {
-            this.activeTab = "parameters";
-        }
+        document.getElementById("parameters-filter").value = this.getStoredFilterQuery();
 
         this.props.hub.on(AppEvents.CY_UPDATE, cy => this.cy = cy);
         this.props.hub.once(AppEvents.CY_UPDATE, ignored => {this.updateFilter()});
@@ -54,29 +50,46 @@ class Filtration extends Component {
     }
 
     getFilterQuery(): undefined | String {
-        return document.getElementById('parameters-search').value;
+        return document.getElementById('parameters-filter').value;
     }
 
     updateFilter(): void {
         let filterQuery = this.getFilterQuery();
         Optional.ofNullable(filterQuery).ifPresent(query => {
-            this.updateFilter_(query);
+            if (Strings.isBlank(query)) {
+                this.updateFilter_(null);
+            } else {
+                this.updateFilter_(query);
+            }
         });
     }
 
     updateFilterFromField(): void {
-        let input = document.getElementById('parameters-search');
-        let results = document.getElementById('parameters-search-results');
+        let input = document.getElementById('parameters-filter');
+        let results = document.getElementById('parameters-filter-results');
         let queryString = input.value;
         extLocalStorage.setItem(AppStorage.FILTER_QUERY, queryString);
 
         results.scrollTo(0, 0);
 
-        this.updateFilter_(queryString);
+        if (Strings.isBlank(queryString)) {
+            this.updateFilter_(null);
+        } else {
+            this.updateFilter_(queryString);
+        }
     }
 
     updateFilter_(queryString): void {
         if (Objects.isNotCorrect(this.cy)) {
+            logger.warn("Failed to updateFilter_ cause cy is undefined");
+            return;
+        }
+
+        let nodes = this.cy.nodes();
+        if (Objects.isNotCorrect(queryString)) {
+            this.setState({
+                filteredNodes: nodes
+            });
             return;
         }
 
@@ -90,7 +103,6 @@ class Filtration extends Component {
             return Strings.countCommonLength(label, query);
         };
         let getNodeMetric = memoize(node => getMetric(node, normalizedQuery), node => node.id());
-        let nodes = this.cy.nodes();
         let filteredNodes = nodes
             .filter(node => {
                 return getNodeMetric(node) > 0;
@@ -110,15 +122,6 @@ class Filtration extends Component {
         });
     }
 
-    selectNode(node): void {
-        if (Objects.isNotCorrect(this.props.tap)) {
-            logger.warn("A field is undefined. The field - tap.");
-            return;
-        }
-
-        this.props.tap.onTapNode(node);
-    }
-
     getFilteredNodes(): Array {
         let state = this.state;
         if (Objects.isNotCorrect(state)) {
@@ -130,17 +133,17 @@ class Filtration extends Component {
 
     render() {
         let filterResult = this.getFilteredNodes().map(node => {
-            return <div key={node.id()} className={"parameter-node-info"} onClick={() => this.selectNode(node)}>
-                <NodeInfo node={node}/>
+            return <div key={node.id()} className={"parameter-node-info"}>
+                <FilterNodeInfo node={node}/>
             </div>
         });
 
         const t = this.props.t;
         return <div>
-            <input id={"parameters-search"} type={"text"} className={"parameters-search"}
+            <input id={"parameters-filter"} type={"text"} className={"parameters-filter"}
                    placeholder={t("placeholder.begin-input.message")}
                    onKeyDown={this.debouncedUpdateFilter}/>
-            <div id={"parameters-search-results"} className={"parameters-search-results"}>
+            <div id={"parameters-filter-results"} className={"parameters-filter-results"}>
                 { filterResult }
             </div>
         </div>;

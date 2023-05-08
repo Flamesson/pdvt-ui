@@ -1,4 +1,4 @@
-.parameters-filter {
+.parameters-search {
     border-radius: 1em;
     border: 0;
     outline: 0;
@@ -13,6 +13,6 @@
     -webkit-appearance: none;
 }
 
-.parameters-filter-results {
+.parameters-search-results {
     margin-top: 2ex;
 }
