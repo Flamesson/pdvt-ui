@@ -11,6 +11,11 @@ import Objects from "../../utils/Objects";
 import Strings from "../../utils/Strings";
 import Buttons from "../../utils/Buttons";
 import AppStorage from "../../AppStorage";
+import {ReactNode} from "react";
+import DataManager from "../../datamanager/DataManager";
+import InputSource from "../../datamanager/InputSource";
+import CurrentInputSource from "../CurrentInputSource/CurrentInputSource";
+import AppEvents from "../../AppEvents";
 
 class Data extends Component {
     static MOCK_TEXT_DATA = "[unversioned][1]\n" +
@@ -53,6 +58,8 @@ class Data extends Component {
 
         const t = this.props.t;
         toast.success(t('apply-text.success.toast'));
+
+        this.props.hub.emit(AppEvents.INPUT_CHANGED);
     }
 
     generateText(ignored) {
@@ -65,6 +72,8 @@ class Data extends Component {
 
         const t = this.props.t;
         toast.success(t('clear-text.success.toast'));
+
+        this.props.hub.emit(AppEvents.INPUT_CHANGED);
     }
 
     setText(value) {
@@ -93,25 +102,26 @@ class Data extends Component {
 
     render() {
         const t = this.props.t;
-        return (
+        return <div>
+            <CurrentInputSource hub={this.props.hub}/>
             <div className={"types-container"}>
                 <div className={"input-data-type"}>
                     <div className={"text-area-zone"}>
                         <div className={"text-area-zone-internal"}>
                             <h3>{t('h3.simple-input-data.caption')}</h3>
-                            <textarea id={this.textAreaId} placeholder={t('textarea.input-data.placeholder')}
-                                      onChange={this.onTextChange}/>
                             <ButtonGroup>
                                 <Button id={"apply-text-button"} variant={"outline-secondary"} onClick={this.applyText}>
                                     {t('button.apply.caption')}
                                 </Button>
                                 <Button variant={"outline-secondary"} onClick={this.generateText}>
-                                    {t('button.generate.caption')}
+                                    {t('button.sample.caption')}
                                 </Button>
                                 <Button id={"clear-text-button"} variant={"outline-danger"} onClick={this.clearText}>
                                     {t('button.clear.caption')}
                                 </Button>
                             </ButtonGroup>
+                            <textarea id={this.textAreaId} placeholder={t('textarea.input-data.placeholder')}
+                                      onChange={this.onTextChange}/>
                         </div>
                     </div>
                 </div>
@@ -124,7 +134,7 @@ class Data extends Component {
                     </div>
                 </div>
             </div>
-        );
+        </div>;
     }
 }
 

@@ -3,7 +3,7 @@
   "menu-item.data": "Data",
   "menu-item.help": "Help",
   "button.apply.caption": "Apply",
-  "button.generate.caption": "Generate",
+  "button.sample.caption": "Sample",
   "button.clear.caption": "Clear",
   "button.upload.caption": "Upload",
   "button.delete.caption": "Delete",
@@ -54,5 +54,8 @@
   "parameter.general.label-max-width.caption": "Maximum caption width, pixels",
   "parameter.general.label-font-size.caption": "Label text size, pixels",
   "parameter.general.label-font-color.caption": "Label Text Color",
-  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Hide unconnected nodes"
+  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Hide unconnected nodes",
+  "input-source.file.message": "Uploaded file will be used for graph",
+  "input-source.text.message": "The data from the simple input field will be used for the graph",
+  "input-source.nothing.message": "No input"
 }

@@ -3,17 +3,31 @@ import AbstractParser from "../parser/AbstractParser";
 import ParserFactory from "../parser/ParserFactory";
 import Elements from "../cytoscape/Elements";
 import AppStorage from "../AppStorage";
+import InputSource from "./InputSource";
 
 class DataManager {
-    getElements(): Promise<Elements> {
+    getUsedInputSource(): InputSource {
         if (extLocalStorage.isPresent(AppStorage.DATA_TEXT)) {
-            return this.getTextDataElements();
+            return InputSource.PLAIN_TEXT
         } else if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
-            return this.getFileElements();
+            return InputSource.FILE;
         } else {
+            return InputSource.NOTHING;
+        }
+    }
+
+    getElements(): Promise<Elements> {
+        let inputSource = this.getUsedInputSource();
+        if (inputSource === InputSource.PLAIN_TEXT) {
+            return this.getTextDataElements();
+        } else if (inputSource === InputSource.FILE) {
+            return this.getFileElements();
+        } else if (inputSource === InputSource.NOTHING) {
             return new Promise((resolve, reject) => {
                 resolve(new Elements());
             });
+        } else {
+            throw new Error("Unknown input source will be used");
         }
     }
 

@@ -16,7 +16,7 @@ _________
 * [ ] Add highlighting for dangerous-license components (add license info input).
 * [ ] Add highlighting for circular dependencies.
 * [X] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
-* [ ] Update data visualization - show current source in UI.
+* [X] Update data visualization - show current source in UI.
 * [ ] Create React-plugin for generation pdvt-file.
 * [X] Remember input settings in storage.
 * [ ] Add flexible context system for links, nodes. (f.e. - show as different api, implementation, runtime dependencies Gradle types)

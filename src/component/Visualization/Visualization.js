@@ -3,7 +3,7 @@ import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from 'cytoscape';
 import Objects from "../../utils/Objects";
 import Elements from "../../cytoscape/Elements";
-import DataManager from "../../service/DataManager";
+import DataManager from "../../datamanager/DataManager";
 import COSEBilkent from "cytoscape-cose-bilkent";
 import {withTranslation} from "react-i18next";
 import ParametersPanel from "../ParametersPanel/ParametersPanel";

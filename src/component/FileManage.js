@@ -7,6 +7,7 @@ import {toast} from "react-toastify";
 import Buttons from "../utils/Buttons";
 import Strings from "../utils/Strings";
 import AppStorage from "../AppStorage";
+import AppEvents from "../AppEvents";
 
 class FileManage extends Component {
     constructor(props) {
@@ -25,10 +26,12 @@ class FileManage extends Component {
             let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
             this.setState({
                 file: file
+            }, () => {
+                this.updateRemoveFileButtonState();
             });
+        } else {
+            this.updateRemoveFileButtonState();
         }
-
-        this.updateRemoveFileButtonState();
     }
 
     uploadFile(ignored) {
@@ -51,6 +54,8 @@ class FileManage extends Component {
             ));
 
             this.updateRemoveFileButtonState();
+
+            this.props.hub.emit(AppEvents.INPUT_CHANGED);
         });
     }
 
@@ -62,6 +67,7 @@ class FileManage extends Component {
         let file = e.target.files[0];
         extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
             this.updateRemoveFileButtonState();
+            this.props.hub.emit(AppEvents.INPUT_CHANGED);
         });
         this.setState({
             file: file
@@ -87,8 +93,6 @@ class FileManage extends Component {
         const t = this.props.t;
         return (
             <div>
-                { file == null && <p>{t('p.nothing-is-upload.caption')}</p> }
-                { file != null && <p>{t('p.uploaded-file.caption')} {file.name}</p> }
                 <ButtonGroup>
                     <Button variant={"outline-secondary"} onClick={this.uploadFile}>
                         {t('button.upload.caption')}
@@ -97,6 +101,8 @@ class FileManage extends Component {
                         {t('button.delete.caption')}
                     </Button>
                 </ButtonGroup>
+                { file == null && <p>{t('p.nothing-is-upload.caption')}</p> }
+                { file != null && <p>{t('p.uploaded-file.caption')} {file.name}</p> }
                 <input id={"graph-file"} type="file" onChange={this.handleFileChange} accept={".txt, .pdvt"}
                        onInput={(e) => {
                            let file: File = e.target.files[0];

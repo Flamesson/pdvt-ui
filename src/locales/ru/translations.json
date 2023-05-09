@@ -3,7 +3,7 @@
   "menu-item.data": "Данные",
   "menu-item.help": "Помощь",
   "button.apply.caption": "Применить",
-  "button.generate.caption": "Сгенерировать",
+  "button.sample.caption": "Пример",
   "button.clear.caption": "Очистить",
   "button.upload.caption": "Загрузить",
   "button.delete.caption": "Удалить",
@@ -54,5 +54,8 @@
   "parameter.general.label-max-width.caption": "Максимальная ширина надписи, пикселей",
   "parameter.general.label-font-size.caption": "Размер текста надписи, пикселей",
   "parameter.general.label-font-color.caption": "Цвет текста надписи",
-  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Спрятать несвязанные узлы"
+  "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Спрятать несвязанные узлы",
+  "input-source.file.message": "Для графа будет использован загруженный файл",
+  "input-source.text.message": "Для графа будут использованы данные из поля простого ввода",
+  "input-source.nothing.message": "Введенных данных нет"
 }

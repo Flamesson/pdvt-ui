@@ -71,6 +71,10 @@ class ExtLocalStorage {
         return base64.decode(raw, filename);
     }
 
+    getFileName(key: String): String {
+        return localStorage.getItem(key + "_name");
+    }
+
     subscribeOnChange(key: String, listener: Function): void {
         this.hub.on(key, listener);
     }
