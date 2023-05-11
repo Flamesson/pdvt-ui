@@ -11,9 +11,6 @@ import Objects from "../../utils/Objects";
 import Strings from "../../utils/Strings";
 import Buttons from "../../utils/Buttons";
 import AppStorage from "../../AppStorage";
-import {ReactNode} from "react";
-import DataManager from "../../datamanager/DataManager";
-import InputSource from "../../datamanager/InputSource";
 import CurrentInputSource from "../CurrentInputSource/CurrentInputSource";
 import AppEvents from "../../AppEvents";
 
@@ -26,7 +23,7 @@ class Data extends Component {
         "org.springframework.ioc=d;\n" +
         "[mappings]\n" +
         "a->b;b->c;\n" +
-        "a->c;\n";
+        "a->c;c->b;\n";
 
     constructor(props) {
         super(props);
@@ -53,7 +50,6 @@ class Data extends Component {
 
     applyText(ignored) {
         let content = document.getElementById(this.textAreaId).value;
-        extLocalStorage.removeFile(AppStorage.DATA_FILE);
         extLocalStorage.setItem(AppStorage.DATA_TEXT, content);
 
         const t = this.props.t;

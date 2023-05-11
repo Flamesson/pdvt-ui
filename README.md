@@ -36,7 +36,7 @@ _________
     * [X] Labels text size;
 * [ ] Add deployment.
 * [ ] Fill help.
-* [ ] File is deleted when clear text-area.
+* [X] File is deleted when clear text-area.
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
