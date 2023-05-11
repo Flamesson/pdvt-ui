@@ -58,5 +58,6 @@
   "parameter.graph.toggle-circular-dependencies-highlighting.caption": "Highlight circular dependencies",
   "input-source.file.message": "Uploaded file will be used for graph",
   "input-source.text.message": "The data from the simple input field will be used for the graph",
-  "input-source.nothing.message": "No input"
+  "input-source.nothing.message": "No input",
+  "info.text-input-filled.message": "Added test data to the text field (\"Data\" tab) to display in the graph"
 }

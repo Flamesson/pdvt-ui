@@ -7,11 +7,11 @@ class PathSource {
     getPath(localeCode: String): * {
         if (Objects.isNotCorrect(localeCode)) {
             return undefined;
-        } else if (localeCode === "ru") {
+        } else if (localeCode.includes("ru")) {
             return ruFlag;
-        } else if (localeCode === "en") {
+        } else if (localeCode.includes("en")) {
             return brFlag;
-        } else if (localeCode === "zh") {
+        } else if (localeCode.includes("zh")) {
             return zhFlag;
         }
     }

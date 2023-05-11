@@ -16,7 +16,7 @@ class Params {
             new SpacingFactor("parameter.spacingFactor.caption", "spacingFactor",
                 5,
                 (elements: Elements) => {
-                    return elements.countMostTargetNode() / 2;
+                    return elements.nodes.length === 0 ? 1 : (elements.countMostTargetNode() / 2);
                 }
             ),
             new CheckboxParameter("parameter.avoid-overlap.caption", "avoidOverlap", true),
@@ -28,7 +28,7 @@ class Params {
             new SpacingFactor("parameter.spacingFactor.caption", "spacingFactor",
                 5,
                 (elements: Elements) => {
-                    return elements.countMostTargetNode() / 2;
+                    return elements.nodes.length === 0 ? 1 : (elements.countMostTargetNode() / 2);
                 }
             ),
             new CheckboxParameter("parameter.avoid-overlap.caption", "avoidOverlap", true),
@@ -43,7 +43,7 @@ class Params {
             new SpacingFactor("parameter.spacingFactor.caption", "spacingFactor",
                 5,
                 (elements: Elements) => {
-                    return elements.countMostTargetNode() / 2;
+                    return elements.nodes.length === 0 ? 1 : (elements.countMostTargetNode() / 2);
                 }
             ),
             new CheckboxParameter("parameter.avoid-overlap.caption", "avoidOverlap", true),

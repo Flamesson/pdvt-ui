@@ -11,6 +11,7 @@ import Objects from "../../utils/Objects";
 import memoize from "lodash.memoize";
 import logger from "../../utils/Logger";
 import {withTranslation} from "react-i18next";
+import Strings from "../../utils/Strings";
 
 const minMetricValue = 0.25;
 const minSimilarityValue = 0;
@@ -53,7 +54,7 @@ class Search extends Component {
 
     getStoredSearchQuery(): undefined | String {
         if (extLocalStorage.isAbsent(AppStorage.SEARCH_QUERY)) {
-            return undefined;
+            return Strings.EMPTY;
         }
 
         return extLocalStorage.getItem(AppStorage.SEARCH_QUERY);

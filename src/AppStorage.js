@@ -12,6 +12,17 @@ class AppStorage {
     static GENERAL_PARAMETERS = "general parameters";
     static PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY = "toggle unlinked nodes visibility";
     static PARAMETER_TOGGLE_CIRCULAR_DEPENDENCIES_HIGHLIGHTING = "toggle circular dependencies highlighting";
+    static FIRST_OPEN = "first open";
+
+    static MOCK_TEXT_DATA = "[unversioned][1]\n" +
+        "[dictionary]\n" +
+        "org.izumi.sample=a;\n" +
+        "org.izumi.sample2=b;\n" +
+        "org.springframework.core=c;\n" +
+        "org.springframework.ioc=d;\n" +
+        "[mappings]\n" +
+        "a->b;b->c;\n" +
+        "a->c;c->b;\n";
 }
 
 export default AppStorage;

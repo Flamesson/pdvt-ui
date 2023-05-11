@@ -5,7 +5,7 @@ import {Tab, Tabs} from "react-bootstrap";
 import "./ParametersPanel.css";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
-import Filtration from "../Filtration/Filtration";
+import Filtration from "../Filter/Filter";
 import Parameters from "../Parameters/Parameters";
 import Search from "../Search/Search";
 

@@ -58,5 +58,6 @@
   "parameter.graph.toggle-circular-dependencies-highlighting.caption": "突出显示循环依赖",
   "input-source.file.message": "上传的文件将用于图表",
   "input-source.text.message": "来自简单输入字段的数据将用于图表",
-  "input-source.nothing.message": "无输入"
+  "input-source.nothing.message": "无输入",
+  "info.text-input-filled.message": "将测试数据添加到文本字段（“数据”选项卡）以显示在图表中"
 }

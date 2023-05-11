@@ -9,11 +9,11 @@ import Strings from "../../utils/Strings";
 import AppEvents from "../../AppEvents";
 import {withTranslation} from "react-i18next";
 
-import "./Filtration.css";
+import "./Filter.css";
 import FilterNodeInfo from "../FilterNodeInfo/FilterNodeInfo";
 import logger from "../../utils/Logger";
 
-class Filtration extends Component {
+class Filter extends Component {
     constructor(props) {
         super(props);
 
@@ -43,7 +43,7 @@ class Filtration extends Component {
 
     getStoredFilterQuery(): undefined | String {
         if (extLocalStorage.isAbsent(AppStorage.FILTER_QUERY)) {
-            return undefined;
+            return Strings.EMPTY;
         }
 
         return extLocalStorage.getItem(AppStorage.FILTER_QUERY);
@@ -87,6 +87,9 @@ class Filtration extends Component {
 
         let nodes = this.cy.nodes();
         if (Objects.isNotCorrect(queryString)) {
+            this.cy.batch(() => {
+                nodes.removeClass('hidden');
+            });
             this.setState({
                 filteredNodes: nodes
             });
@@ -150,4 +153,4 @@ class Filtration extends Component {
     }
 }
 
-export default withTranslation()(Filtration);
+export default withTranslation()(Filter);

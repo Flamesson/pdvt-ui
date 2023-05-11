@@ -37,10 +37,12 @@ _________
 * [ ] Add deployment.
 * [ ] Fill help.
 * [X] File is deleted when clear text-area.
+* [ ] Add info about nodes and edges number.
+* [ ] Node selection may work incorrect with filter and search.
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
 * [X] **(Optional)** Add search
-* [] **(Optional)** When first open app flag in left corner is not displayed. 
-* [] **(Optional)** Add sample data and show toast about that for first-open app.
-* [] **(Optional)** Filter and search queries are undefined on app first-open.
+* [X] **(Optional)** When first open app flag in left corner is not displayed. 
+* [X] **(Optional)** Add sample data and show toast about that for first-open app.
+* [X] **(Optional)** Filter and search queries are undefined on app first-open.

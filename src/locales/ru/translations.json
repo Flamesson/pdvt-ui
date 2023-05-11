@@ -58,5 +58,6 @@
   "parameter.graph.toggle-circular-dependencies-highlighting.caption": "Выделить циклические зависимости",
   "input-source.file.message": "Для графа будет использован загруженный файл",
   "input-source.text.message": "Для графа будут использованы данные из поля простого ввода",
-  "input-source.nothing.message": "Введенных данных нет"
+  "input-source.nothing.message": "Введенных данных нет",
+  "info.text-input-filled.message": "В текстовое поле (вкладка \"Данные\") добавлены тестовые данные для отображения в графе"
 }

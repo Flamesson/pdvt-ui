@@ -2,6 +2,7 @@ import Objects from "./Objects";
 
 class Strings {
     static FORMAT_KEYWORD = "{}";
+    static EMPTY = "";
 
     static isBlank(string: String) {
         if (Objects.isNotCorrect(string)) {

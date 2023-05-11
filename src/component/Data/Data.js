@@ -15,16 +15,6 @@ import CurrentInputSource from "../CurrentInputSource/CurrentInputSource";
 import AppEvents from "../../AppEvents";
 
 class Data extends Component {
-    static MOCK_TEXT_DATA = "[unversioned][1]\n" +
-        "[dictionary]\n" +
-        "org.izumi.sample=a;\n" +
-        "org.izumi.sample2=b;\n" +
-        "org.springframework.core=c;\n" +
-        "org.springframework.ioc=d;\n" +
-        "[mappings]\n" +
-        "a->b;b->c;\n" +
-        "a->c;c->b;\n";
-
     constructor(props) {
         super(props);
 
@@ -59,7 +49,7 @@ class Data extends Component {
     }
 
     generateText(ignored) {
-        this.setText(Data.MOCK_TEXT_DATA);
+        this.setText(AppStorage.MOCK_TEXT_DATA);
     }
 
     clearText(ignored) {
