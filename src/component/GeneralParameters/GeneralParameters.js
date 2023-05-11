@@ -9,6 +9,7 @@ class GeneralParameters extends Component {
         super(props);
 
         this.reset = this.reset.bind(this);
+        this.fireCyStyleChanged = this.fireCyStyleChanged.bind(this);
         this.onNodeColorChange = this.onNodeColorChange.bind(this);
         this.onNodeBorderColorChange = this.onNodeBorderColorChange.bind(this);
         this.onNodeSizeChange = this.onNodeSizeChange.bind(this);
@@ -17,6 +18,7 @@ class GeneralParameters extends Component {
         this.onLabelColorChange = this.onLabelColorChange.bind(this);
         this.onLabelMaxWidthChange = this.onLabelMaxWidthChange.bind(this);
         this.onLabelFontSizeChange = this.onLabelFontSizeChange.bind(this);
+        this.onCircularColorChange = this.onCircularColorChange.bind(this);
     }
 
     reset(): void {
@@ -30,47 +32,57 @@ class GeneralParameters extends Component {
         document.getElementById("label-max-width-input").value = style.labelMaxWidth;
         document.getElementById("label-font-size-input").value = style.labelFontSize;
         document.getElementById("label-color-input").value = style.labelColor;
+        document.getElementById("circular-color-input").value = style.circularColor;
         this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, style);
+    }
+
+    fireCyStyleChanged(): void {
+        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
     }
 
     onNodeColorChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setNodeColor(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onNodeBorderColorChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setNodeBorderColor(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onNodeSizeChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setNodeSize(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onEdgeColorChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setEdgeColor(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onEdgeWidthChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setEdgeWidth(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onLabelColorChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setLabelColor(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onLabelMaxWidthChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setLabelMaxWidth(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
     }
 
     onLabelFontSizeChange(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.setLabelFontSize(event.target.value);
-        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+        this.fireCyStyleChanged();
+    }
+
+    onCircularColorChange(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.setCircularColor(event.target.value);
+        this.fireCyStyleChanged();
     }
 
     render() {
@@ -132,6 +144,13 @@ class GeneralParameters extends Component {
                        type={"color"}
                        defaultValue={this.props.cyStyle.labelColor}
                        onChange={this.onLabelColorChange}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>Цвет циклических зависимостей:</label>
+                <input id={"circular-color-input"}
+                       type={"color"}
+                       defaultValue={this.props.cyStyle.circularColor}
+                       onChange={this.onCircularColorChange}/>
             </div>
 
             <div className={"full-width-container flex-horizontal-center-center margin-top-10px"}>

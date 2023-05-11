@@ -1,6 +1,6 @@
-import type CyStyle from "./CyStyle";
+import type CyStyle from "../component/Visualization/CyStyle";
 
-class Style {
+class Stylesheet {
     constructor(cyStyle: CyStyle) {
         this.cyStyle = cyStyle;
     }
@@ -87,9 +87,15 @@ class Style {
                 style: {
                     "display": "none"
                 }
+            },
+            {
+                selector: "node.circular",
+                style: {
+                    'background-color': this.cyStyle.circularColor
+                }
             }
         ];
     }
 }
 
-export default Style;
+export default Stylesheet;

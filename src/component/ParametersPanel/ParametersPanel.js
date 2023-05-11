@@ -74,7 +74,7 @@ class ParametersPanel extends Component {
         const t = this.props.t;
         return <div className={"parameters-panel"}>
             <div className={"parameters-toggle" + (open ? " parameters-open" : "")} onClick={this.toggle}/>
-            <div className={"parameters" + (!open ? " parameters-closed" : "")}>
+            <div className={"parameters vertical-scrollable" + (!open ? " parameters-closed" : "")}>
                 <Tabs activeKey={this.getActiveKey()}
                       defaultActiveKey={"parameters"}
                       onSelect={(key) => {

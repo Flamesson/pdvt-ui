@@ -13,8 +13,7 @@
     width: 25%;
     min-width: 300px;
     max-width: 100vw;
-    min-height: 100%;
-    height: fit-content;
+    height: 100%;
 
     position: absolute;
     right: 0;

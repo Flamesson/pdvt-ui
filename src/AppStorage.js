@@ -11,6 +11,7 @@ class AppStorage {
     static SEARCH_QUERY = "search query";
     static GENERAL_PARAMETERS = "general parameters";
     static PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY = "toggle unlinked nodes visibility";
+    static PARAMETER_TOGGLE_CIRCULAR_DEPENDENCIES_HIGHLIGHTING = "toggle circular dependencies highlighting";
 }
 
 export default AppStorage;

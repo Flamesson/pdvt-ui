@@ -9,6 +9,7 @@ class CyStyle {
     static DEFAULT_LABEL_COLOR = "#0000ff";
     static DEFAULT_LABEL_MAX_WIDTH = 100;
     static DEFAULT_LABEL_FONT_SIZE = 12;
+    static DEFAULT_CIRCULAR_COLOR = "#ff0000";
 
     constructor(nodeColor: String,
                 nodeBorderColor: String,
@@ -17,7 +18,8 @@ class CyStyle {
                 edgeWidth: Number,
                 labelColor: String,
                 labelMaxWidth: Number,
-                labelFontSize: Number) {
+                labelFontSize: Number,
+                circularColor: String) {
 
         if (Objects.isNotCorrect(nodeColor)) {
             this.nodeColor = CyStyle.DEFAULT_NODE_COLOR;
@@ -59,6 +61,11 @@ class CyStyle {
         } else {
             this.labelFontSize = labelFontSize;
         }
+        if (Objects.isNotCorrect(circularColor)) {
+            this.circularColor = CyStyle.DEFAULT_CIRCULAR_COLOR;
+        } else {
+            this.circularColor = circularColor;
+        }
     }
 
     reset(): CyStyle {
@@ -70,7 +77,8 @@ class CyStyle {
             .resetEdgeWidth()
             .resetLabelColor()
             .resetLabelMaxWidth()
-            .resetLabelFontSize();
+            .resetLabelFontSize()
+            .resetCircularColor();
     }
 
     setNodeColor(nodeColor: String): void {
@@ -239,6 +247,27 @@ class CyStyle {
 
     resetLabelFontSize(): CyStyle {
         return this.withLabelFontSize(CyStyle.DEFAULT_LABEL_FONT_SIZE);
+    }
+
+    setCircularColor(circularColor: String): void {
+        this.circularColor = circularColor;
+    }
+
+    withCircularColor(circularColor: String): CyStyle {
+        this.setCircularColor(circularColor);
+        return this;
+    }
+
+    withCircularColorIfValid(circularColor: String): CyStyle {
+        if (Objects.isNotCorrect(circularColor)) {
+            return this;
+        }
+
+        return this.withCircularColor(circularColor);
+    }
+
+    resetCircularColor(): CyStyle {
+        return this.withCircularColor(CyStyle.DEFAULT_CIRCULAR_COLOR);
     }
 }
 

@@ -55,6 +55,7 @@
   "parameter.general.label-font-size.caption": "标签文字大小，像素",
   "parameter.general.label-font-color.caption": "标签文字颜色",
   "parameter.graph.toggle-unlinked-nodes-visibility.caption": "隐藏未连接的节点",
+  "parameter.graph.toggle-circular-dependencies-highlighting.caption": "突出显示循环依赖",
   "input-source.file.message": "上传的文件将用于图表",
   "input-source.text.message": "来自简单输入字段的数据将用于图表",
   "input-source.nothing.message": "无输入"

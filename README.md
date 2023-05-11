@@ -14,7 +14,7 @@ _________
 ## Checklist
 * [ ] Add highlighting for most long path in graph (allow to configure the start node, by default - most depended node).
 * [ ] Add highlighting for dangerous-license components (add license info input).
-* [ ] Add highlighting for circular dependencies.
+* [X] Add highlighting for circular dependencies.
 * [X] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
 * [X] Update data visualization - show current source in UI.
 * [ ] Create React-plugin for generation pdvt-file.
@@ -36,7 +36,11 @@ _________
     * [X] Labels text size;
 * [ ] Add deployment.
 * [ ] Fill help.
+* [ ] File is deleted when clear text-area.
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
 * [X] **(Optional)** Add search
+* [] **(Optional)** When first open app flag in left corner is not displayed. 
+* [] **(Optional)** Add sample data and show toast about that for first-open app.
+* [] **(Optional)** Filter and search queries are undefined on app first-open.

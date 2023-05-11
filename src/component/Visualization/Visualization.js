@@ -11,7 +11,7 @@ import Controller from "./Controller";
 import logger from "../../utils/Logger";
 import Tap from "./Tap";
 import AppEvents from "../../AppEvents";
-import Style from "./Style";
+import Stylesheet from "../../cytoscape/Stylesheet";
 
 import "./Visualization.css";
 import CyStyle from "./CyStyle";
@@ -86,7 +86,8 @@ class Visualization extends Component {
             .withEdgeWidthIfValid(stored.edgeWidth)
             .withLabelColorIfValid(stored.labelColor)
             .withLabelMaxWidthIfValid(stored.labelMaxWidth)
-            .withLabelFontSizeIfValid(stored.labelFontSize);
+            .withLabelFontSizeIfValid(stored.labelFontSize)
+            .withCircularColor(stored.circularColor);
     }
 
     saveCyStyle(): void {
@@ -148,7 +149,7 @@ class Visualization extends Component {
         return <div className={"visualization-container"}>
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
-                                stylesheet={new Style(this.cyStyle).get()}
+                                stylesheet={new Stylesheet(this.cyStyle).get()}
                                 cy={cy => this.emit(AppEvents.CY_UPDATE, cy)}/>
             <ParametersPanel hub={this.props.hub}
                              controller={this.controller}
