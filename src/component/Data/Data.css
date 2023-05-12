@@ -1,18 +1,17 @@
 .types-container {
-    height: 100%;
+    width: 100%;
 
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+}
 
-    border-top: 1px solid black;
+.types-container .gutter {
+    box-shadow: inset 0 0.125em 0.25em #000;
+    background-color: var(--secondary);
 }
 
 .input-data-type {
-    width: 50%;
-    height: 100%;
-
-    border-right: 1px solid black;
 }
 
 .input-data-type .text-area-zone-internal {

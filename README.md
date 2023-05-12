@@ -37,8 +37,9 @@ _________
 * [ ] Add deployment.
 * [ ] Fill help.
 * [X] File is deleted when clear text-area.
-* [ ] Add info about nodes and edges number.
+* [X] Add info about nodes and edges number.
 * [ ] Node selection may work incorrect with filter and search.
+* [ ] Add 'circular' class for nodes only once, when parameter is toggled - just add another style (f.e. 'circular.active').
 * [ ] **(Optional)** Add users (+ backend).
 * [ ] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.

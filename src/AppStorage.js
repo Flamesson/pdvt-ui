@@ -7,6 +7,8 @@ class AppStorage {
     static CURRENT_LOCALE_CODE = "i18nextLng";
     static FILTER_QUERY = "filter query";
     static PARAMETERS_OPENED = "parameters opened";
+    static INFO_OPENED = "info opened";
+    static HEADER_OPENED = "header opened";
     static PARAMETERS_ACTIVE_TAB = "parameters active tab";
     static SEARCH_QUERY = "search query";
     static GENERAL_PARAMETERS = "general parameters";

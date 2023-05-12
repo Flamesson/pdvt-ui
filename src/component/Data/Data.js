@@ -1,7 +1,7 @@
 import React, {Component} from "react";
+import "./Data.css";
 
 import { withTranslation } from 'react-i18next';
-import "./Data.css";
 import FileManage from "../FileManage";
 import {Button, ButtonGroup} from "react-bootstrap";
 import extLocalStorage from "../../utils/ext.local.storage";
@@ -13,6 +13,7 @@ import Buttons from "../../utils/Buttons";
 import AppStorage from "../../AppStorage";
 import CurrentInputSource from "../CurrentInputSource/CurrentInputSource";
 import AppEvents from "../../AppEvents";
+import Split from "react-split";
 
 class Data extends Component {
     constructor(props) {
@@ -90,7 +91,13 @@ class Data extends Component {
         const t = this.props.t;
         return <div>
             <CurrentInputSource hub={this.props.hub}/>
-            <div className={"types-container"}>
+            <Split className={"types-container"}
+                   sizes={[50, 50]}
+                   minSize={[400, 200]}
+                   direction={"horizontal"}
+                   gutterSize={25}
+                   gutterAlign={"center"}
+                   cursor={"col-resize"}>
                 <div className={"input-data-type"}>
                     <div className={"text-area-zone"}>
                         <div className={"text-area-zone-internal"}>
@@ -119,7 +126,7 @@ class Data extends Component {
                         </div>
                     </div>
                 </div>
-            </div>
+            </Split>
         </div>;
     }
 }

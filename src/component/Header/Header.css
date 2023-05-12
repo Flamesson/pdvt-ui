@@ -9,3 +9,30 @@
 
     background-color: var(--header);
 }
+
+.header-container .toggle {
+    top: 0;
+    right: 3em;
+
+    z-index: 10;
+
+    background-image: url('../../icons/chevron-left-white.svg');
+    background-color: var(--header);
+    rotate: 270deg;
+}
+
+.header-container .toggle.open {
+    margin: 0.2em 0.125em;
+    rotate: 90deg;
+}
+
+.header-container .toggle:hover {
+    background-image: url('../../icons/chevron-left-highlight.svg');
+}
+
+#header.closed {
+    display: none;
+    transform: translate3d(25%, 0, 0);
+    opacity: 0;
+    pointer-events: none;
+}

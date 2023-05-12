@@ -17,6 +17,7 @@ import "./Visualization.css";
 import CyStyle from "./CyStyle";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
+import InfoPanel from "../InfoPanel/InfoPanel";
 
 Cytoscape.use(COSEBilkent);
 
@@ -129,7 +130,7 @@ class Visualization extends Component {
         this.setState({
             elements: elements
         }, () => {
-            this.props.hub.emit(AppEvents.ELEMENTS_UPDATE);
+            this.props.hub.emit(AppEvents.ELEMENTS_UPDATE, elements);
         });
     }
 
@@ -147,6 +148,7 @@ class Visualization extends Component {
         let normalized = elements.toNormalizedJson();
 
         return <div className={"visualization-container"}>
+            <InfoPanel hub={this.props.hub}/>
             <CytoscapeComponent className={"graph-container"}
                                 elements={normalized}
                                 stylesheet={new Stylesheet(this.cyStyle).get()}

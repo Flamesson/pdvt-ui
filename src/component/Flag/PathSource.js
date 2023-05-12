@@ -1,7 +1,7 @@
 import Objects from "../../utils/Objects";
-import ruFlag from "./russian_flag.png";
-import brFlag from "./british_flag.png";
-import zhFlag from "./chinese_flag.png";
+import ruFlag from "../../icons/russian_flag.png";
+import brFlag from "../../icons/british_flag.png";
+import zhFlag from "../../icons/chinese_flag.png";
 
 class PathSource {
     getPath(localeCode: String): * {

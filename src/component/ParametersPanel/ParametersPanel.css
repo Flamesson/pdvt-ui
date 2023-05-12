@@ -20,8 +20,10 @@
     top: 0;
     bottom: 0;
     background: var(--panel-background-color);
+
     box-shadow: 0 0 1em #000;
     z-index: 10;
+
     transition-duration: 250ms;
     transition-timing-function: ease-out;
     transition-property: transform, opacity;
@@ -42,28 +44,11 @@
     pointer-events: none;
 }
 
-.parameters-toggle {
-    position: absolute;
+.parameters-panel .toggle {
     right: 0;
     top: 0;
-    margin: 0.2em 0.125em;
-    width: 2.5em;
-    height: 2.5em;
-    background-image: url('./toggle-icon.svg');
-    background-size: 60% 60%;
-    background-position: 50% 50%;
-    background-repeat: no-repeat;
-    z-index: 11;
-    cursor: pointer;
-    border-radius: 0.25em;
-    background-color: transparent;
-    transition-duration: 250ms;
-    transition-timing-function: ease-out;
-    transition-property: background-color;
-}
 
-.parameters-toggle.parameters-open {
-    background-color: transparent;
+    background-image: url('../../icons/toggle-icon.svg');
 }
 
 .parameters .nav-link.active {

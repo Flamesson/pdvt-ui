@@ -1,0 +1,54 @@
+#info-panel-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    min-height: 10ex;
+    height: 10%;
+}
+
+.info {
+    width: 20ex;
+    height: 15ex;
+
+    position: absolute;
+    left: 0;
+    bottom: -15.6ex;
+    background: var(--panel-background-color);
+
+    box-shadow: 0 0 1em #000;
+    z-index: 10;
+
+    transition-duration: 250ms;
+    transition-timing-function: ease-out;
+    transition-property: transform, opacity;
+    transform: translate3d(0, 0, 0);
+    opacity: 1;
+
+    padding: 1ex;
+    color: var(--menu-text);
+}
+
+.info.closed {
+    transform: translate3d(25%, 0, 0);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#info-panel .toggle {
+    left: 0;
+    bottom: -3em;
+
+    background-image: url('../../icons/chevron-left-white.svg');
+    background-color: var(--panel-background-color);
+    rotate: 180deg;
+}
+
+#info-panel .toggle.open {
+    margin: 0.2em -0.125em;
+    rotate: none;
+}
+
+#info-panel .toggle:hover {
+    background-image: url('../../icons/chevron-left-highlight.svg');
+}

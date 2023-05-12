@@ -77,3 +77,23 @@ h1, h2, h3, h4, h5, h6 {
   min-width: fit-content;
   width: 100%;
 }
+
+.toggle {
+  position: absolute;
+
+  margin: 0.2em 0.125em;
+  width: 2.5em;
+  height: 2.5em;
+
+  background-size: 60% 60%;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+
+  z-index: 11;
+  cursor: pointer;
+  border-radius: 0.25em;
+  transition-duration: 250ms;
+  transition-timing-function: ease-out;
+  transition-property: background-color;
+}
+

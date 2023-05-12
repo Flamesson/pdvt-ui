@@ -11,6 +11,10 @@
     max-height: 48px;
 }
 
+#export-dropdown button:hover {
+    box-shadow: inset 0 0.125em 0.25em #000;
+}
+
 #export-dropdown .dropdown-toggle {
     background-color: rgba(0, 0, 0, 0);
     border-color: rgba(0, 0, 0, 0);
