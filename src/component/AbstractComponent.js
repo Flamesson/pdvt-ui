@@ -1,4 +1,4 @@
-import React, {Component} from "react";
+import {Component} from "react";
 import Objects from "../utils/Objects";
 
 class AbstractComponent extends Component {

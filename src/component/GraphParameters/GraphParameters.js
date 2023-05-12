@@ -58,6 +58,8 @@ class GraphParameters extends Component {
         } else {
             this.hideNodes();
         }
+
+        this.props.hub.emit(AppEvents.GRAPH_ITEMS_HIDE_CHANGED, this.cy);
     }
 
     showHiddenNodes(): void {

@@ -21,6 +21,12 @@ class InfoPanel extends AbstractComponent {
                 edges: elements.edges.length
             })
         });
+        this.props.hub.on(AppEvents.GRAPH_ITEMS_HIDE_CHANGED, cy => {
+            this.setState({
+                nodes: cy.nodes().not(".hidden").length,
+                edges: cy.edges().not(".hidden").length
+            });
+        });
 
         let open = extLocalStorage.isPresent(AppStorage.INFO_OPENED)
             && Strings.asBoolean(extLocalStorage.getItem(AppStorage.INFO_OPENED));

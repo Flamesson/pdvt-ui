@@ -72,6 +72,7 @@ class Params {
             layout[parameter.code] = parameter.getValue();
         });
         layout['name'] = this.layoutName;
+        layout['fit'] = 'true';
 
         return layout;
     }

@@ -34,6 +34,12 @@ class PickField extends Component {
     }
 
     componentDidMount() {
+        this.props.hub.on(AppEvents.LOCALE_CHANGED, () => {
+            this.setState({
+                isOpen: false
+            });
+        })
+
         this.setState({
             isOpen: false,
             option: undefined
@@ -43,11 +49,11 @@ class PickField extends Component {
             this.props.reference(this);
         }
 
-        if (!this.hasOption(PickField.RESET_VALUE)) {
+        /*if (!this.hasOption(PickField.RESET_VALUE)) {
             const t = this.props.t;
             let resetOption = { option: PickField.RESET_VALUE, label: t("pick-field.reset.caption") };
             this.options.push(resetOption);
-        }
+        }*/
 
         this.props.hub.on(AppEvents.LOCALE_CHANGED, ignored => {
             this.options = this.optionsSupplier();
