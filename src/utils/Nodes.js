@@ -11,6 +11,40 @@ class Nodes {
 
         return false;
     }
+
+    static animateToOrgPositions(nodes, animationDuration: number, easing: String): Promise {
+        return Promise.all(nodes.nodes().map(node => {
+            return node.animation({
+                position: Node.getOrgPosition(node),
+                duration: animationDuration,
+                easing: easing
+            }).play().promise();
+        }));
+    }
+
+    static hide(cy, target): void {
+        cy.batch(() => {
+            target.addClass('hidden');
+        });
+    }
+
+    static show(cy, target): void {
+        cy.batch(() => {
+            target.removeClass('hidden');
+        });
+    }
+
+    static batchAddClass(cy, target, className: String): void {
+        cy.batch(() => {
+            target.addClass(className);
+        });
+    }
+
+    static batchRemoveClass(cy, target, className: String): void {
+        cy.batch(() => {
+            target.removeClass(className);
+        });
+    }
 }
 
 export default Nodes;

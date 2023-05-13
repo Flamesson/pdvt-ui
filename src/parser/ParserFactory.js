@@ -1,9 +1,10 @@
 import AbstractParser from "./AbstractParser";
 import UnversionedParserV1 from "./UnversionedParserV1";
+import VersionedParserV1 from "./VersionedParserV1";
 
 class ParserFactory {
     static PARSERS = Array.of(
-        new UnversionedParserV1()
+        new UnversionedParserV1(), new VersionedParserV1()
     );
 
     create(input: String): AbstractParser {

@@ -21,9 +21,14 @@
     justify-content: center;
 }
 
-.input-data-type .text-area-zone-internal textarea {
+.input-data-type .text-area-zone-internal #text-area {
     min-height: 24ex;
     height: 72ex;
+}
+
+.input-data-type .text-area-zone-internal #file-preview {
+    min-height: 24ex;
+    height: 64ex;
 }
 
 .text-area-zone-internal .btn-group {

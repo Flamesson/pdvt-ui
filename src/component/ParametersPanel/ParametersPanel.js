@@ -6,7 +6,7 @@ import Objects from "../../utils/Objects";
 import {Tab, Tabs} from "react-bootstrap";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
-import Filtration from "../Filter/Filter";
+import Filter from "../Filter/Filter";
 import Parameters from "../Parameters/Parameters";
 import Search from "../Search/Search";
 import Strings from "../../utils/Strings";
@@ -90,7 +90,7 @@ class ParametersPanel extends Component {
                                     cyStyle={this.props.cyStyle}/>
                     </Tab>
                     <Tab eventKey={"filtration"} title={t("tab.filtration.caption")} className={"filtration-tab"}>
-                        <Filtration hub={this.props.hub}/>
+                        <Filter hub={this.props.hub} controller={this.props.controller}/>
                     </Tab>
                     <Tab eventKey={"search"} title={t("tab.search.caption")} className={"search-tab"}>
                         <Search hub={this.props.hub} tap={this.props.tap}/>

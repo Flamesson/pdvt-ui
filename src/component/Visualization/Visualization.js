@@ -7,14 +7,14 @@ import DataManager from "../../datamanager/DataManager";
 import COSEBilkent from "cytoscape-cose-bilkent";
 import {withTranslation} from "react-i18next";
 import ParametersPanel from "../ParametersPanel/ParametersPanel";
-import Controller from "./Controller";
+import Controller from "../../highlight/Controller";
 import logger from "../../utils/Logger";
-import Tap from "./Tap";
+import Tap from "../../highlight/Tap";
 import AppEvents from "../../AppEvents";
 import Stylesheet from "../../cytoscape/Stylesheet";
 
 import "./Visualization.css";
-import CyStyle from "./CyStyle";
+import CyStyle from "../../cytoscape/CyStyle";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import InfoPanel from "../InfoPanel/InfoPanel";

@@ -1,4 +1,4 @@
-import Objects from "../../utils/Objects";
+import Objects from "../utils/Objects";
 
 class CyStyle {
     static DEFAULT_NODE_COLOR = "#229C53";

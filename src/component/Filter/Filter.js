@@ -12,6 +12,7 @@ import {withTranslation} from "react-i18next";
 import "./Filter.css";
 import FilterNodeInfo from "../FilterNodeInfo/FilterNodeInfo";
 import logger from "../../utils/Logger";
+import Nodes from "../../utils/Nodes";
 
 class Filter extends Component {
     constructor(props) {
@@ -87,9 +88,7 @@ class Filter extends Component {
 
         let nodes = this.cy.nodes();
         if (Objects.isNotCorrect(queryString)) {
-            this.cy.batch(() => {
-                nodes.removeClass('hidden');
-            });
+            Nodes.show(this.cy, nodes);
             this.setState({
                 filteredNodes: nodes
             });
@@ -122,6 +121,8 @@ class Filter extends Component {
 
         this.setState({
             filteredNodes: filteredNodes
+        }, () => {
+            this.cy.fit(10);
         });
     }
 

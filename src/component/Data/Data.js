@@ -30,9 +30,24 @@ class Data extends Component {
         this.updateClearTextButtonState = this.updateClearTextButtonState.bind(this);
     }
     componentDidMount() {
+        this.props.hub.on(AppEvents.INPUT_CHANGED, () => {
+            if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+                extLocalStorage.getFile(AppStorage.DATA_FILE).text().then(text => {
+                    document.getElementById("file-preview").value = text;
+                });
+            } else {
+                document.getElementById("file-preview").value = "";
+            }
+        });
+
         if (extLocalStorage.isPresent(AppStorage.DATA_TEXT)) {
             let content = extLocalStorage.getItem(AppStorage.DATA_TEXT);
             document.getElementById(this.textAreaId).value = content;
+        }
+        if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+            extLocalStorage.getFile(AppStorage.DATA_FILE).text().then(text => {
+                document.getElementById("file-preview").value = text;
+            });
         }
 
         this.updateApplyTextButtonState();
@@ -123,6 +138,9 @@ class Data extends Component {
                         <div className={"text-area-zone-internal"}>
                             <h3>{t('h3.file-upload-input.caption')}</h3>
                             <FileManage hub={this.props.hub}/>
+
+                            <h6>{t('file-content.caption')}</h6>
+                            <textarea id={"file-preview"} readOnly={"readonly"} disabled={"disabled"}/>
                         </div>
                     </div>
                 </div>

@@ -56,8 +56,10 @@
   "parameter.general.label-font-color.caption": "标签文字颜色",
   "parameter.graph.toggle-unlinked-nodes-visibility.caption": "隐藏未连接的节点",
   "parameter.graph.toggle-circular-dependencies-highlighting.caption": "突出显示循环依赖",
+  "parameter.graph.toggle-most-long-path-highlighting.caption": "用颜色突出显示最长的路径",
   "input-source.file.message": "上传的文件将用于图表",
   "input-source.text.message": "来自简单输入字段的数据将用于图表",
   "input-source.nothing.message": "无输入",
-  "info.text-input-filled.message": "将测试数据添加到文本字段（“数据”选项卡）以显示在图表中"
+  "info.text-input-filled.message": "将测试数据添加到文本字段（“数据”选项卡）以显示在图表中",
+  "file-content.caption": "文件内容"
 }

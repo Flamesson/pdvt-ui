@@ -1,5 +1,5 @@
-import logger from "../../utils/Logger";
-import Position from "../../cytoscape/Position";
+import logger from "../utils/Logger";
+import Position from "../cytoscape/Position";
 
 class Tap {
     constructor(cy, controller) {
@@ -12,7 +12,7 @@ class Tap {
             return;
         }
 
-        this.controller.unhighlight().then(ignored => {
+        this.controller.unhighlightAll().then(ignored => {
             this.cy.fit();
         });
     }

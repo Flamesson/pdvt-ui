@@ -56,8 +56,10 @@
   "parameter.general.label-font-color.caption": "Label Text Color",
   "parameter.graph.toggle-unlinked-nodes-visibility.caption": "Hide unconnected nodes",
   "parameter.graph.toggle-circular-dependencies-highlighting.caption": "Highlight circular dependencies",
+  "parameter.graph.toggle-most-long-path-highlighting.caption": "Highlight the longest path",
   "input-source.file.message": "Uploaded file will be used for graph",
   "input-source.text.message": "The data from the simple input field will be used for the graph",
   "input-source.nothing.message": "No input",
-  "info.text-input-filled.message": "Added test data to the text field (\"Data\" tab) to display in the graph"
+  "info.text-input-filled.message": "Added test data to the text field (\"Data\" tab) to display in the graph",
+  "file-content.caption": "File content"
 }

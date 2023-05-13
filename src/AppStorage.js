@@ -14,6 +14,7 @@ class AppStorage {
     static GENERAL_PARAMETERS = "general parameters";
     static PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY = "toggle unlinked nodes visibility";
     static PARAMETER_TOGGLE_CIRCULAR_DEPENDENCIES_HIGHLIGHTING = "toggle circular dependencies highlighting";
+    static PARAMETER_TOGGLE_MOST_LONG_PATH_HIGHLIGHTING = "toggle most long path highlighting";
     static FIRST_OPEN = "first open";
 
     static MOCK_TEXT_DATA = "[unversioned][1]\n" +

@@ -2,7 +2,7 @@ import React, {ChangeEvent, Component} from "react";
 import AppEvents from "../../AppEvents";
 import {withTranslation} from "react-i18next";
 import {Button} from "react-bootstrap";
-import CyStyle from "../Visualization/CyStyle";
+import CyStyle from "../../cytoscape/CyStyle";
 
 class GeneralParameters extends Component {
     constructor(props) {

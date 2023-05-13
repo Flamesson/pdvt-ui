@@ -1,4 +1,4 @@
-import type CyStyle from "../component/Visualization/CyStyle";
+import type CyStyle from "./CyStyle";
 
 class Stylesheet {
     constructor(cyStyle: CyStyle) {
@@ -92,6 +92,24 @@ class Stylesheet {
                 selector: "node.circular",
                 style: {
                     'background-color': this.cyStyle.circularColor
+                }
+            },
+            {
+                selector: "node.most-long-path-start.visible",
+                style: {
+                    "background-color": "orange"
+                }
+            },
+            {
+                selector: "node.most-long-path.visible",
+                style: {
+                    "background-color": "yellow"
+                }
+            },
+            {
+                selector: "node.most-long-path-end.visible",
+                style: {
+                    "background-color": "blue"
                 }
             }
         ];

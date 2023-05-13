@@ -1,5 +1,9 @@
-import Objects from "../../utils/Objects";
-import AppEvents from "../../AppEvents";
+import Objects from "../utils/Objects";
+import AppEvents from "../AppEvents";
+import Nodes from "../utils/Nodes";
+import Item from "./Item";
+import Node from"../utils/Node";
+import Arrays from "../utils/Arrays";
 
 const layoutPadding = 10;
 const animationDuration = 500;
@@ -26,7 +30,12 @@ class Controller {
         return this.highlightPath.length > 0;
     }
 
-    highlight(node) {
+    highlight(node): Promise {
+        let neighborhood = node.closedNeighborhood();
+        return this.highlight_(ignored => neighborhood, cy => cy.elements().not(neighborhood));
+    }
+
+    highlight_(neighborhoodFunction, othersFunction): Promise {
         const { cy } = this;
 
         if (this.highlightInProgress) {
@@ -35,11 +44,15 @@ class Controller {
 
         this.highlightInProgress = true;
 
-        const allElements = cy.elements();
-        const neighborhood = node.closedNeighborhood();
-        const others = allElements.not(neighborhood);
-        this.highlightPath.push(node);
+        const neighborhood = neighborhoodFunction(cy);
+        if (Arrays.isEmpty(neighborhood)) {
+            return Promise.resolve();
+        }
+        const others = othersFunction(cy);
+        let node = neighborhood[0];
+        this.highlightPath.push(new Item(neighborhood, others));
 
+        const allElements = cy.elements();
         const showOverview = () => {
             cy.batch(() => {
                 allElements.removeClass('faded highlighted hidden');
@@ -47,12 +60,12 @@ class Controller {
                 neighborhood.addClass('highlighted');
                 others.addClass('hidden');
 
-                others.positions(this.getOrgPosition);
+                others.positions(Node.getOrgPosition);
             });
 
             const layout = neighborhood.layout({
                 name: 'preset',
-                positions: this.getOrgPosition,
+                positions: Node.getOrgPosition,
                 fit: true,
                 animate: true,
                 animationDuration: animationDuration,
@@ -65,7 +78,7 @@ class Controller {
         };
 
         const runLayout = () => {
-            const position = this.getOrgPosition(node);
+            const position = Node.getOrgPosition(node);
 
             const layout = neighborhood.layout({
                 name: 'concentric',
@@ -102,7 +115,6 @@ class Controller {
             });
         };
 
-
         return (
             Promise.resolve()
                 .then(showOverview)
@@ -115,7 +127,22 @@ class Controller {
         );
     }
 
-    unhighlight() {
+    unhighlightSingle() {
+        if (!this.hasHighlight()) {
+            return Promise.resolve();
+        }
+
+        let cy = this.cy;
+        let allNodes = cy.nodes();
+
+        cy.stop();
+        allNodes.stop();
+
+        let item = this.highlightPath.pop();
+        return this.unhighlight(item);
+    }
+
+    unhighlightAll() {
         if (!this.hasHighlight()) {
             return Promise.resolve();
         }
@@ -128,20 +155,7 @@ class Controller {
         allNodes.stop();
 
         let promises = this.highlightPath
-            .map(node => {
-                let neighborhood = node.closedNeighborhood();
-                let others = allElements.not(neighborhood);
-
-                const restorePositions = () => {
-                    cy.batch(() => {
-                        others.nodes().positions(this.getOrgPosition);
-                    });
-
-                    return this.animateToOrgPosition(neighborhood.nodes());
-                };
-
-                return [this.hide(cy, others), restorePositions()];
-            })
+            .map(this.unhighlight)
             .flat(1);
 
         this.highlightPath = [];
@@ -151,33 +165,28 @@ class Controller {
         );
     }
 
-    getOrgPosition(node) {
-        return node.data('orgPos');
-    }
+    unhighlight(item: Item): Promise {
+        let neighborhood = item.neighborhood;
+        let others = item.others;
 
-    animateToOrgPosition(neighborhood): Promise {
-        return Promise.all(neighborhood.nodes().map(node => {
-            return node.animation({
-                position: this.getOrgPosition(node),
-                duration: animationDuration,
-                easing: easing
-            }).play().promise();
-        }));
+        const restorePositions = () => {
+            this.cy.batch(() => {
+                others.nodes().positions(Node.getOrgPosition);
+            });
+
+            return Nodes.animateToOrgPositions(neighborhood.nodes(), animationDuration, easing);
+        };
+
+        return [this.hide(this.cy, others), restorePositions()];
     }
 
     hide(cy, value): Promise {
-        cy.batch(() => {
-           value.addClass('hidden');
-        });
-
+        Nodes.hide(cy, value);
         return Promise.resolve();
     }
 
-    removeClass(cy, value, clazz): Promise {
-        cy.batch(() => {
-            value.removeClass(clazz);
-        });
-
+    removeClass(cy, target, clazz): Promise {
+        Nodes.batchRemoveClass(cy, target, clazz);
         return Promise.resolve();
     }
 }
