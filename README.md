@@ -12,8 +12,8 @@ _________
 _________
 
 ## Checklist
-* [ ] Add highlighting for most long path in graph (allow to configure the start node, by default - most depended node).
-* [ ] Add highlighting for dangerous-license components (add license info input).
+* [X] Add highlighting for most long path in graph (allow to configure the start node, by default - most depended node).
+* [X] Add highlighting for dangerous-license components (add license info input).
 * [X] Add highlighting for circular dependencies.
 * [X] Add showing only that nodes which label starts from value, specified in filter. Others must be blurred or removed temporary.
 * [X] Update data visualization - show current source in UI.
@@ -22,8 +22,8 @@ _________
 * [ ] Add flexible context system for links, nodes. (f.e. - show as different api, implementation, runtime dependencies Gradle types)
 * [X] Add export -> png/jpg.
 * [ ] Interpret input data as plain UML components diagram (without context).
-* [ ] Add versioned components parser.
-* [ ] Add highlighting for possible versions collisions.
+* [X] Add versioned components parser.
+* [X] Add highlighting for possible versions collisions.
 * [X] Hide/show unlinked components
 * [X] Update filtering logic. Now it is searching, must be filtering.
 * [X] Allow to configure base properties:
@@ -35,13 +35,13 @@ _________
     * [X] Labels width;
     * [X] Labels text size;
 * [ ] Add deployment.
-* [ ] Fill help.
+* [X] Fill help.
 * [X] File is deleted when clear text-area.
 * [X] Add info about nodes and edges number.
 * [ ] Node selection may work incorrect with filter and search.
 * [ ] Add 'circular' class for nodes only once, when parameter is toggled - just add another style (f.e. 'circular.active').
 * [ ] **(Optional)** Add users (+ backend).
-* [ ] **(Optional)** Allow to collapse header.
+* [X] **(Optional)** Allow to collapse header.
 * [ ] **(Optional)** Add PlantUML gradle plugin.
 * [X] **(Optional)** Add search
 * [X] **(Optional)** When first open app flag in left corner is not displayed. 
