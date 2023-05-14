@@ -10,7 +10,7 @@ class Menu extends Component {
         return <div id={"menu"}>
             <Link className={"menu-item"} to={"/Visualization"}>{t("menu-item.visualization")}</Link>
             <Link className={"menu-item"} to={"/Data"}>{t("menu-item.data")}</Link>
-            <Link className={"menu-item"} to={"/help"}>{t("menu-item.help")}</Link>
+            <Link className={"menu-item"} to={"/handbook"}>{t("menu-item.handbook")}</Link>
         </div>
     }
 }

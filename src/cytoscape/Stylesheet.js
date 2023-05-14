@@ -91,25 +91,49 @@ class Stylesheet {
             {
                 selector: "node.circular",
                 style: {
-                    'background-color': this.cyStyle.circularColor
+                    'background-color': this.cyStyle.graphStyle.circularColor
                 }
             },
             {
                 selector: "node.most-long-path-start.visible",
                 style: {
-                    "background-color": "orange"
+                    "background-color": this.cyStyle.graphStyle.mostLongPathStartColor
                 }
             },
             {
                 selector: "node.most-long-path.visible",
                 style: {
-                    "background-color": "yellow"
+                    "background-color": this.cyStyle.graphStyle.mostLongPathColor
                 }
             },
             {
                 selector: "node.most-long-path-end.visible",
                 style: {
-                    "background-color": "blue"
+                    "background-color": this.cyStyle.graphStyle.mostLongPathEndColor
+                }
+            },
+            {
+                selector: "node.version-collision.visible",
+                style: {
+                    "background-color": this.cyStyle.graphStyle.versionsCollisionColor
+                }
+            },
+            {
+                selector: "node.version-collision.end-node.visible",
+                style: {
+                    "background-color": this.cyStyle.graphStyle.versionsCollisionEndNodeColor
+                }
+            },
+            {
+                selector: "node.potentially-dangerous.visible",
+                style: {
+                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousColor
+                }
+            },
+            {
+                selector: "node.potentially-dangerous.infected.visible",
+                style: {
+                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousInfectedColor
                 }
             }
         ];

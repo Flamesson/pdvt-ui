@@ -32,7 +32,6 @@ class GeneralParameters extends Component {
         document.getElementById("label-max-width-input").value = style.labelMaxWidth;
         document.getElementById("label-font-size-input").value = style.labelFontSize;
         document.getElementById("label-color-input").value = style.labelColor;
-        document.getElementById("circular-color-input").value = style.circularColor;
         this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, style);
     }
 
@@ -144,13 +143,6 @@ class GeneralParameters extends Component {
                        type={"color"}
                        defaultValue={this.props.cyStyle.labelColor}
                        onChange={this.onLabelColorChange}/>
-            </div>
-            <div className={"graph-parameter-container"}>
-                <label className={"graph-parameter-caption"}>Цвет циклических зависимостей:</label>
-                <input id={"circular-color-input"}
-                       type={"color"}
-                       defaultValue={this.props.cyStyle.circularColor}
-                       onChange={this.onCircularColorChange}/>
             </div>
 
             <div className={"full-width-container flex-horizontal-center-center margin-top-10px"}>

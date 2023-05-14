@@ -4,6 +4,7 @@ import ParserFactory from "../parser/ParserFactory";
 import Elements from "../cytoscape/Elements";
 import AppStorage from "../AppStorage";
 import InputSource from "./InputSource";
+import Tag from "../parser/Tag";
 
 class DataManager {
     getUsedInputSource(): InputSource {
@@ -52,6 +53,36 @@ class DataManager {
             let parser: AbstractParser = new ParserFactory().create(content);
             return parser.parse(content);
         });
+    }
+
+    hasVersions(): Promise<Boolean> {
+        let inputSource = this.getUsedInputSource();
+        if (inputSource === InputSource.PLAIN_TEXT) {
+            return new Promise((resolve, reject) => {
+                let content = extLocalStorage.getItem(AppStorage.DATA_TEXT);
+                let parser: AbstractParser = new ParserFactory().create(content);
+                resolve(parser.doesSupportTag(Tag.VERSIONED));
+            });
+        } else if (inputSource === InputSource.FILE) {
+            return new Promise((resolve, reject) => {
+                let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
+                let reader = new FileReader();
+                reader.onloadend = () => {
+                    resolve(reader.result);
+                }
+                reader.onerror = reject;
+                reader.readAsBinaryString(file);
+            }).then((content) => {
+                let parser: AbstractParser = new ParserFactory().create(content);
+                return parser.doesSupportTag(Tag.VERSIONED);
+            });
+        } else if (inputSource === InputSource.NOTHING) {
+            return new Promise((resolve, reject) => {
+                resolve(false);
+            });
+        } else {
+            throw new Error("Unknown input source will be used");
+        }
     }
 }
 

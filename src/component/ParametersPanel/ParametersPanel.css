@@ -44,11 +44,20 @@
     pointer-events: none;
 }
 
+.parameters-panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    height: 100%;
+}
+
 .parameters-panel .toggle {
     right: 0;
     top: 0;
 
     background-image: url('../../icons/toggle-icon.svg');
+    background-color: var(--panel-background-color);
 }
 
 .parameters .nav-link.active {

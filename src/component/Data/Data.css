@@ -34,3 +34,15 @@
 .text-area-zone-internal .btn-group {
     margin-bottom: 2ex;
 }
+
+.licenses-input {
+    margin-top: 1ex;
+
+    width: 96%;
+    margin-left: 2%;
+}
+
+.licenses-input textarea {
+    width: 100%;
+    height: 60ex;
+}

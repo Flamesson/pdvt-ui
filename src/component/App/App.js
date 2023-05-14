@@ -4,7 +4,7 @@ import Header from "../Header/Header";
 import {Route, Routes} from "react-router-dom";
 import Visualization from "../Visualization/Visualization";
 import Data from "../Data/Data";
-import Help from "../Help";
+import Handbook from "../Handbook/Handbook";
 import {toast, ToastContainer} from "react-toastify";
 import EventEmitter from "eventemitter3";
 import extLocalStorage from "../../utils/ext.local.storage";
@@ -46,7 +46,7 @@ class App extends Component {
           <Route path={"/"} element={<Visualization hub={this.hub}/>}/>
           <Route path={"/Visualization"} element={<Visualization hub={this.hub}/>}/>
           <Route path={"/Data"} element={<Data hub={this.hub}/>}/>
-          <Route path={"/help"} element={<Help hub={this.hub}/>}/>
+          <Route path={"/handbook"} element={<Handbook hub={this.hub}/>}/>
         </Routes>
         <ToastContainer position={"top-right"} autoClose={"5000"}/>
       </div>

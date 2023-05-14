@@ -1,4 +1,5 @@
 import Objects from "../utils/Objects";
+import GraphStyle from "./GraphStyle";
 
 class CyStyle {
     static DEFAULT_NODE_COLOR = "#229C53";
@@ -9,63 +10,17 @@ class CyStyle {
     static DEFAULT_LABEL_COLOR = "#0000ff";
     static DEFAULT_LABEL_MAX_WIDTH = 100;
     static DEFAULT_LABEL_FONT_SIZE = 12;
-    static DEFAULT_CIRCULAR_COLOR = "#ff0000";
 
-    constructor(nodeColor: String,
-                nodeBorderColor: String,
-                nodeSize: Number,
-                edgeColor: String,
-                edgeWidth: Number,
-                labelColor: String,
-                labelMaxWidth: Number,
-                labelFontSize: Number,
-                circularColor: String) {
-
-        if (Objects.isNotCorrect(nodeColor)) {
-            this.nodeColor = CyStyle.DEFAULT_NODE_COLOR;
-        } else {
-            this.nodeColor = nodeColor;
-        }
-        if (Objects.isNotCorrect(nodeBorderColor)) {
-            this.nodeBorderColor = CyStyle.DEFAULT_NODE_BORDER_COLOR;
-        } else {
-            this.nodeBorderColor = nodeBorderColor;
-        }
-        if (Objects.isNotCorrect(nodeSize)) {
-            this.nodeSize = CyStyle.DEFAULT_NODE_SIZE;
-        } else {
-            this.nodeSize = nodeSize;
-        }
-        if (Objects.isNotCorrect(edgeColor)) {
-            this.edgeColor = CyStyle.DEFAULT_EDGE_COLOR;
-        } else {
-            this.edgeColor = edgeColor;
-        }
-        if (Objects.isNotCorrect(edgeWidth)) {
-            this.edgeWidth = CyStyle.DEFAULT_EDGE_WIDTH;
-        } else {
-            this.edgeWidth = edgeWidth;
-        }
-        if (Objects.isNotCorrect(labelColor)) {
-            this.labelColor = CyStyle.DEFAULT_LABEL_COLOR;
-        } else {
-            this.labelColor = labelColor;
-        }
-        if (Objects.isNotCorrect(labelMaxWidth)) {
-            this.labelMaxWidth = CyStyle.DEFAULT_LABEL_MAX_WIDTH;
-        } else {
-            this.labelMaxWidth = labelMaxWidth;
-        }
-        if (Objects.isNotCorrect(labelFontSize)) {
-            this.labelFontSize = CyStyle.DEFAULT_LABEL_FONT_SIZE;
-        } else {
-            this.labelFontSize = labelFontSize;
-        }
-        if (Objects.isNotCorrect(circularColor)) {
-            this.circularColor = CyStyle.DEFAULT_CIRCULAR_COLOR;
-        } else {
-            this.circularColor = circularColor;
-        }
+    constructor() {
+        this.nodeColor = CyStyle.DEFAULT_NODE_COLOR;
+        this.nodeBorderColor = CyStyle.DEFAULT_NODE_BORDER_COLOR;
+        this.nodeSize = CyStyle.DEFAULT_NODE_SIZE;
+        this.edgeColor = CyStyle.DEFAULT_EDGE_COLOR;
+        this.edgeWidth = CyStyle.DEFAULT_EDGE_WIDTH;
+        this.labelColor = CyStyle.DEFAULT_LABEL_COLOR;
+        this.labelMaxWidth = CyStyle.DEFAULT_LABEL_MAX_WIDTH;
+        this.labelFontSize = CyStyle.DEFAULT_LABEL_FONT_SIZE;
+        this.graphStyle = new GraphStyle();
     }
 
     reset(): CyStyle {
@@ -78,7 +33,7 @@ class CyStyle {
             .resetLabelColor()
             .resetLabelMaxWidth()
             .resetLabelFontSize()
-            .resetCircularColor();
+            .resetGraphStyle();
     }
 
     setNodeColor(nodeColor: String): void {
@@ -249,25 +204,13 @@ class CyStyle {
         return this.withLabelFontSize(CyStyle.DEFAULT_LABEL_FONT_SIZE);
     }
 
-    setCircularColor(circularColor: String): void {
-        this.circularColor = circularColor;
-    }
-
-    withCircularColor(circularColor: String): CyStyle {
-        this.setCircularColor(circularColor);
+    withGraphStyle(graphStyle: GraphStyle): CyStyle {
+        this.graphStyle = graphStyle;
         return this;
     }
 
-    withCircularColorIfValid(circularColor: String): CyStyle {
-        if (Objects.isNotCorrect(circularColor)) {
-            return this;
-        }
-
-        return this.withCircularColor(circularColor);
-    }
-
-    resetCircularColor(): CyStyle {
-        return this.withCircularColor(CyStyle.DEFAULT_CIRCULAR_COLOR);
+    resetGraphStyle(): CyStyle {
+        return this.withGraphStyle(new GraphStyle());
     }
 }
 

@@ -18,6 +18,7 @@ import CyStyle from "../../cytoscape/CyStyle";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import InfoPanel from "../InfoPanel/InfoPanel";
+import GraphStyle from "../../cytoscape/GraphStyle";
 
 Cytoscape.use(COSEBilkent);
 
@@ -45,6 +46,9 @@ class Visualization extends Component {
     componentDidMount() {
         let dataManager: DataManager  = new DataManager();
         dataManager.getElements().then(this.updateElements);
+        dataManager.hasVersions().then(result => {
+            extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
+        });
 
         let hub = this.props.hub;
         hub.on(AppEvents.LAYOUT_CHANGE, layout => {
@@ -88,7 +92,16 @@ class Visualization extends Component {
             .withLabelColorIfValid(stored.labelColor)
             .withLabelMaxWidthIfValid(stored.labelMaxWidth)
             .withLabelFontSizeIfValid(stored.labelFontSize)
-            .withCircularColor(stored.circularColor);
+            .withGraphStyle(new GraphStyle()
+                .withPotentiallyDangerousInfectedColorIfValid(stored.graphStyle.potentiallyDangerousInfectedColor)
+                .withPotentiallyDangerousColorIfValid(stored.graphStyle.potentiallyDangerousColor)
+                .withVersionsCollisionEndNodeColorIfValid(stored.graphStyle.versionsCollisionEndNodeColor)
+                .withVersionsCollisionColorIfValid(stored.graphStyle.versionsCollisionColor)
+                .withMostLongPathEndColorIfValid(stored.graphStyle.mostLongPathEndColor)
+                .withMostLongPathColorIfValid(stored.graphStyle.mostLongPathColor)
+                .withMostLongPathStartColorIfValid(stored.graphStyle.mostLongPathStartColor)
+                .withCircularColorIfValid(stored.graphStyle.circularColor)
+            );
     }
 
     saveCyStyle(): void {

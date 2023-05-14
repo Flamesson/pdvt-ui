@@ -8,11 +8,18 @@ import AppStorage from "../../AppStorage";
 import Strings from "../../utils/Strings";
 import Nodes from "../../utils/Nodes";
 import Arrays from "../../utils/Arrays";
+import LicenseDependency from "../../licenses/LicenseDependency";
+import Licenses from "../../licenses/Licenses";
+import LicenseType from "../../licenses/LicenseType";
+import type GraphStyle from "../../cytoscape/GraphStyle";
+import {Button} from "react-bootstrap";
 
 class GraphParameters extends Component {
     constructor(props) {
         super(props);
 
+        this.fireStyleChanged = this.fireStyleChanged.bind(this);
+        this.reset = this.reset.bind(this);
         this.applyParameters = this.applyParameters.bind(this);
         this.onToggleUnlinkedNodesVisibility = this.onToggleUnlinkedNodesVisibility.bind(this);
         this.showHiddenNodes = this.showHiddenNodes.bind(this);
@@ -21,6 +28,25 @@ class GraphParameters extends Component {
         this.highlightCircularDependencies = this.highlightCircularDependencies.bind(this);
         this.unhighlightCircularDependencies = this.unhighlightCircularDependencies.bind(this);
         this.onToggleMostLongPathHighlighting = this.onToggleMostLongPathHighlighting.bind(this);
+        this.hasLicensesData = this.hasLicensesData.bind(this);
+        this.onToggleUseLicenses = this.onToggleUseLicenses.bind(this);
+        this.stopUsingLicenses = this.stopUsingLicenses.bind(this);
+        this.startUsingLicenses = this.startUsingLicenses.bind(this);
+        this.getLicenses = this.getLicenses.bind(this);
+        this.onToggleHighlightVersionsCollisions = this.onToggleHighlightVersionsCollisions.bind(this);
+        this.unhighlightVersionsCollisions = this.unhighlightVersionsCollisions.bind(this);
+        this.highlightVersionsCollisions = this.highlightVersionsCollisions.bind(this);
+        this.getSameIgnoreVersion = this.getSameIgnoreVersion.bind(this);
+        this.isSameIgnoreVersion = this.isSameIgnoreVersion.bind(this);
+        this.separateWithVersion = this.separateWithVersion.bind(this);
+        this.onCircularColorChange = this.onCircularColorChange.bind(this);
+        this.onMostLongPathStartColor = this.onMostLongPathStartColor.bind(this);
+        this.onMostLongPathColor = this.onMostLongPathColor.bind(this);
+        this.onMostLongPathEndColor = this.onMostLongPathEndColor.bind(this);
+        this.onVersionsCollisionColor = this.onVersionsCollisionColor.bind(this);
+        this.onVersionsCollisionEndNodeColor = this.onVersionsCollisionEndNodeColor.bind(this);
+        this.onPotentiallyDangerousColor = this.onPotentiallyDangerousColor.bind(this);
+        this.onPotentiallyDangerousInfectedColor = this.onPotentiallyDangerousInfectedColor.bind(this);
     }
 
     componentDidMount() {
@@ -37,6 +63,30 @@ class GraphParameters extends Component {
         this.showMostLongPath = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_MOST_LONG_PATH_HIGHLIGHTING))
             .map(Strings.asBoolean)
             .getOrElse(() => true);
+        this.useLicenses = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_USE_LICENSES))
+            .map(Strings.asBoolean)
+            .getOrElse(() => false);
+        this.versionsCollisitions = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_VERSIONS_COLLISIONS))
+            .map(Strings.asBoolean)
+            .getOrElse(() => false);
+    }
+
+    fireStyleChanged(): void {
+        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, this.props.cyStyle);
+    }
+
+    reset(): void {
+        let style: GraphStyle = this.props.cyStyle.graphStyle;
+        style.reset();
+        document.getElementById("circular-color-input").value = style.circularColor;
+        document.getElementById("most-long-path-start-color-input").value = style.mostLongPathStartColor;
+        document.getElementById("most-long-path-color-input").value = style.mostLongPathColor;
+        document.getElementById("most-long-path-end-color-input").value = style.mostLongPathEndColor;
+        document.getElementById("versions-collision-color-input").value = style.versionsCollisionColor;
+        document.getElementById("versions-collision-end-node-color-input").value = style.versionsCollisionEndNodeColor;
+        document.getElementById("potentially-dangerous-color-input").value = style.potentiallyDangerousColor;
+        document.getElementById("potentially-dangerous-infected-color-input").value = style.potentiallyDangerousInfectedColor;
+        this.props.hub.emit(AppEvents.CY_STYLE_CHANGED, style);
     }
 
     applyParameters() {
@@ -58,6 +108,18 @@ class GraphParameters extends Component {
             this.unhighlightMostLongPath();
         }
         document.getElementById("toggle-most-long-path-highlighting").checked = this.showMostLongPath;
+        if (this.useLicenses) {
+            this.startUsingLicenses();
+        } else {
+            this.stopUsingLicenses();
+        }
+        document.getElementById("toggle-use-licenses").checked = this.useLicenses;
+        if (this.versionsCollisitions) {
+            this.highlightVersionsCollisions();
+        } else {
+            this.unhighlightVersionsCollisions();
+        }
+        document.getElementById("toggle-highlight-versions-collisions").checked = this.versionsCollisitions;
     }
 
     onToggleUnlinkedNodesVisibility(event: ChangeEvent<HTMLInputElement>): void {
@@ -211,8 +273,209 @@ class GraphParameters extends Component {
         });
     }
 
+    hasLicensesData(): boolean {
+        return extLocalStorage.isPresent(AppStorage.DEPENDENCIES_LICENSES);
+    }
+
+    onToggleUseLicenses(event: ChangeEvent<HTMLInputElement>): void {
+        let newValue = event.target.checked;
+        this.useLicenses = newValue;
+        extLocalStorage.setItem(AppStorage.PARAMETER_TOGGLE_USE_LICENSES, newValue);
+        if (!newValue) {
+            this.stopUsingLicenses();
+        } else {
+            this.startUsingLicenses();
+        }
+    }
+
+    stopUsingLicenses(): void {
+        let potentiallyDangerous = this.cy.nodes(".potentially-dangerous.visible");
+        let infected = this.cy.nodes(".potentially-dangerous.infected.visible");
+        this.cy.batch(() => {
+            potentiallyDangerous.removeClass("potentially-dangerous visible");
+            infected.removeClass("potentially-dangerous infected visible");
+        });
+    }
+
+    startUsingLicenses(): void {
+        let licenses = this.getLicenses();
+        let potentiallyDangerous = this.cy.nodes().filter(node => {
+            let label = node.data().label;
+            for (let license of licenses) {
+                if (label.startsWith(license.key)) {
+                    let code = license.value
+                    let type = Licenses.getTypeByCode(code);
+                    return type === LicenseType.PAID || type === LicenseType.MAYBE_PAID;
+                }
+            }
+
+            return false;
+        });
+
+        let infected = [];
+        let handled = [];
+        let toHandle = new Array(potentiallyDangerous);
+        while (Arrays.isNotEmpty(toHandle)) {
+            let inHandle = toHandle.pop();
+            let incomers = inHandle.incomers().filter(incomer => incomer.isNode());
+            toHandle.push.apply(toHandle, incomers.filter(incomer => !handled.includes(incomer)));
+            infected.push.apply(infected, incomers);
+            handled.push(inHandle);
+        }
+
+        this.cy.batch(() => {
+            for (let node of potentiallyDangerous) {
+                node.addClass("potentially-dangerous visible");
+            }
+            for (let node of infected) {
+                node.addClass("potentially-dangerous infected visible")
+            }
+        });
+    }
+
+    getLicenses(): LicenseDependency[] {
+        let plain = extLocalStorage.getParsedJson(AppStorage.DEPENDENCIES_LICENSES);
+        return plain.map(singlePlain => {
+            return new LicenseDependency(singlePlain.key, singlePlain.value);
+        });
+    }
+
+    hasVersions(): boolean {
+        return extLocalStorage.isPresent(AppStorage.HAS_VERSIONS)
+            && Strings.asBoolean(extLocalStorage.getItem(AppStorage.HAS_VERSIONS));
+    }
+
+    onToggleHighlightVersionsCollisions(event: ChangeEvent<HTMLInputElement>): void {
+        let newValue = event.target.checked;
+        this.versionsCollisitions = newValue;
+        extLocalStorage.setItem(AppStorage.PARAMETER_TOGGLE_VERSIONS_COLLISIONS, newValue);
+        if (!newValue) {
+            this.unhighlightVersionsCollisions();
+        } else {
+            this.highlightVersionsCollisions();
+        }
+    }
+
+    unhighlightVersionsCollisions(): void {
+        let collisions = this.cy.nodes(".version-collision.visible");
+        let endNodes = this.cy.nodes(".version-collision.end-node.visible");
+        this.cy.batch(() => {
+            collisions.removeClass("version-collision visible");
+            endNodes.removeClass("version-collision end-node visible");
+        });
+    }
+
+    highlightVersionsCollisions(): void {
+        let collisions = [];
+        let endNodes = [];
+        let elements = this.cy.elements();
+        this.cy.nodes().forEach(node => {
+            let outgoers = node.outgoers();
+            let func = this.getSameIgnoreVersion;
+            elements.dfs({
+                root: node,
+                directed: true,
+                visit: function (node): void {
+                    let nodeOutgoers = node.outgoers();
+                    let sameIgnoreVersion = func(outgoers, nodeOutgoers);
+                    if (Arrays.isNotEmpty(sameIgnoreVersion)) {
+                        collisions.push(node);
+                        endNodes.push.apply(endNodes, sameIgnoreVersion);
+                    }
+                }
+            });
+        });
+
+        this.cy.batch(() => {
+            for (let node of collisions) {
+                node.addClass("version-collision visible");
+            }
+            for (let endNode of endNodes) {
+                endNode.addClass("version-collision end-node visible");
+            }
+        });
+    }
+
+    getSameIgnoreVersion(neighborhood1, neighborhood2): *[] {
+        let sameIgnoreVersion = [];
+        for (let element1 of neighborhood1) {
+            if (!element1.isNode()) {
+                continue;
+            }
+
+            for (let element2 of neighborhood2) {
+                if (!element2.isNode()) {
+                    continue;
+                }
+
+                if (this.isSameIgnoreVersion(element1, element2)) {
+                    sameIgnoreVersion.push(element1);
+                    sameIgnoreVersion.push(element2);
+                }
+            }
+        }
+
+        return sameIgnoreVersion;
+    }
+
+    isSameIgnoreVersion(node1, node2): boolean {
+        let label1 = node1.data().label;
+        let label2 = node2.data().label;
+        let separate1 = this.separateWithVersion(label1);
+        let separate2 = this.separateWithVersion(label2);
+        return separate1[0] === separate2[0] && separate1[1] !== separate2[1];
+    }
+
+    separateWithVersion(label: String): String[] {
+        let lastColonIndex = label.lastIndexOf(":");
+        let withoutColon: String = label.substring(0, lastColonIndex);
+        let version: String = label.substring(lastColonIndex + 1);
+        return Array.of(withoutColon, version);
+    }
+
+    onCircularColorChange(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.setCircularColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onMostLongPathStartColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withMostLongPathStartColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onMostLongPathColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withMostLongPathColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onMostLongPathEndColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withMostLongPathEndColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onVersionsCollisionColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withVersionsCollisionColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onVersionsCollisionEndNodeColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withVersionsCollisionEndNodeColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onPotentiallyDangerousColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withPotentiallyDangerousColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
+    onPotentiallyDangerousInfectedColor(event: ChangeEvent<HTMLInputElement>): void {
+        this.props.cyStyle.graphStyle.withPotentiallyDangerousInfectedColor(event.target.value);
+        this.fireStyleChanged();
+    }
+
     render() {
         const t = this.props.t;
+        let style = this.props.cyStyle.graphStyle;
         return <div>
             <h4>{t("parameters.graph.caption")}</h4>
             <div className={"graph-parameter-container"}>
@@ -232,6 +495,85 @@ class GraphParameters extends Component {
                 <input id={"toggle-most-long-path-highlighting"}
                        type={"checkbox"}
                        onChange={this.onToggleMostLongPathHighlighting}/>
+            </div>
+            {
+                this.hasLicensesData() && <div className={"graph-parameter-container"}>
+                    <label className={"graph-parameter-caption"}>{t("parameter.graph.toggle-use-licenses.caption")}</label>
+                    <input id={"toggle-use-licenses"}
+                           type={"checkbox"}
+                           onChange={this.onToggleUseLicenses}/>
+                </div>
+            }
+            {
+                this.hasVersions() && <div className={"graph-parameter-container"}>
+                    <label className={"graph-parameter-caption"}>{t("parameter.graph.toggle-highlight-versions-collisions")}:</label>
+                    <input id={"toggle-highlight-versions-collisions"}
+                           type={"checkbox"}
+                           onChange={this.onToggleHighlightVersionsCollisions}/>
+                </div>
+            }
+
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.circular-dependency-color.caption")}:</label>
+                <input id={"circular-color-input"}
+                       type={"color"}
+                       defaultValue={style.circularColor}
+                       onChange={this.onCircularColorChange}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.most-long-path-start-color.caption")}:</label>
+                <input id={"most-long-path-start-color-input"}
+                       type={"color"}
+                       defaultValue={style.mostLongPathStartColor}
+                       onChange={this.onMostLongPathStartColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.most-long-path-color.caption")}:</label>
+                <input id={"most-long-path-color-input"}
+                       type={"color"}
+                       defaultValue={style.mostLongPathColor}
+                       onChange={this.onMostLongPathColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.most-long-path-end-color.caption")}:</label>
+                <input id={"most-long-path-end-color-input"}
+                       type={"color"}
+                       defaultValue={style.mostLongPathEndColor}
+                       onChange={this.onMostLongPathEndColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.versions-collision-color.caption")}:</label>
+                <input id={"versions-collision-color-input"}
+                       type={"color"}
+                       defaultValue={style.versionsCollisionColor}
+                       onChange={this.onVersionsCollisionColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.versions-collision-end-node-color.caption")}:</label>
+                <input id={"versions-collision-end-node-color-input"}
+                       type={"color"}
+                       defaultValue={style.versionsCollisionEndNodeColor}
+                       onChange={this.onVersionsCollisionEndNodeColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.potentially-dangerous-color.caption")}:</label>
+                <input id={"potentially-dangerous-color-input"}
+                       type={"color"}
+                       defaultValue={style.potentiallyDangerousColor}
+                       onChange={this.onPotentiallyDangerousColor}/>
+            </div>
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.potentially-dangerous-infected-color.caption")}:</label>
+                <input id={"potentially-dangerous-infected-color-input"}
+                       type={"color"}
+                       defaultValue={style.potentiallyDangerousInfectedColor}
+                       onChange={this.onPotentiallyDangerousInfectedColor}/>
+            </div>
+
+            <div className={"full-width-container flex-horizontal-center-center margin-top-10px"}>
+                <Button onClick={ignored => this.reset()} variant={"outline-info"}>
+                    {t("button.reset.caption")}
+                </Button>
             </div>
         </div>;
     }

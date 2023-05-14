@@ -10,12 +10,18 @@ class AppStorage {
     static INFO_OPENED = "info opened";
     static HEADER_OPENED = "header opened";
     static PARAMETERS_ACTIVE_TAB = "parameters active tab";
+    static DATA_ACTIVE_TAB = "data active tab";
     static SEARCH_QUERY = "search query";
     static GENERAL_PARAMETERS = "general parameters";
     static PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY = "toggle unlinked nodes visibility";
     static PARAMETER_TOGGLE_CIRCULAR_DEPENDENCIES_HIGHLIGHTING = "toggle circular dependencies highlighting";
     static PARAMETER_TOGGLE_MOST_LONG_PATH_HIGHLIGHTING = "toggle most long path highlighting";
+    static PARAMETER_TOGGLE_USE_LICENSES = "toggle use licenses";
+    static PARAMETER_TOGGLE_VERSIONS_COLLISIONS = "toggle versions collisions";
     static FIRST_OPEN = "first open";
+    static RAW_DEPENDENCIES_LICENSES = "raw dependencies licenses";
+    static DEPENDENCIES_LICENSES = "dependencies licenses";
+    static HAS_VERSIONS = "has versions";
 
     static MOCK_TEXT_DATA = "[unversioned][1]\n" +
         "[dictionary]\n" +
