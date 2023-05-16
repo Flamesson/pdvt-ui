@@ -89,6 +89,7 @@ class Filter extends Component {
         let nodes = this.cy.nodes();
         if (Objects.isNotCorrect(queryString)) {
             Nodes.show(this.cy, nodes);
+            this.props.hub.emit(AppEvents.GRAPH_ITEMS_HIDE_CHANGED, this.cy);
             this.setState({
                 filteredNodes: nodes
             });
@@ -123,6 +124,7 @@ class Filter extends Component {
             filteredNodes: filteredNodes
         }, () => {
             this.cy.fit(10);
+            this.props.hub.emit(AppEvents.GRAPH_ITEMS_HIDE_CHANGED, this.cy);
         });
     }
 

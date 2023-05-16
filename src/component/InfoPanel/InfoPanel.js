@@ -22,9 +22,14 @@ class InfoPanel extends AbstractComponent {
             })
         });
         this.props.hub.on(AppEvents.GRAPH_ITEMS_HIDE_CHANGED, cy => {
+            let nodes = cy.nodes().not(".hidden");
+            let edgesSum = 0;
+            for (let node of nodes) {
+                edgesSum += node.connectedEdges().filter(edge => edge.visible()).length;
+            }
             this.setState({
-                nodes: cy.nodes().not(".hidden").length,
-                edges: cy.edges().not(".hidden").length
+                nodes: nodes.length,
+                edges: edgesSum
             });
         });
 
