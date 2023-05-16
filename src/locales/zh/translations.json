@@ -105,5 +105,9 @@
   "parameter.graph.potentially-dangerous-infected-color.caption": "颜色取决于汗水节点",
   "license-type.paid": "付费",
   "license-type.maybe-paid": "可能已付费",
-  "license-type.free": "免费"
+  "license-type.free": "免费",
+  "tab.graph.caption": "图表",
+  "tab.licenses.caption": "许可证",
+  "tab.mobile-plain.caption": "图形（文本）",
+  "tab.mobile-file.caption": "图表（文件）"
 }

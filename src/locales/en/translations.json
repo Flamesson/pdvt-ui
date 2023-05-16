@@ -105,5 +105,9 @@
   "parameter.graph.potentially-dangerous-infected-color.caption": "Colour Dependent on Sweat Node",
   "license-type.paid": "Paid",
   "license-type.maybe-paid": "Maybe Paid",
-  "license-type.free": "Free"
+  "license-type.free": "Free",
+  "tab.graph.caption": "Graph",
+  "tab.licenses.caption": "Licenses",
+  "tab.mobile-plain.caption": "Graph (text)",
+  "tab.mobile-file.caption": "Graph (file)"
 }

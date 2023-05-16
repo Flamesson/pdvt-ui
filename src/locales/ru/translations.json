@@ -105,5 +105,9 @@
   "parameter.graph.potentially-dangerous-infected-color.caption": "Цвет зависящего от пот.-но пл.-го узла",
   "license-type.paid": "Платный",
   "license-type.maybe-paid": "Возможно платный",
-  "license-type.free": "Бесплатный"
+  "license-type.free": "Бесплатный",
+  "tab.graph.caption": "Граф",
+  "tab.licenses.caption": "Лицензии",
+  "tab.mobile-plain.caption": "Граф (текст)",
+  "tab.mobile-file.caption": "Граф (файл)"
 }

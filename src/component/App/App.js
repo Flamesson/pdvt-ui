@@ -13,6 +13,8 @@ import AppEvents from "../../AppEvents";
 import InputSource from "../../datamanager/InputSource";
 import DataManager from "../../datamanager/DataManager";
 import {withTranslation} from "react-i18next";
+import {BrowserView, MobileView} from "react-device-detect";
+import MobileData from "../Data/MobileData";
 
 class App extends Component {
   constructor(props) {
@@ -45,7 +47,16 @@ class App extends Component {
         <Routes>
           <Route path={"/"} element={<Visualization hub={this.hub}/>}/>
           <Route path={"/Visualization"} element={<Visualization hub={this.hub}/>}/>
-          <Route path={"/Data"} element={<Data hub={this.hub}/>}/>
+          <Route path={"/Data"} element={
+            <>
+              <BrowserView>
+                <Data hub={this.hub}/>
+              </BrowserView>
+              <MobileView>
+                <MobileData hub={this.hub}/>
+              </MobileView>
+            </>
+          }/>
           <Route path={"/handbook"} element={<Handbook hub={this.hub}/>}/>
         </Routes>
         <ToastContainer position={"top-right"} autoClose={"5000"}/>

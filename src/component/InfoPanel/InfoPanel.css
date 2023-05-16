@@ -52,3 +52,9 @@
 #info-panel .toggle:hover {
     background-image: url('../../icons/chevron-left-highlight.svg');
 }
+
+@media (max-width: 800px) {
+    #info-panel-container {
+        min-height: 12ex;
+    }
+}

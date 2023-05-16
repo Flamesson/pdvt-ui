@@ -1,25 +1,23 @@
 import React from "react";
-import "./Data.css";
 
-import { withTranslation } from 'react-i18next';
-import FileManage from "../FileManage";
+import AbstractComponent from "../AbstractComponent";
 import {Button, ButtonGroup, Tab, Tabs} from "react-bootstrap";
 import extLocalStorage from "../../utils/ext.local.storage";
-import {toast} from "react-toastify";
-import ParserFactory from "../../parser/ParserFactory";
-import Objects from "../../utils/Objects";
-import Strings from "../../utils/Strings";
-import Buttons from "../../utils/Buttons";
 import AppStorage from "../../AppStorage";
 import CurrentInputSource from "../CurrentInputSource/CurrentInputSource";
+import FileManage from "../FileManage";
+import {withTranslation} from "react-i18next";
 import AppEvents from "../../AppEvents";
-import Split from "react-split";
-import AbstractComponent from "../AbstractComponent";
+import Optional from "../../utils/Optional";
+import {toast} from "react-toastify";
+import ParserFactory from "../../parser/ParserFactory";
+import Buttons from "../../utils/Buttons";
+import Objects from "../../utils/Objects";
+import Strings from "../../utils/Strings";
 import Licenses from "../../licenses/Licenses";
 import LicenseDependency from "../../licenses/LicenseDependency";
-import Optional from "../../utils/Optional";
 
-class Data extends AbstractComponent {
+class MobileData extends AbstractComponent {
     constructor(props) {
         super(props);
 
@@ -159,53 +157,48 @@ class Data extends AbstractComponent {
     render() {
         const t = this.props.t;
         return <Tabs activeKey={this.getActiveKey()}
-                        defaultActiveKey={"graph"}
-                        onSelect={(key) => {
-                            this.activeTab = key;
-                            extLocalStorage.setItem(AppStorage.DATA_ACTIVE_TAB, key);
-                            this.forceUpdate();
-                        }}>
-            <Tab eventKey={"graph"} title={t("tab.graph.caption")}>
+                     defaultActiveKey={"plain"}
+                     onSelect={(key) => {
+                         this.activeTab = key;
+                         extLocalStorage.setItem(AppStorage.DATA_ACTIVE_TAB, key);
+                         this.forceUpdate();
+                     }}>
+            <Tab eventKey={"plain"} title={t("tab.mobile-plain.caption")}>
                 <CurrentInputSource hub={this.props.hub}/>
-                <Split className={"types-container"}
-                       sizes={[50, 50]}
-                       minSize={[400, 200]}
-                       direction={"horizontal"}
-                       gutterSize={25}
-                       gutterAlign={"center"}
-                       cursor={"col-resize"}>
-                    <div className={"input-data-type"}>
-                        <div className={"text-area-zone"}>
-                            <div className={"text-area-zone-internal"}>
-                                <h3>{t('h3.simple-input-data.caption')}</h3>
-                                <ButtonGroup>
-                                    <Button id={"apply-text-button"} variant={"outline-secondary"} onClick={this.applyText}>
-                                        {t('button.apply.caption')}
-                                    </Button>
-                                    <Button variant={"outline-secondary"} onClick={this.generateText}>
-                                        {t('button.sample.caption')}
-                                    </Button>
-                                    <Button id={"clear-text-button"} variant={"outline-danger"} onClick={this.clearText}>
-                                        {t('button.clear.caption')}
-                                    </Button>
-                                </ButtonGroup>
-                                <textarea id={this.textAreaId} placeholder={t('textarea.input-data.placeholder')}
-                                          onChange={this.onTextChange}/>
-                            </div>
+                <div className={"input-data-type"}>
+                    <div className={"text-area-zone"}>
+                        <div className={"text-area-zone-internal"}>
+                            <h3>{t('h3.simple-input-data.caption')}</h3>
+                            <ButtonGroup>
+                                <Button id={"apply-text-button"} variant={"outline-secondary"} onClick={this.applyText}>
+                                    {t('button.apply.caption')}
+                                </Button>
+                                <Button variant={"outline-secondary"} onClick={this.generateText}>
+                                    {t('button.sample.caption')}
+                                </Button>
+                                <Button id={"clear-text-button"} variant={"outline-danger"} onClick={this.clearText}>
+                                    {t('button.clear.caption')}
+                                </Button>
+                            </ButtonGroup>
+                            <textarea id={this.textAreaId} placeholder={t('textarea.input-data.placeholder')}
+                                      onChange={this.onTextChange}/>
                         </div>
                     </div>
-                    <div className={"input-data-type"}>
-                        <div className={"text-area-zone"}>
-                            <div className={"text-area-zone-internal"}>
-                                <h3>{t('h3.file-upload-input.caption')}</h3>
-                                <FileManage hub={this.props.hub}/>
+                </div>
+            </Tab>
+            <Tab eventKey={"file"} title={t("tab.mobile-file.caption")}>
+                <CurrentInputSource hub={this.props.hub}/>
+                <div className={"input-data-type"}>
+                    <div className={"text-area-zone"}>
+                        <div className={"text-area-zone-internal"}>
+                            <h3>{t('h3.file-upload-input.caption')}</h3>
+                            <FileManage hub={this.props.hub}/>
 
-                                <h6>{t('file-content.caption')}</h6>
-                                <textarea id={"file-preview"} readOnly={"readonly"} disabled={"disabled"}/>
-                            </div>
+                            <h6>{t('file-content.caption')}</h6>
+                            <textarea id={"file-preview"} readOnly={"readonly"} disabled={"disabled"}/>
                         </div>
                     </div>
-                </Split>
+                </div>
             </Tab>
             <Tab eventKey={"licenses"} title={t("tab.licenses.caption")}>
                 <div className={"licenses-input"}>
@@ -222,4 +215,4 @@ class Data extends AbstractComponent {
     }
 }
 
-export default withTranslation()(Data);
+export default withTranslation()(MobileData);
