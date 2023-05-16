@@ -14,6 +14,17 @@ class Nodes {
         return false;
     }
 
+    static getConnected(node): *[] {
+        let connected = [];
+        let edges = node.connectedEdges();
+        for (let edge of edges) {
+            let target = edge.target();
+            connected.push(target);
+        }
+
+        return connected;
+    }
+
     static animateToOrgPositions(nodes, animationDuration: number, easing: String): Promise {
         return Promise.all(nodes.nodes().map(node => {
             let orgPosition = Node.getOrgPosition(node);

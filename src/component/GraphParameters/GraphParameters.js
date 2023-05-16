@@ -14,6 +14,7 @@ import LicenseType from "../../licenses/LicenseType";
 import type GraphStyle from "../../cytoscape/GraphStyle";
 import {Button} from "react-bootstrap";
 import Objects from "../../utils/Objects";
+import logger from "../../utils/Logger";
 
 class GraphParameters extends Component {
     constructor(props) {
@@ -215,16 +216,21 @@ class GraphParameters extends Component {
 
     highlightMostLongPath(): void {
         let elements = this.cy.elements();
-        let roots = elements.roots();
+        let roots = elements.roots().filter(element => element.isNode());
         let deepestPathLength = 0;
+        let visited = [];
         let dfses = roots
             .map(root => {
                 return this.cy.elements().dfs({
                     root: root,
-                    directed: false,
+                    directed: true,
                     visit: function (node, edge, previousNode, index, depth) {
-                        let edges = node.connectedEdges()
-                        if (edges.length < 2) {
+                        if (!visited.includes(node)) {
+                            visited.push(node);
+                        }
+
+                        let notVisited = Nodes.getConnected(node).filter(aNode => !visited.includes(aNode))
+                        if (Arrays.isEmpty(notVisited)) {
                             if (depth === deepestPathLength) {
                                 return true;
                             } else if (depth > deepestPathLength) {
@@ -255,17 +261,21 @@ class GraphParameters extends Component {
         this.cy.batch(() => {
             let paths = maxDfses.map(dfs => dfs.path);
             for (let path of paths) {
+                logger.warn("path length: " + path.length);
                 let nodes = path.filter(element => element.isNode());
                 if (nodes.length === 0) {
                     continue;
                 }
 
+                logger.warn("Start: " + nodes[0].data().label);
                 nodes[0].addClass("most-long-path-start visible");
                 for (let i = 1; i < nodes.length - 1; i++) {
                     nodes[i].addClass("most-long-path visible");
+                    logger.warn("Path: " + nodes[i].data().label);
                 }
                 if (nodes.length > 1) {
                     nodes[nodes.length - 1].addClass("most-long-path-end visible");
+                    logger.warn("End: " + nodes[nodes.length - 1].data().label);
                 }
             }
         });
