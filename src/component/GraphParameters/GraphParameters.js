@@ -13,6 +13,7 @@ import Licenses from "../../licenses/Licenses";
 import LicenseType from "../../licenses/LicenseType";
 import type GraphStyle from "../../cytoscape/GraphStyle";
 import {Button} from "react-bootstrap";
+import Objects from "../../utils/Objects";
 
 class GraphParameters extends Component {
     constructor(props) {
@@ -108,18 +109,26 @@ class GraphParameters extends Component {
             this.unhighlightMostLongPath();
         }
         document.getElementById("toggle-most-long-path-highlighting").checked = this.showMostLongPath;
-        if (this.useLicenses) {
-            this.startUsingLicenses();
-        } else {
-            this.stopUsingLicenses();
+
+        let toggleUseLicensesCheckbox = document.getElementById("toggle-use-licenses");
+        if (Objects.isCorrect(toggleUseLicensesCheckbox)) {
+            if (this.useLicenses) {
+                this.startUsingLicenses();
+            } else {
+                this.stopUsingLicenses();
+            }
+            toggleUseLicensesCheckbox.checked = this.useLicenses;
         }
-        document.getElementById("toggle-use-licenses").checked = this.useLicenses;
-        if (this.versionsCollisitions) {
-            this.highlightVersionsCollisions();
-        } else {
-            this.unhighlightVersionsCollisions();
+
+        let toggleVersionsCollisionsCheckbox = document.getElementById("toggle-highlight-versions-collisions");
+        if (Objects.isCorrect(toggleVersionsCollisionsCheckbox)) {
+            if (this.versionsCollisitions) {
+                this.highlightVersionsCollisions();
+            } else {
+                this.unhighlightVersionsCollisions();
+            }
+            toggleVersionsCollisionsCheckbox.checked = this.versionsCollisitions;
         }
-        document.getElementById("toggle-highlight-versions-collisions").checked = this.versionsCollisitions;
     }
 
     onToggleUnlinkedNodesVisibility(event: ChangeEvent<HTMLInputElement>): void {

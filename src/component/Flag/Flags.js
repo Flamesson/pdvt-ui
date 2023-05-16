@@ -1,11 +1,12 @@
 import React, {Component} from "react";
+import "./Flags.css";
+
 import {Dropdown, Image} from "react-bootstrap";
 import Flag from "./Flag";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import {withTranslation} from "react-i18next";
 import PathSource from "./PathSource";
 import i18next from "i18next";
-import "./Flags.css";
 import ReactNodeWrapper from "../../utils/ReactNodeWrapper";
 import AppEvents from "../../AppEvents";
 import extLocalStorage from "../../utils/ext.local.storage";

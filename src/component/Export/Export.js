@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import {Dropdown, Image} from "react-bootstrap";
-
-import icon from "../../icons/export-white.svg";
 import "./Export.css";
+
+import {Dropdown, Image} from "react-bootstrap";
+import icon from "../../icons/export-white.svg";
 import DropdownItem from "react-bootstrap/DropdownItem";
 import ReactNodeWrapper from "../../utils/ReactNodeWrapper";
 import AppEvents from "../../AppEvents";

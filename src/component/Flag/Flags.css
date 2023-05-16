@@ -1,7 +1,4 @@
 #flag-dropdown {
-    grid-column: 1;
-    grid-row: 3;
-
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -33,4 +30,11 @@
 img.flag-to-pickup {
     width: 64px;
     height: 64px;
+}
+
+@media (max-width: 800px) {
+    #flag-dropdown img {
+        height: 32px;
+        width: 32px;
+    }
 }

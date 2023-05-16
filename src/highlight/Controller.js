@@ -17,6 +17,14 @@ class Controller {
         hub.on(AppEvents.CY_UPDATE, cy => {
             this.setCy(cy);
         });
+
+        this.highlight = this.highlight.bind(this);
+        this.highlight_ = this.highlight_.bind(this);
+        this.hasHighlight = this.hasHighlight.bind(this);
+        this.unhighlight = this.unhighlight.bind(this);
+        this.unhighlightSingle = this.unhighlightSingle.bind(this);
+        this.unhighlightAll = this.unhighlightAll.bind(this);
+        this.hide = this.hide.bind(this);
     }
 
     setCy(cy) {
@@ -50,7 +58,8 @@ class Controller {
         }
         const others = othersFunction(cy);
         let node = neighborhood[0];
-        this.highlightPath.push(new Item(neighborhood, others));
+
+        this.highlightPath.push(new Item(node, neighborhood, others));
 
         const allElements = cy.elements();
         const showOverview = () => {
@@ -168,6 +177,9 @@ class Controller {
     unhighlight(item: Item): Promise {
         let neighborhood = item.neighborhood;
         let others = item.others;
+        if (Objects.isNotCorrect(others)) {
+            return Promise.resolve();
+        }
 
         const restorePositions = () => {
             this.cy.batch(() => {

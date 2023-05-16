@@ -1,7 +1,4 @@
 #export-dropdown {
-    grid-column: 2;
-    grid-row: 3;
-
     display: flex;
     justify-content: flex-start;
     align-items: center;
@@ -40,4 +37,11 @@
 
 #export-dropdown .dropdown-item:active {
     color: white;
+}
+
+@media (max-width: 800px) {
+    #export-dropdown img {
+        height: 32px;
+        width: 32px;
+    }
 }

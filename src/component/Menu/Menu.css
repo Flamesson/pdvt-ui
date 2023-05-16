@@ -26,3 +26,9 @@
 .menu-item:hover {
     color: var(--menu-text-hover);
 }
+
+@media (max-width: 800px) {
+    .menu-item {
+        font-size: 1.5ex;
+    }
+}

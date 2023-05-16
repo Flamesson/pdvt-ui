@@ -53,8 +53,10 @@ class Header extends AbstractComponent {
         return <div className={"header-container"}>
             <div className={"toggle chevron" + (open ? " open" : "")} onClick={this.toggle}/>
             <header id={"header"} className={"header" + (!open ? " closed" : "")}>
-                <Flags hub={this.props.hub}/>
-                <Export hub={this.props.hub}/>
+                <div className={"icons"}>
+                    <Flags hub={this.props.hub}/>
+                    <Export hub={this.props.hub}/>
+                </div>
                 <Menu hub={this.props.hub}/>
             </header>
         </div>;

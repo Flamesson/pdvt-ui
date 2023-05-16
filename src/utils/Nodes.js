@@ -1,3 +1,5 @@
+import Node from "./Node";
+
 class Nodes {
     static hasNeighbour(node, targetNeighbour): Boolean {
         let edges = node.connectedEdges();
@@ -14,8 +16,9 @@ class Nodes {
 
     static animateToOrgPositions(nodes, animationDuration: number, easing: String): Promise {
         return Promise.all(nodes.nodes().map(node => {
+            let orgPosition = Node.getOrgPosition(node);
             return node.animation({
-                position: Node.getOrgPosition(node),
+                position: orgPosition,
                 duration: animationDuration,
                 easing: easing
             }).play().promise();
