@@ -36,7 +36,7 @@ class Data extends AbstractComponent {
         this.onLicensesInputChange = this.onLicensesInputChange.bind(this);
     }
     componentDidMount() {
-        this.props.hub.on(AppEvents.INPUT_CHANGED, () => {
+        this.onChangeUserOrigin = () => {
             if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
                 extLocalStorage.getFile(AppStorage.DATA_FILE).text().then(text => {
                     document.getElementById("file-preview").value = text;
@@ -44,7 +44,9 @@ class Data extends AbstractComponent {
             } else {
                 document.getElementById("file-preview").value = "";
             }
-        });
+        };
+
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onChangeUserOrigin);
 
         if (extLocalStorage.isPresent(AppStorage.DATA_TEXT)) {
             let content = extLocalStorage.getItem(AppStorage.DATA_TEXT);
@@ -67,6 +69,10 @@ class Data extends AbstractComponent {
         this.updateClearTextButtonState();
     }
 
+    componentWillUnmount() {
+        this.props.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onChangeUserOrigin);
+    }
+
     applyText(ignored) {
         let content = document.getElementById(this.textAreaId).value;
         extLocalStorage.setItem(AppStorage.DATA_TEXT, content);
@@ -74,7 +80,7 @@ class Data extends AbstractComponent {
         const t = this.props.t;
         toast.success(t('apply-text.success.toast'));
 
-        this.props.hub.emit(AppEvents.INPUT_CHANGED);
+        this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
     }
 
     generateText(ignored) {
@@ -88,7 +94,7 @@ class Data extends AbstractComponent {
         const t = this.props.t;
         toast.success(t('clear-text.success.toast'));
 
-        this.props.hub.emit(AppEvents.INPUT_CHANGED);
+        this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
     }
 
     setText(value) {

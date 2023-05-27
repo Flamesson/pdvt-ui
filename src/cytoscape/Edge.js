@@ -1,6 +1,7 @@
 import Objects from "../utils/Objects";
+import Item from "./Item";
 
-class Edge {
+class Edge extends Item {
     static DEFAULT_LINE_COLOR = "black";
     static DEFAULT_LINE_WIDTH = "1px";
     static DEFAULT_TARGET_ARROW_SHAPE = "triangle";
@@ -8,6 +9,7 @@ class Edge {
     static DEFAULT_EDGE_TYPE = "default";
 
     constructor(sourceId, targetId, label, edgeType) {
+        super();
         this.sourceId = sourceId;
         this.targetId = targetId;
         this.label = label;
@@ -20,6 +22,44 @@ class Edge {
         } else {
             this.edgeType = edgeType;
         }
+        this.target = null;
+        this.source = null;
+    }
+
+    getTarget(): Node {
+        if (!this.hasTarget()) {
+            throw new Error("Don't have target");
+        }
+
+        return this.target;
+    }
+
+    hasTarget(): boolean {
+        return Objects.isCorrect(this.target);
+    }
+
+    getSource(): Node {
+        if (!this.hasSource()) {
+            throw new Error("Don't have source");
+        }
+
+        return this.source;
+    }
+
+    getWeight(): Number {
+        return 1;
+    }
+
+    hasSource(): boolean {
+        return Objects.isCorrect(this.source);
+    }
+
+    isEdge(): boolean {
+        return true;
+    }
+
+    isNode(): boolean {
+        return false;
     }
 
     toJson() {

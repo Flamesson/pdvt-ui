@@ -1,4 +1,5 @@
 import Objects from "./Objects";
+import logger from "./Logger";
 
 class Strings {
     static FORMAT_KEYWORD = "{}";
@@ -39,35 +40,15 @@ class Strings {
      * @param args List of arguments.
      */
     static format(_format: String, ...args: *): String {
-        let result: String = "";
-        let endIndex: Number = 0;
+        let result: String = _format;
+        let bracketIndex = 0;
 
-        let argNumber: Number = 0;
-        let index = _format.indexOf(this.FORMAT_KEYWORD);
-        if (index === -1) {
-            return _format;
-        }
-
-        result += _format.substring(0, index);
-        result += args[argNumber].toString();
-        endIndex = index;
-        argNumber += 1;
-
-        while (true) {
-            index = _format.indexOf(this.FORMAT_KEYWORD, endIndex + 1);
-            if (index === -1) {
-                break;
-            }
-
-            let arg: * = args[argNumber];
-            result += _format.substring(endIndex + this.FORMAT_KEYWORD.length, index);
-            if (Objects.isNotCorrect(arg)) {
-                result += "undefined";
-            } else {
-                result += arg.toString();
-            }
-            endIndex = index;
-            argNumber += 1;
+        while (result.includes("{}")) {
+            result = result.replace(/{}/g, () => {
+                let arg = args[bracketIndex];
+                bracketIndex++;
+                return arg;
+            });
         }
 
         return result;

@@ -11,6 +11,9 @@ class Menu extends Component {
             <Link className={"menu-item"} to={"/Visualization"}>{t("menu-item.visualization")}</Link>
             <Link className={"menu-item"} to={"/Data"}>{t("menu-item.data")}</Link>
             <Link className={"menu-item"} to={"/handbook"}>{t("menu-item.handbook")}</Link>
+            <Link className={"menu-item"} to={"/analysis"}>{t("menu-item.analysis")}</Link>
+            <Link className={"menu-item"} to={"/editor"}>{t("menu-item.editor")}</Link>
+            <Link className={"menu-item"} to={"/code"}>{t("menu-item.code")}</Link>
         </div>
     }
 }

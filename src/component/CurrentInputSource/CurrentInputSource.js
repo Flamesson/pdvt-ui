@@ -11,7 +11,7 @@ import "./CurrentInputSource.css";
 class CurrentInputSource extends Component {
 
     componentDidMount() {
-        this.props.hub.on(AppEvents.INPUT_CHANGED, () => {
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
             this.forceUpdate();
         });
     }

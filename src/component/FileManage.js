@@ -55,7 +55,7 @@ class FileManage extends Component {
 
             this.updateRemoveFileButtonState();
 
-            this.props.hub.emit(AppEvents.INPUT_CHANGED);
+            this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
         });
     }
 
@@ -67,7 +67,7 @@ class FileManage extends Component {
         let file = e.target.files[0];
         extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
             this.updateRemoveFileButtonState();
-            this.props.hub.emit(AppEvents.INPUT_CHANGED);
+            this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
         });
         this.setState({
             file: file

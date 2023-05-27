@@ -12,6 +12,14 @@ class Maps {
         });
         return map;
     }
+
+    static computeIfAbsent(map: Map, key: *, defaultValueSupplier: Function): * {
+        if (!map.has(key)) {
+            map.set(key, defaultValueSupplier());
+        }
+
+        return map.get(key);
+    }
 }
 
 export default Maps;

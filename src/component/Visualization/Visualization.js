@@ -1,10 +1,17 @@
 import React, {Component} from "react";
+import "./Visualization.css";
+
 import CytoscapeComponent from "react-cytoscapejs";
 import Cytoscape from 'cytoscape';
+import fcose from 'cytoscape-fcose';
+import COSEBilkent from "cytoscape-cose-bilkent";
+import avsdf from 'cytoscape-avsdf';
+import dagre from 'cytoscape-dagre';
+import klay from 'cytoscape-klay';
+import cola from 'cytoscape-cola';
 import Objects from "../../utils/Objects";
 import Elements from "../../cytoscape/Elements";
 import DataManager from "../../datamanager/DataManager";
-import COSEBilkent from "cytoscape-cose-bilkent";
 import {withTranslation} from "react-i18next";
 import ParametersPanel from "../ParametersPanel/ParametersPanel";
 import Controller from "../../highlight/Controller";
@@ -12,8 +19,6 @@ import logger from "../../utils/Logger";
 import Tap from "../../highlight/Tap";
 import AppEvents from "../../AppEvents";
 import Stylesheet from "../../cytoscape/Stylesheet";
-
-import "./Visualization.css";
 import CyStyle from "../../cytoscape/CyStyle";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
@@ -21,6 +26,11 @@ import InfoPanel from "../InfoPanel/InfoPanel";
 import GraphStyle from "../../cytoscape/GraphStyle";
 
 Cytoscape.use(COSEBilkent);
+Cytoscape.use(fcose);
+Cytoscape.use(avsdf);
+Cytoscape.use(dagre);
+Cytoscape.use(klay);
+Cytoscape.use(cola);
 
 class Visualization extends Component {
     static DEFAULT_LAYOUT = "grid";
@@ -50,13 +60,12 @@ class Visualization extends Component {
             extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
         });
 
-        let hub = this.props.hub;
-        hub.on(AppEvents.LAYOUT_CHANGE, layout => {
+        this.onLayoutChange = layout => {
             this.setState({
                 _layout: layout
             });
-        });
-        hub.on(AppEvents.CY_UPDATE, cy => {
+        };
+        this.onCyUpdate = cy => {
             this.cy = cy;
             this.tap = new Tap(cy, this.controller);
 
@@ -64,17 +73,34 @@ class Visualization extends Component {
             cy.on(AppEvents.TAP, this.onTap);
 
             cy.layout(this.layout()).run();
-        });
-        hub.on(AppEvents.CY_STYLE_CHANGED, ignored => {
+        };
+        this.onCyStyleChanged = ignored => {
             this.forceUpdate();
             this.saveCyStyle();
-        });
+        };
+        this.onInputChangedUserOrigin = () => {
+            let dataManager: DataManager  = new DataManager();
+            dataManager.getElements().then(this.updateElements);
+            dataManager.hasVersions().then(result => {
+                extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
+            });
+        };
+
+        this.props.hub.on(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
+        this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
+        this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
 
     componentWillUnmount() {
         if (Objects.isCorrect(this.cy)) {
             this.cy.removeListener(AppEvents.TAP, this.onTap);
         }
+
+        this.props.hub.removeListener(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
+        this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
+        this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
+        this.props.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
 
     loadCyStyle(): CyStyle {

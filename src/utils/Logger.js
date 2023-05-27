@@ -46,23 +46,23 @@ class Logger {
         return !this.isLevelCovered(keyword);
     }
 
-    debug(message, args) {
-        this.log(DEBUG, message, args);
+    debug(message, ...args: *) {
+        this.log(DEBUG, message, ...args);
     }
 
-    info(message, args) {
-        this.log(INFO, message, args);
+    info(message, ...args: *) {
+        this.log(INFO, message, ...args);
     }
 
-    warn(message, args) {
-        this.log(WARN, message, args);
+    warn(message, ...args: *) {
+        this.log(WARN, message, ...args);
     }
 
-    error(message, args) {
-        this.log(ERROR, message, args);
+    error(message, ...args: *) {
+        this.log(ERROR, message, ...args);
     }
 
-    log(level, message, args) {
+    log(level, message, ...args: *) {
         if (this.isLevelNotCovered(level)) {
             return;
         }
@@ -71,16 +71,16 @@ class Logger {
         console.log(
             String(level).toUpperCase()
             + " | " + now.toLocaleDateString() + " " + now.toLocaleTimeString()
-            + " | " + this.handleMessage(message, args)
+            + " | " + this.handleMessage(message, ...args)
         );
     }
 
-    handleMessage(message, args) {
+    handleMessage(message, ...args: *) {
         if (Objects.isNotCorrect(args)) {
             return message;
         }
 
-        return Strings.format(message, args);
+        return Strings.format(message, ...args);
     }
 }
 

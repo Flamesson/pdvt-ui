@@ -20,7 +20,7 @@ class UnversionedParserV1 extends AbstractParser {
         let rawMappings: String = input.substring(mappingsBeginIndex);
         let edges: Edge[] = this.parseEdges_(rawMappings);
 
-        return new Elements(nodes, edges);
+        return new Elements(nodes, edges, false);
     }
 
     doesSupportTag(tag: String): Boolean {

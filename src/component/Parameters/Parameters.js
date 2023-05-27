@@ -1,6 +1,6 @@
 import React, {Component} from "react";
-
 import "./Parameters.css";
+
 import PickField from "../PickField/PickField";
 import Parameter from "../../cytoscape/parameter/Parameter";
 import Params from "../../cytoscape/parameter/Params";
@@ -12,6 +12,7 @@ import AppEvents from "../../AppEvents";
 import Elements from "../../cytoscape/Elements";
 import GeneralParameters from "../GeneralParameters/GeneralParameters";
 import GraphParameters from "../GraphParameters/GraphParameters";
+import Arrays from "../../utils/Arrays";
 
 class Parameters extends Component {
     static DEFAULT_LAYOUT = "grid";
@@ -167,7 +168,14 @@ class Parameters extends Component {
     }
 
     getOptions(): Array {
-        return Array.from(Params.VALUES.keys()).map(layoutName => {
+        let elements: Elements = this.props.elementsSupplier();
+        let allLayoutNames: String[] = [...Params.VALUES.keys()];
+        if (elements.nodes.length > 80) {
+            Arrays.remove(allLayoutNames, )
+        }
+        //TODO: нужна логика удаления очевидно неподходящих layout
+
+        return allLayoutNames.map(layoutName => {
             return this.toOption(layoutName);
         });
     }

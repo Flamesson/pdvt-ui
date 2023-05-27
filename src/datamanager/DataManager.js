@@ -20,16 +20,28 @@ class DataManager {
     getElements(): Promise<Elements> {
         let inputSource = this.getUsedInputSource();
         if (inputSource === InputSource.PLAIN_TEXT) {
-            return this.getTextDataElements();
+            return this.handle(this.getTextDataElements());
         } else if (inputSource === InputSource.FILE) {
-            return this.getFileElements();
+            return this.handle(this.getFileElements());
         } else if (inputSource === InputSource.NOTHING) {
-            return new Promise((resolve, reject) => {
+            return this.handle(new Promise((resolve, reject) => {
                 resolve(new Elements());
-            });
+            }));
         } else {
             throw new Error("Unknown input source will be used");
         }
+    }
+
+    handle(promise: Promise<Elements>): Promise<Elements> {
+        return promise.then(elements => {
+            elements.handleUnlinkedNodes();
+            elements.handleNumberOfOutputs(5);
+            elements.findCycles();
+            elements.findMostLongPath();
+            elements.findVersionsConflicts();
+
+            return elements;
+        });
     }
 
     getTextDataElements(): Promise<Elements> {

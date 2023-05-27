@@ -1,4 +1,4 @@
-import type CyStyle from "./CyStyle";
+import CyStyle from "./CyStyle";
 
 class Stylesheet {
     constructor(cyStyle: CyStyle) {
@@ -89,37 +89,43 @@ class Stylesheet {
                 }
             },
             {
-                selector: "node.circular",
+                selector: '.unlinked-hidden',
+                style: {
+                    "display": "none"
+                }
+            },
+            {
+                selector: "node.cycle.cycle-visible",
                 style: {
                     'background-color': this.cyStyle.graphStyle.circularColor
                 }
             },
             {
-                selector: "node.most-long-path-start.visible",
+                selector: "node.most-long-path-start.path-visible",
                 style: {
                     "background-color": this.cyStyle.graphStyle.mostLongPathStartColor
                 }
             },
             {
-                selector: "node.most-long-path.visible",
+                selector: "node.most-long-path.path-visible",
                 style: {
                     "background-color": this.cyStyle.graphStyle.mostLongPathColor
                 }
             },
             {
-                selector: "node.most-long-path-end.visible",
+                selector: "node.most-long-path-end.path-visible",
                 style: {
                     "background-color": this.cyStyle.graphStyle.mostLongPathEndColor
                 }
             },
             {
-                selector: "node.version-collision.visible",
+                selector: "node.version-collision.intermediate-node.versions-visible",
                 style: {
                     "background-color": this.cyStyle.graphStyle.versionsCollisionColor
                 }
             },
             {
-                selector: "node.version-collision.end-node.visible",
+                selector: "node.version-collision.end-node.versions-visible",
                 style: {
                     "background-color": this.cyStyle.graphStyle.versionsCollisionEndNodeColor
                 }

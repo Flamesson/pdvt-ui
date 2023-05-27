@@ -34,7 +34,7 @@ class MobileData extends AbstractComponent {
         this.onLicensesInputChange = this.onLicensesInputChange.bind(this);
     }
     componentDidMount() {
-        this.props.hub.on(AppEvents.INPUT_CHANGED, () => {
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
             if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
                 extLocalStorage.getFile(AppStorage.DATA_FILE).text().then(text => {
                     document.getElementById("file-preview").value = text;
@@ -72,7 +72,7 @@ class MobileData extends AbstractComponent {
         const t = this.props.t;
         toast.success(t('apply-text.success.toast'));
 
-        this.props.hub.emit(AppEvents.INPUT_CHANGED);
+        this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
     }
 
     generateText(ignored) {
@@ -86,7 +86,7 @@ class MobileData extends AbstractComponent {
         const t = this.props.t;
         toast.success(t('clear-text.success.toast'));
 
-        this.props.hub.emit(AppEvents.INPUT_CHANGED);
+        this.props.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
     }
 
     setText(value) {

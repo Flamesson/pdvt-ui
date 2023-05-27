@@ -6,15 +6,13 @@ import Optional from "../../utils/Optional";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import Strings from "../../utils/Strings";
-import Nodes from "../../utils/Nodes";
 import Arrays from "../../utils/Arrays";
 import LicenseDependency from "../../licenses/LicenseDependency";
 import Licenses from "../../licenses/Licenses";
 import LicenseType from "../../licenses/LicenseType";
-import type GraphStyle from "../../cytoscape/GraphStyle";
+import GraphStyle from "../../cytoscape/GraphStyle";
 import {Button} from "react-bootstrap";
 import Objects from "../../utils/Objects";
-import logger from "../../utils/Logger";
 
 class GraphParameters extends Component {
     constructor(props) {
@@ -146,19 +144,17 @@ class GraphParameters extends Component {
     }
 
     showHiddenNodes(): void {
-        let nodes = this.cy.nodes();
-        let hidden = nodes.filter(".hidden");
-        Nodes.show(this.cy, hidden);
+        let nodes = this.cy.nodes().filter(".unlinked.unlinked-hidden");
+        this.cy.batch(() => {
+            nodes.removeClass("unlinked-hidden");
+        });
     }
 
     hideNodes(): void {
-        let nodes = this.cy.nodes();
-        let unconnected = nodes.filter(node => {
-            let neighborhood = node.openNeighborhood();
-            return neighborhood.length === 0;
+        let nodes = this.cy.nodes().filter(".unlinked");
+        this.cy.batch(() => {
+            nodes.addClass("unlinked-hidden");
         });
-
-        Nodes.hide(this.cy, unconnected);
     }
 
     onToggleCircularDependenciesHighlighting(event: ChangeEvent<HTMLInputElement>) {
@@ -173,33 +169,17 @@ class GraphParameters extends Component {
     }
 
     highlightCircularDependencies() {
-        let nodes = this.cy.nodes();
-        let circular = nodes.filter(node => {
-            let edges = node.connectedEdges();
-            for (let edge of edges) {
-                let target = edge.target();
-                if (target === node) {
-                    continue;
-                }
-
-                if (Nodes.hasNeighbour(target, node)) {
-                    return true;
-                }
-            }
-
-            return false;
-        });
-
+        let nodes = this.cy.nodes().filter(".cycle");
         this.cy.batch(() => {
-            circular.addClass("circular");
+            nodes.addClass("cycle-visible");
         });
     }
 
     unhighlightCircularDependencies() {
         let nodes = this.cy.nodes();
-        let circular = nodes.filter(".circular");
+        let cycle = nodes.filter(".cycle.cycle-visible");
         this.cy.batch(() => {
-            circular.removeClass("circular");
+            cycle.removeClass("cycle-visible");
         });
     }
 
@@ -215,80 +195,25 @@ class GraphParameters extends Component {
     }
 
     highlightMostLongPath(): void {
-        let elements = this.cy.elements();
-        let roots = elements.roots().filter(element => element.isNode());
-        let deepestPathLength = 0;
-        let visited = [];
-        let dfses = roots
-            .map(root => {
-                return this.cy.elements().dfs({
-                    root: root,
-                    directed: true,
-                    visit: function (node, edge, previousNode, index, depth) {
-                        if (!visited.includes(node)) {
-                            visited.push(node);
-                        }
-
-                        let notVisited = Nodes.getConnected(node).filter(aNode => !visited.includes(aNode))
-                        if (Arrays.isEmpty(notVisited)) {
-                            if (depth === deepestPathLength) {
-                                return true;
-                            } else if (depth > deepestPathLength) {
-                                deepestPathLength = depth;
-                                return true;
-                            } else if (depth < deepestPathLength) {
-                                return false;
-                            }
-                        }
-                    }
-                });
-            })
-            .filter(dfs => Arrays.isNotEmpty(dfs.found));
-
-        let maxDfses = [];
-        let maxPathLength = 0;
-        for (let dfs of dfses) {
-            let length = dfs.path.length;
-            if (length > maxPathLength) {
-                maxPathLength = dfs.path.length;
-                maxDfses = [];
-                maxDfses.push(dfs);
-            } else if (length === maxPathLength) {
-                maxDfses.push(dfs);
-            }
-        }
-
+        let nodes = this.cy.nodes();
+        let startNodes = nodes.filter(".most-long-path-start");
+        let intermediateNodes = nodes.filter(".most-long-path");
+        let endNodes = nodes.filter(".most-long-path-end");
         this.cy.batch(() => {
-            let paths = maxDfses.map(dfs => dfs.path);
-            for (let path of paths) {
-                logger.warn("path length: " + path.length);
-                let nodes = path.filter(element => element.isNode());
-                if (nodes.length === 0) {
-                    continue;
-                }
-
-                logger.warn("Start: " + nodes[0].data().label);
-                nodes[0].addClass("most-long-path-start visible");
-                for (let i = 1; i < nodes.length - 1; i++) {
-                    nodes[i].addClass("most-long-path visible");
-                    logger.warn("Path: " + nodes[i].data().label);
-                }
-                if (nodes.length > 1) {
-                    nodes[nodes.length - 1].addClass("most-long-path-end visible");
-                    logger.warn("End: " + nodes[nodes.length - 1].data().label);
-                }
-            }
+            startNodes.addClass("path-visible");
+            intermediateNodes.addClass("path-visible");
+            endNodes.addClass("path-visible");
         });
     }
 
     unhighlightMostLongPath(): void {
-        let pathStartNodes = this.cy.nodes(".most-long-path-start.visible");
-        let pathNodes = this.cy.nodes(".most-long-path.visible");
-        let pathEndNodes = this.cy.nodes(".most-long-path-end.visible");
+        let startNodes = this.cy.nodes(".most-long-path-start.path-visible");
+        let intermediateNode = this.cy.nodes(".most-long-path.path-visible");
+        let endNodes = this.cy.nodes(".most-long-path-end.path-visible");
         this.cy.batch(() => {
-            pathStartNodes.removeClass("most-long-path-start visible");
-            pathNodes.removeClass("most-long-path visible");
-            pathEndNodes.removeClass("most-long-path-end visible");
+            startNodes.removeClass("path-visible");
+            intermediateNode.removeClass("path-visible");
+            endNodes.removeClass("path-visible");
         });
     }
 
@@ -376,42 +301,22 @@ class GraphParameters extends Component {
     }
 
     unhighlightVersionsCollisions(): void {
-        let collisions = this.cy.nodes(".version-collision.visible");
-        let endNodes = this.cy.nodes(".version-collision.end-node.visible");
+        let nodes = this.cy.nodes();
+        let intermediate = nodes.filter(".version-collision.intermediate-node.versions-visible");
+        let endNodes = nodes.filter(".version-collision.end-node.versions-visible");
         this.cy.batch(() => {
-            collisions.removeClass("version-collision visible");
-            endNodes.removeClass("version-collision end-node visible");
+            intermediate.removeClass("versions-visible");
+            endNodes.removeClass("versions-visible");
         });
     }
 
     highlightVersionsCollisions(): void {
-        let collisions = [];
-        let endNodes = [];
-        let elements = this.cy.elements();
-        this.cy.nodes().forEach(node => {
-            let outgoers = node.outgoers();
-            let func = this.getSameIgnoreVersion;
-            elements.dfs({
-                root: node,
-                directed: true,
-                visit: function (node): void {
-                    let nodeOutgoers = node.outgoers();
-                    let sameIgnoreVersion = func(outgoers, nodeOutgoers);
-                    if (Arrays.isNotEmpty(sameIgnoreVersion)) {
-                        collisions.push(node);
-                        endNodes.push.apply(endNodes, sameIgnoreVersion);
-                    }
-                }
-            });
-        });
-
+        let nodes = this.cy.nodes();
+        let intermediate = nodes.filter(".version-collision.intermediate-node");
+        let endNodes = nodes.filter(".version-collision.end-node");
         this.cy.batch(() => {
-            for (let node of collisions) {
-                node.addClass("version-collision visible");
-            }
-            for (let endNode of endNodes) {
-                endNode.addClass("version-collision end-node visible");
-            }
+            intermediate.addClass("versions-visible");
+            endNodes.addClass("versions-visible");
         });
     }
 

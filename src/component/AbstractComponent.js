@@ -8,6 +8,9 @@ class AbstractComponent extends Component {
         this.getOrElse = this.getOrElse.bind(this);
     }
 
+    componentDidMount(): void {
+    }
+
     getOrElse(stateFunction: Function, defaultValue: *): * {
         if (Objects.isCorrect(this.state)) {
             return stateFunction(this.state);

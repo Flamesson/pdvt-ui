@@ -19,9 +19,6 @@ i18n.use(LanguageDetector)
             },
             en: {
                 translations: require("./locales/en/translations.json")
-            },
-            zh: {
-                translations: require("./locales/zh/translations.json")
             }
         },
         ns: ["translations"],
