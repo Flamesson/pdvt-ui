@@ -1,5 +1,5 @@
 import React from 'react';
-import "./ProblemNavigation.css";
+import "./ProblemCarousel.css";
 
 import { Carousel, Button } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
@@ -60,39 +60,37 @@ class ProblemCarousel extends AbstractComponent {
         const showSolutionButtonText = explicitShowSolution
             ? t('problem-carousel.hide-solution')
             : t('problem-carousel.show-solution');
-        const prevButtonText = t('problem-carousel.prev');
-        const nextButtonText = t('problem-carousel.next');
 
         return (
-            <div>
+            <div className={"w-100 mt-2 vertical-scrollable"}>
                 {Arrays.isNotEmpty(problems) &&
-                    <div>
-                        <div className="problem-navigation">
-                            <Button variant="link" className="navigation-button" onClick={this.handlePrev} disabled={!canGoPrev}>
+                    <div className={"d-flex flex-column align-items-center"}>
+                        <div className="d-flex flex-row justify-content-center">
+                            <Button variant="link" className="ml-1 mr-1" onClick={this.handlePrev} disabled={!canGoPrev}>
                                 <BsChevronLeft className="navigation-icon" size={32} />
                             </Button>
-                            <Button variant="link" className="navigation-button" onClick={this.handleNext} disabled={!canGoNext}>
+                            <Button variant="link" className="ml-1 mr-1" onClick={this.handleNext} disabled={!canGoNext}>
                                 <BsChevronRight className="navigation-icon" size={32} />
                             </Button>
                         </div>
-                        <Carousel interval={null} activeIndex={currentIndex}>
+                        <Carousel className={"w-96 ml-2p"} interval={null} activeIndex={currentIndex}>
                             {problems.map((problem, index) => (
                                 <Carousel.Item key={index}>
                                     <div>
                                         <h3>{problem.name}</h3>
-                                        <p>{problem.description}</p>
+                                        {problem.body}
                                     </div>
                                 </Carousel.Item>
                             ))}
                         </Carousel>
 
-                        <div className="toggle-solution">
+                        <div className="toggle-solution mt-4 mb-4">
                             <Button variant="outline-secondary" onClick={this.toggleSolution}>
                                 {showSolutionButtonText}
                             </Button>
                         </div>
 
-                        {explicitShowSolution && <p>{currentProblem.possibleSolution}</p>}
+                        {explicitShowSolution && currentProblem.possibleSolution}
                     </div>
                 }
             </div>

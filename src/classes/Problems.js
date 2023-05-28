@@ -2,6 +2,11 @@ import Elements from "../cytoscape/Elements";
 import Problem from "./Problem";
 import Optional from "../utils/Optional";
 import Arrays from "../utils/Arrays";
+import Cycle from "../cytoscape/Cycle";
+import Conflict from "../cytoscape/Conflict";
+import UnlinkedNodesProblem from "../component/Problem/UnlinkedNodesProblem";
+import CyclesProblem from "../component/Problem/CyclesProblem";
+import ConflictsProblem from "../component/Problem/ConflictsProblem";
 
 class Problems {
     constructor(elements: Elements, t) {
@@ -10,8 +15,14 @@ class Problems {
     }
 
     analyze(): Problem[] {
-        let problems: Problem[] = [];
-        this._getUnlinked().ifPresent(problem => problems.push(problem));
+        return Array.of(
+            this._getUnlinked(),
+            this._getCycles(),
+            this._getVersionsConflicts(),
+            this._getLicencesProblems()
+        )
+            .filter(optional => optional.isPresent())
+            .map(optional => optional.getOrThrow());
     }
 
     _getUnlinked(): Optional<Problem> {
@@ -22,15 +33,35 @@ class Problems {
 
         //TODO: localize
         let name = "Несвязанные узлы";
-        let description = "В графе присутствуют несвязанные узлы. Вот список таких узлов: " +
-        "\n" + unlinked.map(node => "=> " + node.getLabel() + "\n") +
-        "\nЭто может произойти по следующим причинам:" +
-        "\n1) В проекте может быть независимый компонент, модуль или микросервис, который не зависит от других элементов системы и не требует взаимодействия с ними." +
-        "\n2) В ходе развития проекта код может устареть и некоторые модули могут стать неактуальными." +
-        "\n3) При проектировании или разработке произошла ошибка, модуль оказался ненужен или не был привязан к нужному месту." +
-        "\n4) Вы используете версию приложения, которая содержит баг, из-за которого не генерирует список зависимостей нужным образом.";
+        return Optional.of(new Problem(name, <UnlinkedNodesProblem nodes={unlinked}/>, <div>"Пока не придумал..."</div>))
+    }
 
-        return Optional.of(new Problem(name, description, ""))
+    _getCycles(): Optional<Problem> {
+        let cycles: Cycle[] = this.elements.getCycles();
+        if (Arrays.isEmpty(cycles)) {
+            return Optional.empty();
+        }
+
+        //проблема не критична, но может ухудшить сопровождаемость, тестируемость и скорость разработки.
+        //решение - Когда у вас есть циклическая зависимость, вероятно, у вас есть проблема с дизайном, и обязанности не разделены должным образом. Вам следует попытаться правильно перепроектировать компоненты, чтобы их иерархия была хорошо спроектирована и не было необходимости в циклических зависимостях.
+        //решение - использование пакетного менеджера
+        let name = "Циклы зависимостей";
+        return Optional.of(new Problem(name, <CyclesProblem cycles={cycles}/>, <div>"Пока не придумал..."</div>));
+    }
+
+    _getVersionsConflicts(): Optional<Problem> {
+        let conflicts: Conflict[] = this.elements.getVersionsConflicts();
+        if (Arrays.isEmpty(conflicts)) {
+            return Optional.empty();
+        }
+
+        let name = "Конфликты зависимостей";
+        return Optional.of(new Problem(name, <ConflictsProblem conflicts={conflicts}/>, <div>"Пока не придумал..."</div>));
+    }
+
+    _getLicencesProblems(): Optional<Problem> {
+        //TODO: отправлять на бэкенд текущий файл зависимостей. там фильтровать. возвращать те, что не проходят + по какой лицензии. причем можно по id, а не по label.
+        return Optional.empty();
     }
 }
 

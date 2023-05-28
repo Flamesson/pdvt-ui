@@ -11,6 +11,9 @@ class AbstractComponent extends Component {
     componentDidMount(): void {
     }
 
+    componentWillUnmount(): void {
+    }
+
     getOrElse(stateFunction: Function, defaultValue: *): * {
         if (Objects.isCorrect(this.state)) {
             return stateFunction(this.state);

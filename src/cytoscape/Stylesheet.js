@@ -131,15 +131,15 @@ class Stylesheet {
                 }
             },
             {
-                selector: "node.potentially-dangerous.visible",
+                selector: ".potentially-dangerous.infected.infection-visible",
                 style: {
-                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousColor
+                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousInfectedColor
                 }
             },
             {
-                selector: "node.potentially-dangerous.infected.visible",
+                selector: ".potentially-dangerous.infection-source.infection-visible",
                 style: {
-                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousInfectedColor
+                    "background-color": this.cyStyle.graphStyle.potentiallyDangerousColor
                 }
             }
         ];

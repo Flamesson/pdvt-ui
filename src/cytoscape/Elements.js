@@ -12,7 +12,10 @@ import JohnsonAlgorithm from "../algorithm/JohnsonAlgorithm";
 import FloydWarshall from "../algorithm/FloydWarshall";
 import BooleanUtils from "../utils/BooleanUtils";
 import VersionsCollisions from "../algorithm/VersionsConflicts";
-import Pair from "../utils/Pair";
+import type Conflict from "./Conflict";
+import LicensesRequest from "../algorithm/LicensesRequest";
+import StoredLicenses from "../algorithm/StoredLicenses";
+import type LicenseProblems from "./LicenseProblems";
 
 class Elements {
     constructor(nodes, edges, versioned) {
@@ -122,7 +125,6 @@ class Elements {
     }
 
     getTooMuchOfOutputs(limit: Number): Node[] {
-        logger.error("Too much of outputs begin");
         let result = [];
         for (let node: Node of this.nodes) {
             let outputs = node.outcomes.length;
@@ -130,8 +132,6 @@ class Elements {
                 result.push(node);
             }
         }
-
-        logger.error("Too much of outputs end");
 
         return result;
     }
@@ -142,11 +142,7 @@ class Elements {
             return;
         }
 
-        logger.error("handleUnlinkedNodes start");
-
         this.getUnlinkedNodes().forEach(node => node.addClassName("unlinked"));
-
-        logger.error("handleUnlinkedNodes end");
 
         this.lazy.set(key, true);
     }
@@ -168,8 +164,6 @@ class Elements {
             return;
         }
 
-        logger.error("findCycles start");
-
         let cycles: Cycle[] = this.getCycles();
 
         for (let i = 0; i < cycles.length; i++) {
@@ -179,8 +173,6 @@ class Elements {
                 node.data.cycle = i;
             }
         }
-
-        logger.error("findCycles end");
 
         this.lazy.set(key, true);
     }
@@ -199,32 +191,60 @@ class Elements {
             return;
         }
 
-        logger.error("findVersionsConflicts start");
-
-        let pair: Pair<Node[], Node[]> = new VersionsCollisions(this).findCollisions();
-        let collisions = pair.first;
-        let endNodes = pair.second;
-
-        for (let node: Node of collisions) {
-            node.addClassName("version-collision").addClassName("intermediate-node");
+        let conflicts: Conflict[] = this.getVersionsConflicts();
+        for (let i = 0; i < conflicts.length; i++) {
+            let conflict: Conflict = conflicts[i];
+            for (let node: Node of conflict.intermediateNodes) {
+                node.data.conflict = i;
+                node.addClassName("version-collision").addClassName("intermediate-node");
+            }
+            for (let node: Node of conflict.endNodes) {
+                node.data.conflict = i;
+                node.addClassName("version-collision").addClassName("end-node");
+            }
         }
-        for (let endNode: Node of endNodes) {
-            endNode.addClassName("version-collision").addClassName("end-node");
-        }
-
-        logger.error("findVersionsConflicts end");
 
         this.lazy.set(key, true);
     }
 
-    handleLicenses(): void {
+    getVersionsConflicts(): Conflict[] {
+        if (!this.versioned) {
+            return;
+        }
+
+        return new VersionsCollisions(this).findConflicts();
+    }
+
+    handleLicenses(): Promise {
         let key = "licenses";
         if (this._initiated(key)) {
             return;
         }
 
-        //TODO: подумать где лучше реализовать. Очевидно, что мне нужна будет подгрузка данных. Но каких размеров?
-        this.lazy.set(key, true);
+        let elements: Elements = this;
+
+        return this.getLicenses()
+            .then((results): Promise<Elements> => {
+                for (let licenseProblems: LicenseProblems of results) {
+                    for (let node: Node of licenseProblems.infections) {
+                        node.addClassName("potentially-dangerous").addClassName("infection-source");
+                    }
+                    for (let node: Node of licenseProblems.infected) {
+                        node.addClassName("potentially-dangerous").addClassName("infected");
+                    }
+                }
+
+                elements.lazy.set(key, true);
+
+                return Promise.resolve(elements);
+            });
+    }
+
+    getLicenses(): Promise<LicenseProblems[]> {
+        return Promise.all([
+            new LicensesRequest(this).getLicenseProblems(),
+            new StoredLicenses(this).findProblems()
+        ]);
     }
 
     findMostLongPath(): void {
@@ -232,8 +252,6 @@ class Elements {
         if (this._initiated(key) || this.isEmpty()) {
             return;
         }
-
-        logger.error("findMostLongPath start");
 
         let path: Node[] = this.getMostLongPath();
 
@@ -252,8 +270,6 @@ class Elements {
             let last: Node = path[path.length - 1];
             last.addClassName("most-long-path-end");
         }
-
-        logger.error("findMostLongPath end");
 
         this.lazy.set(key, true);
     }
@@ -293,6 +309,29 @@ class Elements {
         }
     }
 
+    findPath(startNode: Node, endNode: Node): Node[] {
+        let stack: Node[] = [startNode];
+        let visited = new Set();
+
+        let path = {};
+
+        while (stack.length > 0) {
+            let currentNode: Node = stack.pop();
+            if (currentNode === endNode) {
+                return this._buildPath(path, startNode, endNode);
+            }
+
+            let outgoers: Node[] = currentNode.getOutgoers();
+            for (let outgoingNode: Node of outgoers) {
+                if (!visited.has(outgoingNode)) {
+                    stack.push(outgoingNode);
+                    visited.add(outgoingNode);
+                    path[outgoingNode] = currentNode;
+                }
+            }
+        }
+    }
+
     getByIndex(map: Map<Node, Number>, index: Number): Optional<Node> {
         for (let [node, number]: [Node, Number] of map.entries()) {
             if (number === index) {
@@ -305,6 +344,30 @@ class Elements {
 
     _initiated(key): Boolean {
         return BooleanUtils.isTrue(this.lazy.get(key));
+    }
+
+    _buildPath(path, startNode, endNode): Node[] {
+        let result = [];
+        let currentNode = endNode;
+
+        while (currentNode !== startNode) {
+            result.unshift(currentNode);
+            currentNode = path[currentNode];
+        }
+
+        result.unshift(startNode);
+
+        return result;
+    }
+
+    _getNodeByLabel(label: String): Node {
+        for (let node: Node of this.nodes) {
+            if (node.getLabel() === label) {
+                return node;
+            }
+        }
+
+        throw new Error("Illegal argument. No node with given label is present. Given: " + label);
     }
 }
 

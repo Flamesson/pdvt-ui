@@ -32,6 +32,20 @@ class Arrays {
 
         return result;
     }
+
+    static areEquals(a1: *[], a2: *[]): boolean {
+        if (a1.length !== a2.length) {
+            return false;
+        }
+
+        for (let i1: * of a1) {
+            if (!a2.includes(i1)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
 
 export default Arrays;

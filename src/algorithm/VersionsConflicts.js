@@ -1,30 +1,27 @@
 import Elements from "../cytoscape/Elements";
 import Arrays from "../utils/Arrays";
 import Node from "../cytoscape/Node";
-import Pair from "../utils/Pair";
+import Conflict from "../cytoscape/Conflict";
 
 class VersionsConflicts {
     constructor(elements: Elements) {
         this.elements = elements;
     }
 
-    findCollisions(): Pair<Node[], Node[]> {
-        let collisions: Node[] = [];
-        let endNodes: Node[] = [];
-        let nodes = this.elements.nodes;
-        for (let node: Node of nodes) {
+    findConflicts(): Conflict[] {
+        let conflicts = [];
+        for (let node: Node of this.elements.nodes) {
             let outgoers: Node[] = node.getOutgoers();
-            this.elements.dfs(node, (visited): void => {
-                let nodeOutgoers: Node[] = visited.getOutgoers();
-                let sameIgnoreVersion = this.getSameIgnoreVersion(outgoers, nodeOutgoers);
+            this.elements.dfs(node, (visited: Node): void => {
+                let sameIgnoreVersion: Node[] = this.getSameIgnoreVersion(outgoers, visited.getOutgoers());
                 if (Arrays.isNotEmpty(sameIgnoreVersion)) {
-                    collisions.push(node);
-                    endNodes.push.apply(endNodes, sameIgnoreVersion);
+                    let intermediate: Node[] = this.elements.findPath(node, visited);
+                    this.pushConflict(conflicts, new Conflict(intermediate, sameIgnoreVersion));
                 }
             });
         }
 
-        return new Pair(collisions, endNodes);
+        return conflicts;
     }
 
     getSameIgnoreVersion(neighborhood1: Node[], neighborhood2: Node[]): *[] {
@@ -54,6 +51,22 @@ class VersionsConflicts {
         let withoutColon: String = label.substring(0, lastColonIndex);
         let version: String = label.substring(lastColonIndex + 1);
         return Array.of(withoutColon, version);
+    }
+
+    pushConflict(conflicts: Conflict[], conflict: Conflict): boolean {
+        for (let item: Conflict of conflicts) {
+            if (Arrays.areEquals(item.endNodes, conflict.endNodes)) {
+                for (let node: Node of conflict.intermediateNodes) {
+                    if (!item.intermediateNodes.includes(node)) {
+                        item.intermediateNodes.push(node);
+                    }
+                }
+
+                return;
+            }
+        }
+
+        conflicts.push(conflict);
     }
 }
 

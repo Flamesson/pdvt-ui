@@ -6,6 +6,10 @@ class Cycles {
     }
 
     addCycle(cycle: Cycle) {
+        if (cycle.length === 1) {
+            return;
+        }
+
         if (!this.contains(cycle)) {
             this.cycles.push(cycle);
         }

@@ -8,34 +8,67 @@ import ProblemCarousel from "../ProblemCarousel/ProblemCarousel";
 import Problems from "../../classes/Problems";
 import DataManager from "../../datamanager/DataManager";
 import Problem from "../../classes/Problem";
+import extLocalStorage from "../../utils/ext.local.storage";
+import AppStorage from "../../AppStorage";
+import Optional from "../../utils/Optional";
+import Strings from "../../utils/Strings";
+import Objects from "../../utils/Objects";
+import AppEvents from "../../AppEvents";
 
 class Analysis extends AbstractComponent {
     constructor(props) {
         super(props);
 
-        this.analyze = this.analyze.bind(this);
+        this.state = {
+            problems: []
+        };
     }
 
-    analyze() {
+    componentDidMount() {
+        let analysisPerformed: Boolean = Optional.ofNullable(extLocalStorage.getItem(AppStorage.ANALYSIS_PERFORMED))
+            .map(Strings.asBoolean)
+            .getOrDefault(false);
+
+        if (analysisPerformed) {
+            this.analyze();
+        }
+
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
+            this.setState({
+                problems: []
+            });
+        });
+    }
+
+    analyze = (callback): void => {
         let dataManager: DataManager = new DataManager();
         dataManager.getElements().then(elements => {
             let problems: Problem[] = new Problems(elements, this.props.t).analyze();
-            this.setState({
-                problems: problems
-            });
+
+            if (Objects.isCorrect(callback)) {
+                this.setState({
+                    problems: problems
+                }, callback);
+            } else {
+                this.setState({
+                    problems: problems
+                });
+            }
+        });
+    }
+
+    onPerformAnalysis = (): void => {
+        this.analyze(() => {
+            extLocalStorage.setItem(AppStorage.ANALYSIS_PERFORMED, true);
         });
     }
 
     render() {
         const t = this.props.t;
-        let problems = this.getOrElse(state => state.problems, []);
-        /*let problems = [
-            { name: 'Problem 1', description: 'Description 1', solution: 'Solution 1' },
-            { name: 'Problem 2', description: 'Description 2', solution: 'Solution 2' },
-            { name: 'Problem 3', description: 'Description 3', solution: 'Solution 3' }
-        ];*/
-        return <div className={"b"}>
-            <Button onClick={ignored => this.analyze()}>{t("button.perform-analysis.caption")}</Button>
+        let problems = this.state.problems;
+
+        return <div className={"d-flex flex-column justify-content-start align-items-center"}>
+            <Button className={"mt-5"} onClick={this.onPerformAnalysis}>{t("button.perform-analysis.caption")}</Button>
             <ProblemCarousel problems={problems}/>
         </div>;
     }

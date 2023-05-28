@@ -35,6 +35,7 @@ class Data extends AbstractComponent {
         this.getActiveKey = this.getActiveKey.bind(this);
         this.onLicensesInputChange = this.onLicensesInputChange.bind(this);
     }
+
     componentDidMount() {
         this.onChangeUserOrigin = () => {
             if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {

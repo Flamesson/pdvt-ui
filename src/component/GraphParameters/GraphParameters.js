@@ -36,9 +36,6 @@ class GraphParameters extends Component {
         this.onToggleHighlightVersionsCollisions = this.onToggleHighlightVersionsCollisions.bind(this);
         this.unhighlightVersionsCollisions = this.unhighlightVersionsCollisions.bind(this);
         this.highlightVersionsCollisions = this.highlightVersionsCollisions.bind(this);
-        this.getSameIgnoreVersion = this.getSameIgnoreVersion.bind(this);
-        this.isSameIgnoreVersion = this.isSameIgnoreVersion.bind(this);
-        this.separateWithVersion = this.separateWithVersion.bind(this);
         this.onCircularColorChange = this.onCircularColorChange.bind(this);
         this.onMostLongPathStartColor = this.onMostLongPathStartColor.bind(this);
         this.onMostLongPathColor = this.onMostLongPathColor.bind(this);
@@ -233,47 +230,22 @@ class GraphParameters extends Component {
     }
 
     stopUsingLicenses(): void {
-        let potentiallyDangerous = this.cy.nodes(".potentially-dangerous.visible");
-        let infected = this.cy.nodes(".potentially-dangerous.infected.visible");
+        let nodes = this.cy.nodes();
+        let infections = nodes.filter(".potentially-dangerous.infection-source.infection-visible");
+        let infected = nodes.filter(".potentially-dangerous.infected.infection-visible");
         this.cy.batch(() => {
-            potentiallyDangerous.removeClass("potentially-dangerous visible");
-            infected.removeClass("potentially-dangerous infected visible");
+            infections.removeClass("infection-visible");
+            infected.removeClass("infection-visible");
         });
     }
 
     startUsingLicenses(): void {
-        let licenses = this.getLicenses();
-        let potentiallyDangerous = this.cy.nodes().filter(node => {
-            let label = node.data().label;
-            for (let license of licenses) {
-                if (label.startsWith(license.key)) {
-                    let code = license.value
-                    let type = Licenses.getTypeByCode(code);
-                    return type === LicenseType.PAID || type === LicenseType.MAYBE_PAID;
-                }
-            }
-
-            return false;
-        });
-
-        let infected = [];
-        let handled = [];
-        let toHandle = new Array(potentiallyDangerous);
-        while (Arrays.isNotEmpty(toHandle)) {
-            let inHandle = toHandle.pop();
-            let incomers = inHandle.incomers().filter(incomer => incomer.isNode());
-            toHandle.push.apply(toHandle, incomers.filter(incomer => !handled.includes(incomer)));
-            infected.push.apply(infected, incomers);
-            handled.push(inHandle);
-        }
-
+        let nodes = this.cy.nodes();
+        let infections = nodes.filter(".potentially-dangerous.infection-source");
+        let infected = nodes.filter(".potentially-dangerous.infected");
         this.cy.batch(() => {
-            for (let node of potentiallyDangerous) {
-                node.addClass("potentially-dangerous visible");
-            }
-            for (let node of infected) {
-                node.addClass("potentially-dangerous infected visible")
-            }
+            infections.addClass("infection-visible");
+            infected.addClass("infection-visible");
         });
     }
 
@@ -318,43 +290,6 @@ class GraphParameters extends Component {
             intermediate.addClass("versions-visible");
             endNodes.addClass("versions-visible");
         });
-    }
-
-    getSameIgnoreVersion(neighborhood1, neighborhood2): *[] {
-        let sameIgnoreVersion = [];
-        for (let element1 of neighborhood1) {
-            if (!element1.isNode()) {
-                continue;
-            }
-
-            for (let element2 of neighborhood2) {
-                if (!element2.isNode()) {
-                    continue;
-                }
-
-                if (this.isSameIgnoreVersion(element1, element2)) {
-                    sameIgnoreVersion.push(element1);
-                    sameIgnoreVersion.push(element2);
-                }
-            }
-        }
-
-        return sameIgnoreVersion;
-    }
-
-    isSameIgnoreVersion(node1, node2): boolean {
-        let label1 = node1.data().label;
-        let label2 = node2.data().label;
-        let separate1 = this.separateWithVersion(label1);
-        let separate2 = this.separateWithVersion(label2);
-        return separate1[0] === separate2[0] && separate1[1] !== separate2[1];
-    }
-
-    separateWithVersion(label: String): String[] {
-        let lastColonIndex = label.lastIndexOf(":");
-        let withoutColon: String = label.substring(0, lastColonIndex);
-        let version: String = label.substring(lastColonIndex + 1);
-        return Array.of(withoutColon, version);
     }
 
     onCircularColorChange(event: ChangeEvent<HTMLInputElement>): void {

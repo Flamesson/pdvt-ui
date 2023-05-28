@@ -40,12 +40,29 @@ class Node extends Item {
         return [...set];
     }
 
+    getIncomers(): Node[] {
+        let set: Set<Node> = new Set();
+        this.getIncomes().forEach(edge => {
+            set.add(edge.getSource());
+        });
+
+        return [...set];
+    }
+
     getOutcomes(): Edge[] {
         return this.outcomes;
     }
 
     getIncomes(): Edge[] {
         return this.incomes;
+    }
+
+    addOutgoingEdge(edge: Edge): void {
+        this.outcomes.push(edge);
+    }
+
+    addIncomingEdge(edge: Edge): void {
+        this.incomes.push(edge);
     }
 
     isEdge(): boolean {

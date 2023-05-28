@@ -14,6 +14,9 @@ class FileManage extends Component {
         super(props);
 
         this.fileUploadInputId = "graph-file";
+        this.state = {
+            file: null
+        };
 
         this.handleFileChange = this.handleFileChange.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
@@ -22,16 +25,33 @@ class FileManage extends Component {
     }
 
     componentDidMount() {
-        if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
-            let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
-            this.setState({
-                file: file
-            }, () => {
-                this.updateRemoveFileButtonState();
-            });
-        } else {
-            this.updateRemoveFileButtonState();
+        let checkFile = () => {
+            if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+                let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
+                this.setState({
+                    file: file
+                }, () => {
+                    this.updateRemoveFileButtonState();
+                });
+            } else {
+                this.setState({
+                    file: null
+                }, () => {
+                    this.updateRemoveFileButtonState();
+                })
+            }
+        };
+
+        this.onInputChangedUserOrigin = (): void => {
+            checkFile();
         }
+        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
+
+        checkFile();
+    }
+
+    componentWillUnmount() {
+        this.props.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
 
     uploadFile(ignored) {
@@ -82,15 +102,9 @@ class FileManage extends Component {
     }
 
     render() {
-        const state = this.state;
-        let file;
-        if (Objects.isCorrect(state)) {
-            file = state.file;
-        } else {
-            file = null;
-        }
-
+        let file = this.state.file;
         const t = this.props.t;
+
         return (
             <div>
                 <ButtonGroup>

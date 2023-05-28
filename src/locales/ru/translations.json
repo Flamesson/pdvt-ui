@@ -130,8 +130,6 @@
   "tab.mobile-plain.caption": "Граф (текст)",
   "tab.mobile-file.caption": "Граф (файл)",
   "button.perform-analysis.caption": "Произвести анализ",
-  "problem-carousel.prev": "<-",
-  "problem-carousel.next": "->",
   "problem-carousel.show-solution": "Отобразить потенциальное решение",
   "problem-carousel.hide-solution": "Спрятать потенциальное решение",
   "graph-editor": {
@@ -193,5 +191,13 @@
   "copy-button": {
     "success": "Скопировано в буфер обмена",
     "error": "Не удалось скопировать"
+  },
+  "problem": {
+    "hide-reasons": "Свернуть причины",
+    "show-reasons": "Развернуть причины",
+    "hide-solution": "Свернуть решение",
+    "show-solution": "Развернуть решение",
+    "hide-consequences": "Свернуть проблемы",
+    "show-consequences": "Развернуть проблемы"
   }
 }

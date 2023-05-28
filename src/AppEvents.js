@@ -6,7 +6,6 @@ class AppEvents {
     static TAP = "tap";
     static CY_STYLE_CHANGED = "cy style changed";
     static INPUT_CHANGED_USER_ORIGIN = "input changed user origin";
-    static INPUT_CHANGED = "input changed";
     static GRAPH_ITEMS_HIDE_CHANGED = "graph items hide changed";
     static CODE_CHANGED = "code changed";
 }

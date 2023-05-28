@@ -1,7 +1,9 @@
+import {ReactNode} from "react";
+
 class Problem {
-    constructor(name, description, possibleSolution) {
+    constructor(name: String, body: ReactNode, possibleSolution: ReactNode) {
         this.name = name;
-        this.description = description;
+        this.body = body;
         this.possibleSolution = possibleSolution;
     }
 }

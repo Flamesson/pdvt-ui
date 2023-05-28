@@ -129,8 +129,6 @@
   "tab.licenses.caption": "Licenses",
   "tab.mobile-plain.caption": "Graph (text)",
   "tab.mobile-file.caption": "Graph (file)",
-  "problem-carousel.prev": "<-",
-  "problem-carousel.next": "->",
   "problem-carousel.show-solution": "Show Potential Solution",
   "problem-carousel.hide-solution": "Hide Potential Solution",
   "graph-editor": {
@@ -192,5 +190,13 @@
   "copy-button": {
     "success": "Copied to clipboard",
     "error": "Copy failed"
+  },
+  "problem": {
+    "hide-reasons": "Hide reasons",
+    "show-reasons": "Expand reasons",
+    "hide-solution": "Hide Solution",
+    "show-solution": "Deploy Solution",
+    "hide-consequences": "Hide problems",
+    "show-consequences": "Expand problems"
   }
 }

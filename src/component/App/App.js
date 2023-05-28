@@ -23,16 +23,23 @@ import Stomp from 'webstomp-client';
 import GraphEditor from "../GraphEditor/GraphEditor";
 import CodeScreen from "../CodeScreen/CodeScreen";
 import Code from "../CodeScreen/Code";
+import Maps from "../../utils/Maps";
+import {withRouter} from "../withRouter";
+import Optional from "../../utils/Optional";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;
 const SERVER_URL = "http://" + REACT_APP_SERVER_ADDRESS;
 const WEB_SOCKETS_ENDPOINT = "/ws/pdvt";
 const SOCKET_URL = `${SERVER_URL}${WEB_SOCKETS_ENDPOINT}`;
 
+const PDVT_TASK = "pdvt";
+const FILE_AND_ANALYSE_TASK = "file-and-analyze";
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.hub = new EventEmitter();
+    this.previousSubscriptions = new Map() //<String, *>
 
     this.generateText = this.generateText.bind(this);
     this.receivePdvt = this.receivePdvt.bind(this);
@@ -57,13 +64,18 @@ class App extends Component {
         return;
       }
 
-      if (Objects.isCorrect(this.previousSubscription)) {
-        this.previousSubscription.unsubscribe();
-      }
+      let keysToFuncs = Maps.ofVararg(new Option(PDVT_TASK, this.receivePdvt), new Option(FILE_AND_ANALYSE_TASK, this.receiveFileAndAnalyze));
+      keysToFuncs.forEach((value, key) => {
+        if (this.previousSubscriptions.has(key)) {
+          this.previousSubscriptions.get(key).unsubscribe();
+          this.previousSubscriptions.delete(key);
+        }
 
-      if (code.notEmpty()) {
-        this.previousSubscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/pdvt", this.receivePdvt);
-      }
+        if (code.notEmpty()) {
+          let subscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/" + key, value);
+          this.previousSubscriptions.set(key, subscription);
+        }
+      });
     };
     this.hub.on(AppEvents.CODE_CHANGED, this.onCodeChanged);
 
@@ -71,9 +83,15 @@ class App extends Component {
     client.connect({}, (): void => {
       this.client = client;
       if (extLocalStorage.isPresent(AppStorage.SAVED_CODE)) {
-        let code = new Code(extLocalStorage.getItem(AppStorage.SAVED_CODE));
-        this.previousSubscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/pdvt", this.receivePdvt);
+        let code: Code = new Code(extLocalStorage.getItem(AppStorage.SAVED_CODE));
+        this.previousSubscriptions.set(PDVT_TASK, this.client.subscribe("/user/" + code.getCodeword() + `/ws/${PDVT_TASK}`, this.receivePdvt));
+        this.previousSubscriptions.set(FILE_AND_ANALYSE_TASK, this.client.subscribe("/user/" + code.getCodeword() + `/ws/${FILE_AND_ANALYSE_TASK}`, this.receiveFileAndAnalyze))
       }
+    });
+
+
+    this.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
+      extLocalStorage.setItem(AppStorage.ANALYSIS_PERFORMED, false);
     });
   }
 
@@ -81,7 +99,22 @@ class App extends Component {
     this.hub.removeListener(AppEvents.CODE_CHANGED, this.onCodeChanged);
   }
 
-  receivePdvt(message): void {
+  receivePdvt(message, callback): void {
+    let file: File = this.extractTaskFile(message);
+    extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
+      this.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
+      Optional.ofNullable(callback).ifPresent(call => call());
+    });
+  }
+
+  receiveFileAndAnalyze = (message): void => {
+    this.receivePdvt(message, () => {
+      extLocalStorage.setItem(AppStorage.ANALYSIS_PERFORMED, true);
+      this.props.navigate("/analysis");
+    });
+  }
+
+  extractTaskFile = (message): File => {
     let raw = message.body;
 
     for (let pos = 0; pos < raw.length; pos++) {
@@ -92,14 +125,11 @@ class App extends Component {
         let filename = raw.substring(pos + 1, pos + length + 1);
         let body = raw.substring(pos + length + 1);
 
-        let file = new File([atob(body)], filename);
-        extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
-          this.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
-        });
-
-        break;
+        return new File([atob(body)], filename);
       }
     }
+
+    throw new Error("Failed to extract a task file");
   }
 
   generateText(ignored) {
@@ -135,4 +165,4 @@ class App extends Component {
   }
 }
 
-export default withTranslation()(App);
+export default withTranslation()(withRouter(App));

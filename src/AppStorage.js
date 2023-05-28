@@ -24,6 +24,7 @@ class AppStorage {
     static HAS_VERSIONS = "has versions";
     static SAVED_CODE = "code";
     static SAVED_PASS_LENGTH = "pl";
+    static ANALYSIS_PERFORMED = "analysis performed";
 
     static MOCK_TEXT_DATA = "[versioned][1]\n" +
         "[dictionary]\n" +

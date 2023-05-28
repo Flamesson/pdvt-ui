@@ -33,15 +33,17 @@ class DataManager {
     }
 
     handle(promise: Promise<Elements>): Promise<Elements> {
-        return promise.then(elements => {
-            elements.handleUnlinkedNodes();
-            elements.handleNumberOfOutputs(5);
-            elements.findCycles();
-            elements.findMostLongPath();
-            elements.findVersionsConflicts();
+        return promise
+            .then((elements: Elements) => {
+                elements.handleUnlinkedNodes();
+                elements.handleNumberOfOutputs(5);
+                elements.findCycles();
+                elements.findMostLongPath();
+                elements.findVersionsConflicts();
 
-            return elements;
-        });
+                return Promise.resolve(elements);
+            })
+            .then((elements: Elements) => elements.handleLicenses());
     }
 
     getTextDataElements(): Promise<Elements> {

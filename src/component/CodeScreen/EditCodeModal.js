@@ -69,7 +69,7 @@ class EditCodeModal extends Component {
 
         let password;
         if (!this.state.userTouchedPassword && this.state.code.hasPassword()) {
-            password = " ".repeat(this.state.dto.rawPasswordLength);
+            password = " ";
         } else {
             password = this.state.password;
         }

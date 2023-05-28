@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {Button, Container, Spinner} from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { withTranslation } from 'react-i18next';
-import EditCodeModal from './EditCodeModal';
 import CreateCodeModal from './CreateCodeModal';
 import CopyButton from "../CopyButton/CopyButton";
 import axios from "axios";
@@ -47,15 +46,13 @@ class CodeScreen extends Component {
     loadCodeFromLocalStorage = () => {
         if (extLocalStorage.isPresent(AppStorage.SAVED_CODE)) {
             this.setState({
-                code: new Code(extLocalStorage.getItem(AppStorage.SAVED_CODE)),
-                dto: new CodeDto(null, null, Number.parseInt(extLocalStorage.getItem(AppStorage.SAVED_PASS_LENGTH)))
+                code: new Code(extLocalStorage.getItem(AppStorage.SAVED_CODE))
             });
         }
     };
 
     saveCodeToLocalStorage = () => {
         extLocalStorage.setItem(AppStorage.SAVED_CODE, this.state.code.getRaw());
-        extLocalStorage.setItem(AppStorage.SAVED_PASS_LENGTH, this.state.dto.rawPasswordLength);
 
         this.props.hub.emit(AppEvents.CODE_CHANGED, this.state.code);
     }
@@ -271,13 +268,6 @@ class CodeScreen extends Component {
                         {t('code-screen.delete-button')}
                     </Button>
                 </div>
-                <EditCodeModal
-                    show={isEditModalOpen}
-                    onClose={this.closeEditModal}
-                    onSave={this.handleCreate}
-                    code={code}
-                    dto={dto}
-                />
                 {isCreateModalOpen &&
                     <CreateCodeModal
                         show={isCreateModalOpen}

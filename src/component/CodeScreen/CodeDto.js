@@ -1,12 +1,11 @@
 class CodeDto {
-    constructor(codeword, password, rawPasswordLength) {
+    constructor(codeword, password) {
         this.codeword = codeword;
         this.password = password;
-        this.rawPasswordLength = rawPasswordLength;
     }
 
     static empty() {
-        return new CodeDto(null, null, 0);
+        return new CodeDto(null, null);
     }
 }
 
