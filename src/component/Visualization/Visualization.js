@@ -11,7 +11,6 @@ import klay from 'cytoscape-klay';
 import cola from 'cytoscape-cola';
 import Objects from "../../utils/Objects";
 import Elements from "../../cytoscape/Elements";
-import DataManager from "../../datamanager/DataManager";
 import {withTranslation} from "react-i18next";
 import ParametersPanel from "../ParametersPanel/ParametersPanel";
 import Controller from "../../highlight/Controller";
@@ -46,50 +45,20 @@ class Visualization extends Component {
         this.saveCyStyle = this.saveCyStyle.bind(this);
         this.onTap = this.onTap.bind(this);
         this.layout = this.layout.bind(this);
-        this.getElements = this.getElements.bind(this);
-        this.updateElements = this.updateElements.bind(this);
         this.emit = this.emit.bind(this);
 
         this.cyStyle = this.loadCyStyle();
     }
 
     componentDidMount() {
-        let dataManager: DataManager  = new DataManager();
-        dataManager.getElements().then(this.updateElements);
-        dataManager.hasVersions().then(result => {
-            extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
-        });
-
         this.onLayoutChange = layout => {
             this.setState({
                 _layout: layout
             });
         };
-        this.onCyUpdate = cy => {
-            this.cy = cy;
-            this.tap = new Tap(cy, this.controller);
-
-            cy.removeListener(AppEvents.TAP, this.onTap);
-            cy.on(AppEvents.TAP, this.onTap);
-
-            cy.layout(this.layout()).run();
-        };
-        this.onCyStyleChanged = ignored => {
-            this.forceUpdate();
-            this.saveCyStyle();
-        };
-        this.onInputChangedUserOrigin = () => {
-            let dataManager: DataManager  = new DataManager();
-            dataManager.getElements().then(this.updateElements);
-            dataManager.hasVersions().then(result => {
-                extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
-            });
-        };
-
         this.props.hub.on(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
-        this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
 
     componentWillUnmount() {
@@ -100,8 +69,22 @@ class Visualization extends Component {
         this.props.hub.removeListener(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
-        this.props.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
+
+    onCyUpdate = (cy): void => {
+        this.cy = cy;
+        this.tap = new Tap(cy, this.controller);
+
+        cy.removeListener(AppEvents.TAP, this.onTap);
+        cy.on(AppEvents.TAP, this.onTap);
+
+        cy.layout(this.layout()).run();
+    }
+
+    onCyStyleChanged = (ignored) => {
+        this.forceUpdate();
+        this.saveCyStyle();
+    };
 
     loadCyStyle(): CyStyle {
         if (extLocalStorage.isAbsent(AppStorage.GENERAL_PARAMETERS)) {
@@ -134,19 +117,6 @@ class Visualization extends Component {
         extLocalStorage.setAsJson(AppStorage.GENERAL_PARAMETERS, this.cyStyle);
     }
 
-    getElements(): Elements {
-        const state = this.state;
-        if (Objects.isNotCorrect(state)) {
-            return new Elements();
-        } else {
-            if (Objects.isCorrect(state.elements)) {
-                return state.elements;
-            } else {
-                return new Elements();
-            }
-        }
-    }
-
     layout() {
         let state = this.state;
         if (Objects.isNotCorrect(state) || Objects.isNotCorrect(state._layout)) {
@@ -165,14 +135,6 @@ class Visualization extends Component {
         this.tap.onTap(e);
     }
 
-    updateElements(elements) {
-        this.setState({
-            elements: elements
-        }, () => {
-            this.props.hub.emit(AppEvents.ELEMENTS_UPDATE, elements);
-        });
-    }
-
     emit(key: String, arg: *): void {
         if (Objects.isNotCorrect(this.props.hub)) {
             logger.warn("A field is undefined. The field - hub.");
@@ -183,7 +145,7 @@ class Visualization extends Component {
     }
 
     render() {
-        let elements: Elements = this.getElements();
+        let elements: Elements = this.props.elementsSupplier();
         let normalized = elements.toNormalizedJson();
 
         return <div className={"visualization-container"}>
@@ -195,7 +157,7 @@ class Visualization extends Component {
             <ParametersPanel hub={this.props.hub}
                              controller={this.controller}
                              tap={this.tap}
-                             elementsSupplier={() => this.getElements()}
+                             elementsSupplier={this.props.elementsSupplier}
                              cyStyle={this.cyStyle}/>
         </div>
     }

@@ -43,17 +43,18 @@ class Analysis extends AbstractComponent {
     analyze = (callback): void => {
         let dataManager: DataManager = new DataManager();
         dataManager.getElements().then(elements => {
-            let problems: Problem[] = new Problems(elements, this.props.t).analyze();
-
-            if (Objects.isCorrect(callback)) {
-                this.setState({
-                    problems: problems
-                }, callback);
-            } else {
-                this.setState({
-                    problems: problems
+            new Problems(elements, this.props.t).analyze()
+                .then((problems: Problem[]) => {
+                    if (Objects.isCorrect(callback)) {
+                        this.setState({
+                            problems: problems
+                        }, callback);
+                    } else {
+                        this.setState({
+                            problems: problems
+                        });
+                    }
                 });
-            }
         });
     }
 

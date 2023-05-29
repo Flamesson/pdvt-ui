@@ -1,4 +1,4 @@
-import type Elements from "../cytoscape/Elements";
+import Elements from "../cytoscape/Elements";
 import Node from "../cytoscape/Node";
 import axios from "axios";
 import logger from "../utils/Logger";

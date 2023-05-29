@@ -1,7 +1,7 @@
 import React, {Component} from "react";
-import SearchNodeInfo from "../SearchNodeInfo/SearchNodeInfo";
-
 import "./Search.css";
+
+import SearchNodeInfo from "../SearchNodeInfo/SearchNodeInfo";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import AppEvents from "../../AppEvents";
@@ -37,15 +37,26 @@ class Search extends Component {
         });
         document.getElementById("parameters-search").value = this.getStoredSearchQuery();
 
-        this.props.hub.on(AppEvents.CY_UPDATE, cy => this.cy = cy);
+        this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.once(AppEvents.CY_UPDATE, ignored => {
             this.cachedNodeWords = false;
             this.updateSearch();
         });
-        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, ignored => {
-            this.cachedNodeWords = false;
-            this.updateSearch();
-        });
+        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
+    }
+
+    componentWillUnmount() {
+        this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
+        this.props.hub.removeListener(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
+    }
+
+    onElementsUpdate = (ignored): void => {
+        this.cachedNodeWords = false;
+        this.updateSearch();
+    }
+
+    onCyUpdate = (cy): void => {
+        this.cy = cy;
     }
 
     debouncedUpdateSearch() {

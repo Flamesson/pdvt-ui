@@ -1,4 +1,4 @@
-import type Elements from "../cytoscape/Elements";
+import Elements from "../cytoscape/Elements";
 import LicenseDependency from "../licenses/LicenseDependency";
 import extLocalStorage from "../utils/ext.local.storage";
 import AppStorage from "../AppStorage";
@@ -7,7 +7,6 @@ import LicenseType from "../licenses/LicenseType";
 import Arrays from "../utils/Arrays";
 import LicenseProblems from "../cytoscape/LicenseProblems";
 import Node from "../cytoscape/Node";
-import logger from "../utils/Logger";
 
 class StoredLicenses {
     constructor(elements: Elements) {
@@ -38,6 +37,10 @@ class StoredLicenses {
     }
 
     getLicenses(): LicenseDependency[] {
+        if (extLocalStorage.isAbsent(AppStorage.DEPENDENCIES_LICENSES)) {
+            return [];
+        }
+
         let plain = extLocalStorage.getParsedJson(AppStorage.DEPENDENCIES_LICENSES);
         return plain.map(singlePlain => {
             return new LicenseDependency(singlePlain.key, singlePlain.value);

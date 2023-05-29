@@ -4,8 +4,6 @@ import { InputGroup } from 'react-bootstrap';
 import {FaCheck} from "react-icons/fa";
 import {FaTimes} from "react-icons/fa";
 import {withTranslation} from "react-i18next";
-import Objects from "../../utils/Objects";
-import logger from "../../utils/Logger";
 import Node from "../../cytoscape/Node";
 
 class NodeItem extends Component {

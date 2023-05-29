@@ -12,10 +12,10 @@ import JohnsonAlgorithm from "../algorithm/JohnsonAlgorithm";
 import FloydWarshall from "../algorithm/FloydWarshall";
 import BooleanUtils from "../utils/BooleanUtils";
 import VersionsCollisions from "../algorithm/VersionsConflicts";
-import type Conflict from "./Conflict";
+import Conflict from "./Conflict";
 import LicensesRequest from "../algorithm/LicensesRequest";
 import StoredLicenses from "../algorithm/StoredLicenses";
-import type LicenseProblems from "./LicenseProblems";
+import LicenseProblems from "./LicenseProblems";
 
 class Elements {
     constructor(nodes, edges, versioned) {

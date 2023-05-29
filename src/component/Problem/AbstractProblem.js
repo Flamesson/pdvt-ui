@@ -1,5 +1,5 @@
-import AbstractComponent from "../AbstractComponent";
 import React, {ReactNode} from "react";
+import AbstractComponent from "../AbstractComponent";
 import {Button} from "react-bootstrap";
 
 class AbstractProblem extends AbstractComponent {

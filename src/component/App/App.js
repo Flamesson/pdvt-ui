@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import './App.css';
 
 import Header from "../Header/Header";
@@ -26,6 +26,8 @@ import Code from "../CodeScreen/Code";
 import Maps from "../../utils/Maps";
 import {withRouter} from "../withRouter";
 import Optional from "../../utils/Optional";
+import Elements from "../../cytoscape/Elements";
+import AbstractComponent from "../AbstractComponent";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;
 const SERVER_URL = "http://" + REACT_APP_SERVER_ADDRESS;
@@ -35,14 +37,17 @@ const SOCKET_URL = `${SERVER_URL}${WEB_SOCKETS_ENDPOINT}`;
 const PDVT_TASK = "pdvt";
 const FILE_AND_ANALYSE_TASK = "file-and-analyze";
 
-class App extends Component {
+class App extends AbstractComponent {
   constructor(props) {
     super(props);
     this.hub = new EventEmitter();
     this.previousSubscriptions = new Map() //<String, *>
 
-    this.generateText = this.generateText.bind(this);
-    this.receivePdvt = this.receivePdvt.bind(this);
+    this.state = {
+      elements: new Elements()
+    };
+
+    this.getElements = this.getElements.bind(this);
   }
 
   static getServerUrl(): String {
@@ -59,24 +64,6 @@ class App extends Component {
       toast.info(t("info.text-input-filled.message"));
     }
 
-    this.onCodeChanged = (code: Code) => {
-      if (Objects.isNotCorrect(this.client)) {
-        return;
-      }
-
-      let keysToFuncs = Maps.ofVararg(new Option(PDVT_TASK, this.receivePdvt), new Option(FILE_AND_ANALYSE_TASK, this.receiveFileAndAnalyze));
-      keysToFuncs.forEach((value, key) => {
-        if (this.previousSubscriptions.has(key)) {
-          this.previousSubscriptions.get(key).unsubscribe();
-          this.previousSubscriptions.delete(key);
-        }
-
-        if (code.notEmpty()) {
-          let subscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/" + key, value);
-          this.previousSubscriptions.set(key, subscription);
-        }
-      });
-    };
     this.hub.on(AppEvents.CODE_CHANGED, this.onCodeChanged);
 
     let client = Stomp.over(SockJS(SOCKET_URL));
@@ -93,13 +80,20 @@ class App extends Component {
     this.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
       extLocalStorage.setItem(AppStorage.ANALYSIS_PERFORMED, false);
     });
+    this.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
+
+    dataManager.getElements().then(this.updateElements);
+    dataManager.hasVersions().then(result => {
+      extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
+    });
   }
 
   componentWillUnmount() {
     this.hub.removeListener(AppEvents.CODE_CHANGED, this.onCodeChanged);
+    this.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
   }
 
-  receivePdvt(message, callback): void {
+  receivePdvt = (message, callback): void => {
     let file: File = this.extractTaskFile(message);
     extLocalStorage.saveFile(AppStorage.DATA_FILE, file, () => {
       this.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
@@ -132,18 +126,57 @@ class App extends Component {
     throw new Error("Failed to extract a task file");
   }
 
-  generateText(ignored) {
+  updateElements = (elements) => {
+    this.setState({
+      elements: elements
+    }, () => {
+      this.hub.emit(AppEvents.ELEMENTS_UPDATE, elements);
+    });
+  }
+
+  getElements(): Elements {
+    return this.state.elements;
+  }
+
+  generateText = (ignored) => {
     extLocalStorage.setItem(AppStorage.DATA_TEXT, AppStorage.MOCK_TEXT_DATA);
     this.hub.emit(AppEvents.INPUT_CHANGED_USER_ORIGIN);
   }
+
+  onCodeChanged = (code: Code) => {
+    if (Objects.isNotCorrect(this.client)) {
+      return;
+    }
+
+    let keysToFuncs = Maps.ofVararg(new Option(PDVT_TASK, this.receivePdvt), new Option(FILE_AND_ANALYSE_TASK, this.receiveFileAndAnalyze));
+    keysToFuncs.forEach((value, key) => {
+      if (this.previousSubscriptions.has(key)) {
+        this.previousSubscriptions.get(key).unsubscribe();
+        this.previousSubscriptions.delete(key);
+      }
+
+      if (code.notEmpty()) {
+        let subscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/" + key, value);
+        this.previousSubscriptions.set(key, subscription);
+      }
+    });
+  };
+
+  onInputChangedUserOrigin = () => {
+    let dataManager: DataManager  = new DataManager();
+    dataManager.getElements().then(this.updateElements);
+    dataManager.hasVersions().then(result => {
+      extLocalStorage.setItem(AppStorage.HAS_VERSIONS, result);
+    });
+  };
 
   render() {
     return (<div className={"App"}>
       <Header hub={this.hub}/>
       <div id={"body"}>
         <Routes>
-          <Route path={"/"} element={<Visualization hub={this.hub}/>}/>
-          <Route path={"/Visualization"} element={<Visualization hub={this.hub}/>}/>
+          <Route path={"/"} element={<Visualization hub={this.hub} elementsSupplier={this.getElements}/>}/>
+          <Route path={"/Visualization"} element={<Visualization hub={this.hub} elementsSupplier={this.getElements}/>}/>
           <Route path={"/Data"} element={
             <>
               <BrowserView>

@@ -13,13 +13,11 @@ class ProblemCarousel extends AbstractComponent {
         super(props);
         this.state = {
             currentIndex: 0,
-            showSolution: {},
-            explicitShowSolution: false,
+            showSolution: {}
         };
 
         this.handlePrev = this.handlePrev.bind(this);
         this.handleNext = this.handleNext.bind(this);
-        this.toggleSolution = this.toggleSolution.bind(this);
     }
 
     handlePrev(): void {
@@ -41,25 +39,13 @@ class ProblemCarousel extends AbstractComponent {
         }
     };
 
-    toggleSolution(): void {
-        this.setState(prevState => ({
-            explicitShowSolution: !prevState.explicitShowSolution,
-        }));
-    };
-
     render() {
         let problems = Optional.ofNullable(this.props.problems).getOrDefault([]);
-        const t = this.props.t;
 
-        const { currentIndex, showSolution, explicitShowSolution } = this.state;
+        const { currentIndex } = this.state;
 
         let canGoPrev: Function = currentIndex > 0;
         let canGoNext: Function = currentIndex < problems.length - 1;
-
-        const currentProblem = problems[currentIndex];
-        const showSolutionButtonText = explicitShowSolution
-            ? t('problem-carousel.hide-solution')
-            : t('problem-carousel.show-solution');
 
         return (
             <div className={"w-100 mt-2 vertical-scrollable"}>
@@ -83,14 +69,6 @@ class ProblemCarousel extends AbstractComponent {
                                 </Carousel.Item>
                             ))}
                         </Carousel>
-
-                        <div className="toggle-solution mt-4 mb-4">
-                            <Button variant="outline-secondary" onClick={this.toggleSolution}>
-                                {showSolutionButtonText}
-                            </Button>
-                        </div>
-
-                        {explicitShowSolution && currentProblem.possibleSolution}
                     </div>
                 }
             </div>

@@ -218,7 +218,9 @@ class Parameters extends Component {
             })}
 
             <hr/>
-            <GraphParameters hub={this.props.hub} cyStyle={this.props.cyStyle}/>
+            <GraphParameters hub={this.props.hub}
+                             cyStyle={this.props.cyStyle}
+                             elementsSupplier={this.props.elementsSupplier}/>
             <hr/>
             <GeneralParameters hub={this.props.hub} cyStyle={this.props.cyStyle}/>
         </div>;

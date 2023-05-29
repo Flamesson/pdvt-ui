@@ -7,6 +7,8 @@ import Conflict from "../cytoscape/Conflict";
 import UnlinkedNodesProblem from "../component/Problem/UnlinkedNodesProblem";
 import CyclesProblem from "../component/Problem/CyclesProblem";
 import ConflictsProblem from "../component/Problem/ConflictsProblem";
+import LicenseProblems from "../cytoscape/LicenseProblems";
+import LicenseProblem from "../component/Problem/LicensesProblem";
 
 class Problems {
     constructor(elements: Elements, t) {
@@ -14,15 +16,18 @@ class Problems {
         this.t = t;
     }
 
-    analyze(): Problem[] {
-        return Array.of(
-            this._getUnlinked(),
-            this._getCycles(),
-            this._getVersionsConflicts(),
-            this._getLicencesProblems()
-        )
-            .filter(optional => optional.isPresent())
-            .map(optional => optional.getOrThrow());
+    analyze(): Promise<Problem[]> {
+        return this._getLicencesProblems()
+            .then((optional: Optional<Problem>) => {
+                return Array.of(
+                    this._getUnlinked(),
+                    this._getCycles(),
+                    this._getVersionsConflicts(),
+                    optional
+                )
+                    .filter(optional => optional.isPresent())
+                    .map(optional => optional.getOrThrow());
+            });
     }
 
     _getUnlinked(): Optional<Problem> {
@@ -33,7 +38,7 @@ class Problems {
 
         //TODO: localize
         let name = "Несвязанные узлы";
-        return Optional.of(new Problem(name, <UnlinkedNodesProblem nodes={unlinked}/>, <div>"Пока не придумал..."</div>))
+        return Optional.of(new Problem(name, <UnlinkedNodesProblem nodes={unlinked}/>))
     }
 
     _getCycles(): Optional<Problem> {
@@ -42,11 +47,8 @@ class Problems {
             return Optional.empty();
         }
 
-        //проблема не критична, но может ухудшить сопровождаемость, тестируемость и скорость разработки.
-        //решение - Когда у вас есть циклическая зависимость, вероятно, у вас есть проблема с дизайном, и обязанности не разделены должным образом. Вам следует попытаться правильно перепроектировать компоненты, чтобы их иерархия была хорошо спроектирована и не было необходимости в циклических зависимостях.
-        //решение - использование пакетного менеджера
         let name = "Циклы зависимостей";
-        return Optional.of(new Problem(name, <CyclesProblem cycles={cycles}/>, <div>"Пока не придумал..."</div>));
+        return Optional.of(new Problem(name, <CyclesProblem cycles={cycles}/>));
     }
 
     _getVersionsConflicts(): Optional<Problem> {
@@ -56,12 +58,19 @@ class Problems {
         }
 
         let name = "Конфликты зависимостей";
-        return Optional.of(new Problem(name, <ConflictsProblem conflicts={conflicts}/>, <div>"Пока не придумал..."</div>));
+        return Optional.of(new Problem(name, <ConflictsProblem conflicts={conflicts}/>));
     }
 
-    _getLicencesProblems(): Optional<Problem> {
-        //TODO: отправлять на бэкенд текущий файл зависимостей. там фильтровать. возвращать те, что не проходят + по какой лицензии. причем можно по id, а не по label.
-        return Optional.empty();
+    _getLicencesProblems(): Promise<Optional<Problem>> {
+        return this.elements.getLicenses()
+            .then((problems: LicenseProblems[]) => {
+                if (Arrays.isEmpty(problems)) {
+                    return Optional.empty();
+                }
+
+                let name = "Лицензирование";
+                return Optional.of(new Problem(name, <LicenseProblem problems={problems}/>));
+            });
     }
 }
 

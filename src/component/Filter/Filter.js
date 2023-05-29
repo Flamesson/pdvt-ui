@@ -33,9 +33,22 @@ class Filter extends Component {
         });
         document.getElementById("parameters-filter").value = this.getStoredFilterQuery();
 
-        this.props.hub.on(AppEvents.CY_UPDATE, cy => this.cy = cy);
+        this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.once(AppEvents.CY_UPDATE, ignored => {this.updateFilter()});
-        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, ignored => {this.updateFilter()});
+        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
+    }
+
+    componentWillUnmount() {
+        this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
+        this.props.hub.removeListener(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
+    }
+
+    onCyUpdate = (cy): void => {
+        this.cy = cy;
+    }
+
+    onElementsUpdate = (ignored): void => {
+        this.updateFilter();
     }
 
     debouncedUpdateFilter() {

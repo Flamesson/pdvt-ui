@@ -130,8 +130,6 @@
   "tab.mobile-plain.caption": "Граф (текст)",
   "tab.mobile-file.caption": "Граф (файл)",
   "button.perform-analysis.caption": "Произвести анализ",
-  "problem-carousel.show-solution": "Отобразить потенциальное решение",
-  "problem-carousel.hide-solution": "Спрятать потенциальное решение",
   "graph-editor": {
     "title": "Редактор графа",
     "nodeSectionTitle": "Узлы",

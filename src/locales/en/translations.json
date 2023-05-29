@@ -129,8 +129,6 @@
   "tab.licenses.caption": "Licenses",
   "tab.mobile-plain.caption": "Graph (text)",
   "tab.mobile-file.caption": "Graph (file)",
-  "problem-carousel.show-solution": "Show Potential Solution",
-  "problem-carousel.hide-solution": "Hide Potential Solution",
   "graph-editor": {
     "title": "Graph Editor",
     "nodeSectionTitle": "Nodes",
