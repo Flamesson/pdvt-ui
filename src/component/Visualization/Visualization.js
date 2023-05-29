@@ -32,7 +32,7 @@ Cytoscape.use(klay);
 Cytoscape.use(cola);
 
 class Visualization extends Component {
-    static DEFAULT_LAYOUT = "grid";
+    static DEFAULT_LAYOUT = AppStorage.DEFAULT_LAYOUT;
     static DEFAULT_LAYOUT_VALUE = {
         name: Visualization.DEFAULT_LAYOUT
     };

@@ -15,7 +15,7 @@ class Arrays {
         increased.push.apply(increased, included);
     }
 
-    static remove(array: [], element: *): void {
+    static removeIfPresent(array: [], element: *): void {
         let index = array.indexOf(element);
         if (index === -1) {
             return;

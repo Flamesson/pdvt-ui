@@ -1,4 +1,5 @@
 import Objects from "../../utils/Objects";
+import Base64 from "../../utils/Base64";
 
 class Code {
     constructor(raw) {
@@ -78,7 +79,7 @@ class Code {
             return;
         }
 
-        let decoded = atob(this.raw);
+        let decoded = Base64.decodeText(this.raw);
 
         let firstLengthFrom = 0;
         let lengthFirstString = decoded.substring(firstLengthFrom, decoded.indexOf('.', firstLengthFrom));

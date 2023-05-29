@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { withTranslation } from 'react-i18next';
 import CodeDto from "./CodeDto";
+import logger from "../../utils/Logger";
 
 class CreateCodeModal extends Component {
     constructor(props) {

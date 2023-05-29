@@ -83,7 +83,7 @@ class Node extends Item {
 
     removeClassName(className: String): Node {
         if (this.classNames.includes(className)) {
-            Arrays.remove(this.classNames, className);
+            Arrays.removeIfPresent(this.classNames, className);
         }
 
         return this;

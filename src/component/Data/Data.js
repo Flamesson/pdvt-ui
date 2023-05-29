@@ -40,10 +40,10 @@ class Data extends AbstractComponent {
         this.onChangeUserOrigin = () => {
             if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
                 extLocalStorage.getFile(AppStorage.DATA_FILE).text().then(text => {
-                    document.getElementById("file-preview").value = text;
+                    Optional.ofNullable(document.getElementById("file-preview")).ifPresent(elem => elem.value = text);
                 });
             } else {
-                document.getElementById("file-preview").value = "";
+                Optional.ofNullable(document.getElementById("file-preview")).ifPresent(elem => elem.value = "");
             }
         };
 

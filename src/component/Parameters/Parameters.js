@@ -13,6 +13,7 @@ import Elements from "../../cytoscape/Elements";
 import GeneralParameters from "../GeneralParameters/GeneralParameters";
 import GraphParameters from "../GraphParameters/GraphParameters";
 import Arrays from "../../utils/Arrays";
+import Layouts from "../../cytoscape/parameter/Layouts";
 
 class Parameters extends Component {
     static DEFAULT_LAYOUT = "grid";
@@ -25,6 +26,7 @@ class Parameters extends Component {
         this.elementsSupplier = props.elementsSupplier;
         this.modified = false;
 
+        this.defaultLayout = this.defaultLayout.bind(this);
         this.initLayout = this.initLayout.bind(this);
         this.onParameterChange = this.onParameterChange.bind(this);
         this.changeLayout = this.changeLayout.bind(this);
@@ -47,7 +49,7 @@ class Parameters extends Component {
 
     initLayout(): void {
         if (extLocalStorage.anyAbsent(AppStorage.GRAPH_LAYOUT, AppStorage.GRAPH_PARAMETERS_MODIFIED, AppStorage.GRAPH_PARAMS)) {
-            this.changeLayout("breadthfirst");
+            this.changeLayout(this.defaultLayout());
             return;
         }
 
@@ -65,6 +67,15 @@ class Parameters extends Component {
         }, () => {
             this.props.hub.emit(AppEvents.LAYOUT_CHANGE, layout);
         });
+    }
+
+    defaultLayout(): String {
+        let elements = this.props.elementsSupplier();
+        if (elements.nodes.length <= 40) {
+            return Layouts.COSE_BILKENT;
+        } else {
+            return Layouts.CONCENTRIC;
+        }
     }
 
     onParameterChange(parameter: Parameter, userOriginated: Boolean): void {
@@ -171,7 +182,7 @@ class Parameters extends Component {
         let elements: Elements = this.props.elementsSupplier();
         let allLayoutNames: String[] = [...Params.VALUES.keys()];
         if (elements.nodes.length > 80) {
-            Arrays.remove(allLayoutNames, )
+            Arrays.removeIfPresent(allLayoutNames, )
         }
         //TODO: нужна логика удаления очевидно неподходящих layout
 

@@ -26,8 +26,11 @@ import Code from "../CodeScreen/Code";
 import Maps from "../../utils/Maps";
 import {withRouter} from "../withRouter";
 import Optional from "../../utils/Optional";
+import Option from "../../utils/Option";
 import Elements from "../../cytoscape/Elements";
 import AbstractComponent from "../AbstractComponent";
+import logger from "../../utils/Logger";
+import Base64 from "../../utils/Base64";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;
 const SERVER_URL = "http://" + REACT_APP_SERVER_ADDRESS;
@@ -119,7 +122,7 @@ class App extends AbstractComponent {
         let filename = raw.substring(pos + 1, pos + length + 1);
         let body = raw.substring(pos + length + 1);
 
-        return new File([atob(body)], filename);
+        return new File([Base64.decodeText(body)], filename);
       }
     }
 
@@ -149,7 +152,7 @@ class App extends AbstractComponent {
     }
 
     let keysToFuncs = Maps.ofVararg(new Option(PDVT_TASK, this.receivePdvt), new Option(FILE_AND_ANALYSE_TASK, this.receiveFileAndAnalyze));
-    keysToFuncs.forEach((value, key) => {
+    for (let [key, value] of keysToFuncs) {
       if (this.previousSubscriptions.has(key)) {
         this.previousSubscriptions.get(key).unsubscribe();
         this.previousSubscriptions.delete(key);
@@ -159,7 +162,7 @@ class App extends AbstractComponent {
         let subscription = this.client.subscribe("/user/" + code.getCodeword() + "/ws/" + key, value);
         this.previousSubscriptions.set(key, subscription);
       }
-    });
+    }
   };
 
   onInputChangedUserOrigin = () => {

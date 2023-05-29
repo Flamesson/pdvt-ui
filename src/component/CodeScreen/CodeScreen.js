@@ -15,6 +15,8 @@ import TextComponent from "./TextComponent";
 import ApplyCodeModal from "./ApplyCodeModal";
 import DeleteCodeModal from "./DeleteCodeModal";
 import AppEvents from "../../AppEvents";
+import Base64 from "../../utils/Base64";
+import logger from "../../utils/Logger";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;
 const SERVER_URL = "http://" + REACT_APP_SERVER_ADDRESS;
@@ -54,6 +56,8 @@ class CodeScreen extends Component {
     saveCodeToLocalStorage = () => {
         extLocalStorage.setItem(AppStorage.SAVED_CODE, this.state.code.getRaw());
 
+        logger.warn("Before emit: " + JSON.stringify(this.state.code));
+
         this.props.hub.emit(AppEvents.CODE_CHANGED, this.state.code);
     }
 
@@ -61,10 +65,6 @@ class CodeScreen extends Component {
         extLocalStorage.remove(AppStorage.SAVED_CODE);
         extLocalStorage.remove(AppStorage.SAVED_PASS_LENGTH);
     }
-
-    handleEditCode = () => {
-        this.setState({ isEditModalOpen: true });
-    };
 
     handleCreateCode = () => {
         this.setState({ isCreateModalOpen: true });
@@ -208,11 +208,7 @@ class CodeScreen extends Component {
             toEncode = `${specialValue.length}.${SERVER_URL.length}.0.${specialValue}${SERVER_URL}`
         }
 
-        return btoa(toEncode);
-    };
-
-    closeEditModal = () => {
-        this.setState({ isEditModalOpen: false });
+        return Base64.encodeText(toEncode);
     };
 
     closeCreateModal = () => {
@@ -228,7 +224,7 @@ class CodeScreen extends Component {
     }
 
     render() {
-        const { code, dto, isEditModalOpen, isCreateModalOpen, isApplyModalOpen, isDeleteModalOpen, loading } = this.state;
+        const { code, isCreateModalOpen, isApplyModalOpen, isDeleteModalOpen, loading } = this.state;
         const { t } = this.props;
 
         return (
@@ -255,9 +251,6 @@ class CodeScreen extends Component {
                     <Button variant="primary" onClick={this.handleCreateCode} className={"mr-2"}>
                         {t('code-screen.create-button')}
                     </Button>
-                    {/*<Button variant="primary" onClick={this.handleEditCode} className={"mr-2"}>
-                        {t('code-screen.edit-button')}
-                    </Button>*/}
                     <Button variant="primary" onClick={this.handleApplyCode} className={"mr-2"}>
                         {t('code-screen.apply-button')}
                     </Button>

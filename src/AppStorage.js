@@ -1,3 +1,5 @@
+import Layouts from "./cytoscape/parameter/Layouts";
+
 class AppStorage {
     static GRAPH_LAYOUT = "graph layout";
     static GRAPH_PARAMETERS_MODIFIED = "graph parameters modified";
@@ -82,6 +84,8 @@ class AppStorage {
         "b2->c0;\n" +
         "b3->a4;\n" +
         "b3->c2;\n";
+
+    static DEFAULT_LAYOUT = Layouts.COSE_BILKENT;
 }
 
 export default AppStorage;

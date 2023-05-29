@@ -25,7 +25,6 @@ class GraphParameters extends Component {
         this.highlightCircularDependencies = this.highlightCircularDependencies.bind(this);
         this.unhighlightCircularDependencies = this.unhighlightCircularDependencies.bind(this);
         this.onToggleMostLongPathHighlighting = this.onToggleMostLongPathHighlighting.bind(this);
-        this.hasLicensesData = this.hasLicensesData.bind(this);
         this.onToggleUseLicenses = this.onToggleUseLicenses.bind(this);
         this.stopUsingLicenses = this.stopUsingLicenses.bind(this);
         this.startUsingLicenses = this.startUsingLicenses.bind(this);
@@ -211,10 +210,6 @@ class GraphParameters extends Component {
         });
     }
 
-    hasLicensesData(): boolean {
-        return extLocalStorage.isPresent(AppStorage.DEPENDENCIES_LICENSES);
-    }
-
     onToggleUseLicenses(event: ChangeEvent<HTMLInputElement>): void {
         let newValue = event.target.checked;
         this.useLicenses = newValue;
@@ -352,14 +347,12 @@ class GraphParameters extends Component {
                        type={"checkbox"}
                        onChange={this.onToggleMostLongPathHighlighting}/>
             </div>
-            {
-                this.hasLicensesData() && <div className={"graph-parameter-container"}>
-                    <label className={"graph-parameter-caption"}>{t("parameter.graph.toggle-use-licenses.caption")}</label>
-                    <input id={"toggle-use-licenses"}
-                           type={"checkbox"}
-                           onChange={this.onToggleUseLicenses}/>
-                </div>
-            }
+            <div className={"graph-parameter-container"}>
+                <label className={"graph-parameter-caption"}>{t("parameter.graph.toggle-use-licenses.caption")}</label>
+                <input id={"toggle-use-licenses"}
+                       type={"checkbox"}
+                       onChange={this.onToggleUseLicenses}/>
+            </div>
             {
                 this.hasVersions() && <div className={"graph-parameter-container"}>
                     <label className={"graph-parameter-caption"}>{t("parameter.graph.toggle-highlight-versions-collisions")}:</label>
