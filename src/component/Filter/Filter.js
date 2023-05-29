@@ -44,6 +44,7 @@ class Filter extends Component {
     }
 
     onCyUpdate = (cy): void => {
+        logger.warn("Cy update");
         this.cy = cy;
     }
 
@@ -112,11 +113,11 @@ class Filter extends Component {
         let normalizedQuery = queryString.toLowerCase().trim();
         let getMetric = (node, query) => {
             let label: String = node.data().label;
-            if (!label.startsWith(query)) {
+            if (!label.includes(query)) {
                 return 0;
             }
 
-            return Strings.countCommonLength(label, query);
+            return 1;
         };
         let getNodeMetric = memoize(node => getMetric(node, normalizedQuery), node => node.id());
         let filteredNodes = nodes

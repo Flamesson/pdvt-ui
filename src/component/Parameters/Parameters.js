@@ -42,6 +42,7 @@ class Parameters extends Component {
     componentDidMount(): void {
         this.initLayout();
         this.props.hub.on(AppEvents.ELEMENTS_UPDATE, () => {
+            this.changeLayout(this.defaultLayout());
             this.adjustParameters();
         });
         this.props.hub.on(AppEvents.CY_UPDATE, cy => this.cy = cy);

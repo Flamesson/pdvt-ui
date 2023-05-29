@@ -209,7 +209,7 @@ class Elements {
 
     getVersionsConflicts(): Conflict[] {
         if (!this.versioned) {
-            return;
+            return [];
         }
 
         return new VersionsCollisions(this).findConflicts();

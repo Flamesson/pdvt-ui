@@ -9,6 +9,7 @@ import CyclesProblem from "../component/Problem/CyclesProblem";
 import ConflictsProblem from "../component/Problem/ConflictsProblem";
 import LicenseProblems from "../cytoscape/LicenseProblems";
 import LicenseProblem from "../component/Problem/LicensesProblem";
+import logger from "../utils/Logger";
 
 class Problems {
     constructor(elements: Elements, t) {
@@ -64,10 +65,12 @@ class Problems {
     _getLicencesProblems(): Promise<Optional<Problem>> {
         return this.elements.getLicenses()
             .then((problems: LicenseProblems[]) => {
-                if (Arrays.isEmpty(problems)) {
+                let filtered: LicenseProblems[] = problems.filter((problems: LicenseProblems) => problems.isNotEmpty());
+                if (Arrays.isEmpty(filtered)) {
                     return Optional.empty();
                 }
 
+                logger.warn("LICENSE PROBLEMS! " + problems.length);
                 let name = "Лицензирование";
                 return Optional.of(new Problem(name, <LicenseProblem problems={problems}/>));
             });
