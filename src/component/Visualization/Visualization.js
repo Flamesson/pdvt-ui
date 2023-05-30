@@ -10,7 +10,6 @@ import dagre from 'cytoscape-dagre';
 import klay from 'cytoscape-klay';
 import cola from 'cytoscape-cola';
 import Objects from "../../utils/Objects";
-import Elements from "../../cytoscape/Elements";
 import {withTranslation} from "react-i18next";
 import ParametersPanel from "../ParametersPanel/ParametersPanel";
 import Controller from "../../highlight/Controller";
@@ -23,6 +22,7 @@ import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import InfoPanel from "../InfoPanel/InfoPanel";
 import GraphStyle from "../../cytoscape/GraphStyle";
+import cytoscape from "cytoscape";
 
 Cytoscape.use(COSEBilkent);
 Cytoscape.use(fcose);
@@ -66,21 +66,34 @@ class Visualization extends Component {
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.on(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
+
+        this.composeCytoscape();
     }
 
     componentWillUnmount() {
-        if (Objects.isCorrect(this.cy)) {
-            this.cy.removeListener(AppEvents.TAP, this.onTap);
-        }
-
         this.props.hub.removeListener(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.removeListener(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
+
+        if (Objects.isCorrect(this.cy)) {
+            this.cy.removeListener(AppEvents.TAP, this.onTap);
+            this.cy.destroy();
+        }
+    }
+
+    composeCytoscape() {
+        this.cy = cytoscape({
+            container: document.getElementById("cy-container"),
+            elements: this.props.elementsSupplier().toNormalizedJson(),
+            style: new Stylesheet(this.cyStyle).get()
+        });
+
+        this.props.hub.emit(AppEvents.CY_UPDATE, this.cy);
     }
 
     onCyUpdate = (cy): void => {
-        this.cy = cy;
+        //this.cy = cy;
         this.tap = new Tap(cy, this.controller);
 
         cy.removeListener(AppEvents.TAP, this.onTap);
@@ -90,8 +103,9 @@ class Visualization extends Component {
     }
 
     onCyStyleChanged = (ignored) => {
-        this.forceUpdate();
-        this.saveCyStyle();
+        this.forceUpdate(() => {
+            this.saveCyStyle();
+        });
     };
 
     loadCyStyle(): CyStyle {
@@ -144,15 +158,9 @@ class Visualization extends Component {
     }
 
     render() {
-        let elements: Elements = this.props.elementsSupplier();
-        let normalized = elements.toNormalizedJson();
-
         return <div className={"visualization-container"}>
             <InfoPanel hub={this.props.hub}/>
-            <CytoscapeComponent className={"graph-container"}
-                                elements={normalized}
-                                stylesheet={new Stylesheet(this.cyStyle).get()}
-                                cy={cy => this.emit(AppEvents.CY_UPDATE, cy)}/>
+            <CytoscapeComponent id="cy-container" className={"w-100 h-100"}/>;
             <ParametersPanel hub={this.props.hub}
                              controller={this.controller}
                              tap={this.tap}
