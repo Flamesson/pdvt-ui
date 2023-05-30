@@ -29,7 +29,6 @@ import Optional from "../../utils/Optional";
 import Option from "../../utils/Option";
 import Elements from "../../cytoscape/Elements";
 import AbstractComponent from "../AbstractComponent";
-import logger from "../../utils/Logger";
 import Base64 from "../../utils/Base64";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;

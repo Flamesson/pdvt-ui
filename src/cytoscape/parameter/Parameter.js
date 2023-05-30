@@ -4,12 +4,13 @@ import {ChangeEvent} from "react";
 import {ReactNode} from "react";
 
 class Parameter {
-    constructor(nameKey, code, defaultValue, adjustFunc) {
+    constructor(nameKey, code, defaultValue, adjustFunc, visible) {
         this.nameKey = nameKey;
         this.code = code;
         this._value = defaultValue;
         this.adjustFunc = adjustFunc;
         this._onChange = null;
+        this.visible = Objects.isCorrect(visible) ? visible : true;
     }
 
     getValue(): * {

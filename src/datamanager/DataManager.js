@@ -37,9 +37,6 @@ class DataManager {
             .then((elements: Elements) => {
                 elements.handleUnlinkedNodes();
                 elements.handleNumberOfOutputs(5);
-                elements.findCycles();
-                elements.findMostLongPath();
-                elements.findVersionsConflicts();
 
                 return Promise.resolve(elements);
             })

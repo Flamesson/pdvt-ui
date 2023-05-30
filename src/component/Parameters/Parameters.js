@@ -218,7 +218,7 @@ class Parameters extends Component {
                            reference={ref => ref.pick(this.getLayoutOption())} />
             </div>
 
-            { this.getParameters().map(parameter => {
+            { this.getParameters().filter(parameter => parameter.visible).map(parameter => {
                 if (parameter.hasCompleteUi()) {
                     return parameter.toCompleteUi(t);
                 } else {

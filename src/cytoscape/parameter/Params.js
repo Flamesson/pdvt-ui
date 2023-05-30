@@ -7,6 +7,7 @@ import Maps from "../../utils/Maps";
 import Option from "../../utils/Option";
 import NumberParameter from "./NumberParameter";
 import Layouts from "./Layouts";
+import NotEditableParameter from "./NotEditableParameter";
 
 class Params {
     static VALUES: Map<String, Function> = Maps.ofVararg(
@@ -51,7 +52,11 @@ class Params {
             new CheckboxParameter("parameter.node-dimensions-include-labels-overlap.caption", "nodeDimensionsIncludeLabels", true)
         ))),
         new Option(Layouts.COSE_BILKENT, () => new Params(Layouts.COSE_BILKENT, Array.of(
-            new CheckboxParameter("parameter.node-dimensions-include-labels-overlap.caption", "nodeDimensionsIncludeLabels", true)
+            new CheckboxParameter("parameter.node-dimensions-include-labels-overlap.caption", "nodeDimensionsIncludeLabels", true),
+            new NotEditableParameter(null, "quality", "proof", null, false),
+            new NotEditableParameter(null, "refresh", 10, null, false),
+            new NotEditableParameter(null, "nodeRepulsion", 6000, null, false),
+            new NotEditableParameter(null, "fit", true, null, false)
         ))),
         new Option(Layouts.FCOSE, () => new Params(Layouts.FCOSE, Array.of(
             new CheckboxParameter("parameter.node-dimensions-include-labels-overlap.caption", "nodeDimensionsIncludeLabels", true),

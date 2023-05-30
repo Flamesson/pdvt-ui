@@ -40,7 +40,10 @@ class LicensesRequest {
 
                 return Promise.resolve(new LicenseProblems(infections, infected));
             })
-            .catch(ignored => { logger.error("Failed to determine licensing with backend") })
+            .catch(ignored => {
+                logger.error("Failed to determine licensing with backend");
+                return Promise.resolve(new LicenseProblems([], []));
+            });
     }
 
     _calculateTimeout(input: Number): Number {

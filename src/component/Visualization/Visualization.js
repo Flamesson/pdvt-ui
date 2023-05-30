@@ -41,10 +41,13 @@ class Visualization extends Component {
         super(props);
         this.controller = new Controller(this.props.hub);
 
+        this.state = {
+            _layout: Visualization.DEFAULT_LAYOUT_VALUE
+        };
+
         this.loadCyStyle = this.loadCyStyle.bind(this);
         this.saveCyStyle = this.saveCyStyle.bind(this);
         this.onTap = this.onTap.bind(this);
-        this.layout = this.layout.bind(this);
         this.emit = this.emit.bind(this);
 
         this.cyStyle = this.loadCyStyle();
@@ -56,9 +59,13 @@ class Visualization extends Component {
                 _layout: layout
             });
         };
+        this.onRefreshLayoutRequest = () => {
+            this.cy.layout(this.state._layout).run();
+        }
         this.props.hub.on(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
+        this.props.hub.on(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
     }
 
     componentWillUnmount() {
@@ -69,6 +76,7 @@ class Visualization extends Component {
         this.props.hub.removeListener(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
+        this.props.hub.removeListener(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
     }
 
     onCyUpdate = (cy): void => {
@@ -78,7 +86,7 @@ class Visualization extends Component {
         cy.removeListener(AppEvents.TAP, this.onTap);
         cy.on(AppEvents.TAP, this.onTap);
 
-        cy.layout(this.layout()).run();
+        cy.layout(this.state._layout).run();
     }
 
     onCyStyleChanged = (ignored) => {
@@ -115,15 +123,6 @@ class Visualization extends Component {
 
     saveCyStyle(): void {
         extLocalStorage.setAsJson(AppStorage.GENERAL_PARAMETERS, this.cyStyle);
-    }
-
-    layout() {
-        let state = this.state;
-        if (Objects.isNotCorrect(state) || Objects.isNotCorrect(state._layout)) {
-            return Visualization.DEFAULT_LAYOUT_VALUE;
-        }
-
-        return state._layout;
     }
 
     onTap(e): void {

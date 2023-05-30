@@ -8,6 +8,8 @@ class AppEvents {
     static INPUT_CHANGED_USER_ORIGIN = "input changed user origin";
     static GRAPH_ITEMS_HIDE_CHANGED = "graph items hide changed";
     static CODE_CHANGED = "code changed";
+    static ELEMENTS_PARAMETER_CALCULATED = "elements parameter calculated";
+    static REFRESH_LAYOUT_REQUEST = "refresh layout request";
 }
 
 export default AppEvents;

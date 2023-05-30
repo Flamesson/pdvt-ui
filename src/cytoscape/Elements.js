@@ -16,6 +16,7 @@ import Conflict from "./Conflict";
 import LicensesRequest from "../algorithm/LicensesRequest";
 import StoredLicenses from "../algorithm/StoredLicenses";
 import LicenseProblems from "./LicenseProblems";
+import AppEvents from "../AppEvents";
 
 class Elements {
     constructor(nodes, edges, versioned) {
@@ -181,7 +182,7 @@ class Elements {
         return new JohnsonAlgorithm(this).findElementaryCycles().cycles;
     }
 
-    findVersionsConflicts(): void {
+    findVersionsConflicts(hub): void {
         if (!this.versioned) {
             return;
         }
@@ -247,7 +248,7 @@ class Elements {
         ]);
     }
 
-    findMostLongPath(): void {
+    findMostLongPath(hub): void {
         let key = "most-long-path";
         if (this._initiated(key) || this.isEmpty()) {
             return;

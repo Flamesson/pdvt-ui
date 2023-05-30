@@ -89,6 +89,24 @@ class Node extends Item {
         return this;
     }
 
+    hasClassName(className: String): boolean {
+        for (let cn: String of this.classNames) {
+            if (cn === className) {
+                return true;
+            }
+        }
+    }
+
+    hasClassNames(classNames: String): boolean {
+        for (let className: String of classNames) {
+            if (!this.hasClassName(className)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     isUnlinked(): Boolean {
         return Arrays.isEmpty(this.outcomes) && Arrays.isEmpty(this.incomes);
     }

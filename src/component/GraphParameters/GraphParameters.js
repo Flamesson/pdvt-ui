@@ -10,10 +10,15 @@ import LicenseDependency from "../../licenses/LicenseDependency";
 import GraphStyle from "../../cytoscape/GraphStyle";
 import {Button} from "react-bootstrap";
 import Objects from "../../utils/Objects";
+import Elements from "../../cytoscape/Elements";
+import type Nodes from "../../utils/Nodes";
+import BooleanUtils from "../../utils/BooleanUtils";
 
 class GraphParameters extends Component {
     constructor(props) {
         super(props);
+
+        this.lazy = new Map(); //<String, Boolean>
 
         this.fireStyleChanged = this.fireStyleChanged.bind(this);
         this.reset = this.reset.bind(this);
@@ -43,25 +48,31 @@ class GraphParameters extends Component {
     }
 
     componentDidMount() {
-        this.props.hub.on(AppEvents.CY_UPDATE, cy => {
-            this.cy = cy;
-            this.applyParameters();
-        });
         this.hideUnconnectedNodes = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_UNLINKED_NODES_VISIBILITY))
             .map(Strings.asBoolean)
             .getOrElse(() => false);
         this.showCircularDependencies = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_CIRCULAR_DEPENDENCIES_HIGHLIGHTING))
             .map(Strings.asBoolean)
-            .getOrElse(() => true);
+            .getOrElse(() => false);
         this.showMostLongPath = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_MOST_LONG_PATH_HIGHLIGHTING))
             .map(Strings.asBoolean)
-            .getOrElse(() => true);
+            .getOrElse(() => false);
         this.useLicenses = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_USE_LICENSES))
             .map(Strings.asBoolean)
             .getOrElse(() => false);
         this.versionsCollisitions = Optional.ofNullable(extLocalStorage.getItem(AppStorage.PARAMETER_TOGGLE_VERSIONS_COLLISIONS))
             .map(Strings.asBoolean)
             .getOrElse(() => false);
+        this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
+    }
+
+    componentWillUnmount() {
+        this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
+    }
+
+    onCyUpdate = (cy): void => {
+        this.cy = cy;
+        this.applyParameters();
     }
 
     fireStyleChanged(): void {
@@ -162,10 +173,27 @@ class GraphParameters extends Component {
     }
 
     highlightCircularDependencies() {
-        let nodes = this.cy.nodes().filter(".cycle");
-        this.cy.batch(() => {
-            nodes.addClass("cycle-visible");
+        let key = "circular";
+        if (this._initiated(key)) {
+            let cycleNodes = this.cy.nodes().filter(".cycle");
+            this.cy.batch(() => {
+                cycleNodes.addClass("cycle-visible");
+            });
+            return;
+        }
+
+        let elements: Elements = this.props.elementsSupplier();
+        elements.findCycles();
+
+        let cycle: Nodes = elements.nodes.filterByClassName("cycle");
+        let cycleNodes = this.cy.nodes().filter(function (element) {
+            return element.isNode() && cycle.containsById(element.data().id);
         });
+        this.cy.batch(() => {
+            cycleNodes.addClass("cycle cycle-visible");
+        });
+
+        this.lazy.set(key, true);
     }
 
     unhighlightCircularDependencies() {
@@ -188,15 +216,44 @@ class GraphParameters extends Component {
     }
 
     highlightMostLongPath(): void {
+        let key = "most-long-path";
+        if (this._initiated(key)) {
+            let nodes = this.cy.nodes();
+            let startNodes = nodes.filter(".most-long-path-start");
+            let intermediateNodes = nodes.filter(".most-long-path");
+            let endNodes = nodes.filter(".most-long-path-end");
+            this.cy.batch(() => {
+                startNodes.addClass("path-visible");
+                intermediateNodes.addClass("path-visible");
+                endNodes.addClass("path-visible");
+            });
+            return;
+        }
+
+        let elements: Elements = this.props.elementsSupplier();
+        elements.findMostLongPath(this.props.hub);
+
         let nodes = this.cy.nodes();
-        let startNodes = nodes.filter(".most-long-path-start");
-        let intermediateNodes = nodes.filter(".most-long-path");
-        let endNodes = nodes.filter(".most-long-path-end");
-        this.cy.batch(() => {
-            startNodes.addClass("path-visible");
-            intermediateNodes.addClass("path-visible");
-            endNodes.addClass("path-visible");
+        let mostLongPathStartNodes: Nodes = elements.nodes.filterByClassName("most-long-path-start");
+        let mostLongPathNodes: Nodes = elements.nodes.filterByClassName("most-long-path");
+        let mostLongPathEndNodes: Nodes = elements.nodes.filterByClassName("most-long-path-end");
+        let startNodes = nodes.filter(function (element) {
+            return element.isNode() && mostLongPathStartNodes.containsById(element.data().id);
         });
+        let intermediateNodes = nodes.filter(function (element) {
+            return element.isNode() && mostLongPathNodes.containsById(element.data().id);
+        });
+        let endNodes = nodes.filter(function (element) {
+            return element.isNode() && mostLongPathEndNodes.containsById(element.data().id);
+        });
+
+        this.cy.batch(() => {
+            startNodes.addClass("most-long-path-start path-visible");
+            intermediateNodes.addClass("most-long-path path-visible");
+            endNodes.addClass("most-long-path-end path-visible");
+        });
+
+        this.lazy.set(key, true);
     }
 
     unhighlightMostLongPath(): void {
@@ -275,13 +332,38 @@ class GraphParameters extends Component {
     }
 
     highlightVersionsCollisions(): void {
+        let key = "versions-collisions";
+        if (this._initiated(key)) {
+            let nodes = this.cy.nodes();
+            let intermediate = nodes.filter(".version-collision.intermediate-node");
+            let endNodes = nodes.filter(".version-collision.end-node");
+            this.cy.batch(() => {
+                intermediate.addClass("versions-visible");
+                endNodes.addClass("versions-visible");
+            });
+            return;
+        }
+
+        let elements: Elements = this.props.elementsSupplier();
+        elements.findVersionsConflicts(this.props.hub);
+
+        let intermediateNodes: Nodes = elements.nodes.filterByClassNames(["version-collision", "intermediate-node"]);
+        let endNodes: Nodes = elements.nodes.filterByClassNames(["version-collision", "end-node"]);
+
         let nodes = this.cy.nodes();
-        let intermediate = nodes.filter(".version-collision.intermediate-node");
-        let endNodes = nodes.filter(".version-collision.end-node");
-        this.cy.batch(() => {
-            intermediate.addClass("versions-visible");
-            endNodes.addClass("versions-visible");
+        let intermediate = nodes.filter(function (element) {
+            return element.isNode() && intermediateNodes.containsById(element.data().id);
         });
+        let end = nodes.filter(function (element) {
+           return element.isNode() && endNodes.containsById(element.data().id);
+        });
+
+        this.cy.batch(() => {
+            intermediate.addClass("version-collision intermediate-node versions-visible");
+            end.addClass("version-collision end-node versions-visible");
+        });
+
+        this.lazy.set(key, true);
     }
 
     onCircularColorChange(event: ChangeEvent<HTMLInputElement>): void {
@@ -322,6 +404,10 @@ class GraphParameters extends Component {
     onPotentiallyDangerousInfectedColor(event: ChangeEvent<HTMLInputElement>): void {
         this.props.cyStyle.graphStyle.withPotentiallyDangerousInfectedColor(event.target.value);
         this.fireStyleChanged();
+    }
+
+    _initiated(key): Boolean {
+        return BooleanUtils.isTrue(this.lazy.get(key));
     }
 
     render() {
