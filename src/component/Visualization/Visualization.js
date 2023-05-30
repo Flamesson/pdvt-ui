@@ -57,15 +57,21 @@ class Visualization extends Component {
         this.onLayoutChange = layout => {
             this.setState({
                 _layout: layout
+            }, () => {
+                this.cy.layout(this.state._layout).run();
             });
         };
         this.onRefreshLayoutRequest = () => {
             this.cy.layout(this.state._layout).run();
-        }
+        };
+        this.onElementsUpdate = () => {
+            this.composeCytoscape();
+        };
         this.props.hub.on(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.on(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
+        this.props.hub.on(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
 
         this.composeCytoscape();
     }
@@ -75,6 +81,7 @@ class Visualization extends Component {
         this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.removeListener(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
+        this.props.hub.removeListener(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
 
         if (Objects.isCorrect(this.cy)) {
             this.cy.removeListener(AppEvents.TAP, this.onTap);
