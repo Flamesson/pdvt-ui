@@ -68,7 +68,6 @@ class Visualization extends Component {
             this.composeCytoscape();
         };
         this.props.hub.on(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
-        this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.on(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.on(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
         this.props.hub.on(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
@@ -78,14 +77,13 @@ class Visualization extends Component {
 
     componentWillUnmount() {
         this.props.hub.removeListener(AppEvents.LAYOUT_CHANGE, this.onLayoutChange);
-        this.props.hub.removeListener(AppEvents.CY_UPDATE, this.onCyUpdate);
         this.props.hub.removeListener(AppEvents.CY_STYLE_CHANGED, this.onCyStyleChanged);
         this.props.hub.removeListener(AppEvents.REFRESH_LAYOUT_REQUEST, this.onRefreshLayoutRequest);
         this.props.hub.removeListener(AppEvents.ELEMENTS_UPDATE, this.onElementsUpdate);
 
         if (Objects.isCorrect(this.cy)) {
             this.cy.removeListener(AppEvents.TAP, this.onTap);
-            //this.cy.destroy();
+            this.cy.destroy();
         }
     }
 
@@ -96,17 +94,14 @@ class Visualization extends Component {
             style: new Stylesheet(this.cyStyle).get()
         });
 
+        this.tap = new Tap(this.cy, this.controller);
+
+        this.cy.removeListener(AppEvents.TAP, this.onTap);
+        this.cy.on(AppEvents.TAP, this.onTap);
+
+        this.cy.layout(this.state._layout).run();
+
         this.props.hub.emit(AppEvents.CY_UPDATE, this.cy);
-    }
-
-    onCyUpdate = (cy): void => {
-        //this.cy = cy;
-        this.tap = new Tap(cy, this.controller);
-
-        cy.removeListener(AppEvents.TAP, this.onTap);
-        cy.on(AppEvents.TAP, this.onTap);
-
-        cy.layout(this.state._layout).run();
     }
 
     onCyStyleChanged = (ignored) => {

@@ -39,7 +39,8 @@ class Search extends Component {
         document.getElementById("parameters-search").value = this.getStoredSearchQuery();
 
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
-        this.props.hub.once(AppEvents.CY_UPDATE, ignored => {
+        this.props.hub.once(AppEvents.CY_UPDATE, cy => {
+            this.cy = cy;
             this.cachedNodeWords = false;
             this.updateSearch();
         });
