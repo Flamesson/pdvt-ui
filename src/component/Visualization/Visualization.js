@@ -85,7 +85,7 @@ class Visualization extends Component {
 
         if (Objects.isCorrect(this.cy)) {
             this.cy.removeListener(AppEvents.TAP, this.onTap);
-            this.cy.destroy();
+            //this.cy.destroy();
         }
     }
 
@@ -110,9 +110,8 @@ class Visualization extends Component {
     }
 
     onCyStyleChanged = (ignored) => {
-        this.forceUpdate(() => {
-            this.saveCyStyle();
-        });
+        this.saveCyStyle();
+        this.cy.style(new Stylesheet(this.cyStyle).get());
     };
 
     loadCyStyle(): CyStyle {

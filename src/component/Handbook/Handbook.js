@@ -46,7 +46,7 @@ class Handbook extends Component {
                         <tbody>
                         {
                             Licenses.LICENSES.map(license => {
-                                return <tr>
+                                return <tr key={license.id}>
                                     <td>{license.id}</td>
                                     <td>{t(license.name)}</td>
                                     <td>{this.getTypeTranslate(license.type)}</td>

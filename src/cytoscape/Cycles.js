@@ -1,4 +1,5 @@
 import Cycle from "./Cycle";
+import logger from "../utils/Logger";
 
 class Cycles {
     constructor() {

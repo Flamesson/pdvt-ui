@@ -78,7 +78,6 @@ class App extends AbstractComponent {
       }
     });
 
-
     this.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, () => {
       extLocalStorage.setItem(AppStorage.ANALYSIS_PERFORMED, false);
     });

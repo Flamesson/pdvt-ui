@@ -30,60 +30,39 @@ class AppStorage {
 
     static MOCK_TEXT_DATA = "[versioned][1]\n" +
         "[dictionary]\n" +
-        "com.google.collections:google-collections:1.0=a0;\n" +
-        "guru.nidi:graphviz-java:0.18.1=a1;\n" +
-        "com.google.code.findbugs:jsr305:3.0.2=a2;\n" +
-        "org.slf4j:jcl-over-slf4j:1.7.30=a3;\n" +
-        "org.slf4j:jul-to-slf4j:1.7.30=a4;\n" +
-        "org.webjars.npm:viz.js-graphviz-java:2.1.3=a5;\n" +
-        "guru.nidi.com.kitfox:svgSalamander:1.1.3=a6;\n" +
-        "org.slf4j:slf4j-api:1.7.30=a7;\n" +
-        "org.apache.commons:commons-exec:1.3=a8;\n" +
-        "net.arnx:nashorn-promise:0.1.1=a9;\n" +
-        "net.sourceforge.plantuml:plantuml:8059=b0;\n" +
-        "org.junit.jupiter:junit-jupiter-api:5.9.2=b1;\n" +
-        "org.junit.platform:junit-platform-commons:1.9.2=b2;\n" +
-        "org.junit:junit-bom:5.9.2=b3;\n" +
-        "org.opentest4j:opentest4j:1.2.0=b4;\n" +
-        "org.junit.platform:junit-platform-engine:1.9.2=b5;\n" +
-        "org.junit.jupiter:junit-jupiter-engine:5.9.2=b6;\n" +
-        "com.eclipsesource.j2v8:j2v8_linux_x86_64:4.6.0=b7;\n" +
-        "org.projectlombok:lombok:1.18.24=b8;\n" +
-        "org.apiguardian:apiguardian-api:1.1.2=b9;\n" +
-        "org.slf4j:jul-to-slf4j:1.7.29=c0;\n" +
-        "org.slf4j:slf4j-api:1.7.25=c1;\n" +
-        "com.google.collections:google-collections:1.2=c2;\n" +
+        "org.junit.jupiter:junit-jupiter-engine:5.9.2=a0;\n" +
+        "org.junit.platform:junit-platform-engine:1.9.2=a1;\n" +
+        "org.junit.jupiter:junit-jupiter-api:5.9.2=a2;\n" +
+        "org.junit:junit-bom:5.9.2=a3;\n" +
+        "org.opentest4j:opentest4j:1.2.0=a4;\n" +
+        "org.junit.platform:junit-platform-commons:1.9.2=a5;\n" +
+        "com.google.collections:google-collections:1.0=a6;\n" +
+        "com.github.mizosoft.methanol:methanol:1.7.0=a7;\n" +
+        "org.projectlombok:lombok:1.18.24=a8;\n" +
+        "org.apiguardian:apiguardian-api:1.1.2=a9;\n" +
+        "org.izumi.pdvt.gradle:pdvt:2.0.1=b0;\n" +
         "[mappings]\n" +
-        "a1->a2;\n" +
-        "a1->a3;\n" +
+        "a0->a1;\n" +
+        "a0->a2;\n" +
+        "a0->a3;\n" +
         "a1->a4;\n" +
+        "a1->a3;\n" +
         "a1->a5;\n" +
-        "a1->a6;\n" +
-        "a1->a7;\n" +
-        "a1->a8;\n" +
-        "a1->a9;\n" +
-        "a4->a7;\n" +
-        "a3->a7;\n" +
-        "b1->b2;\n" +
-        "b1->b3;\n" +
-        "b1->b4;\n" +
-        "b3->b5;\n" +
-        "b3->b1;\n" +
-        "b3->b6;\n" +
-        "b3->b2;\n" +
-        "b6->b5;\n" +
-        "b6->b1;\n" +
-        "b6->b3;\n" +
-        "b5->b2;\n" +
-        "b5->b4;\n" +
-        "b5->b3;\n" +
-        "b2->b3;\n" +
-        "b1->b9;\n" +
-        "b2->b9;\n" +
-        "b2->a1;\n" +
-        "b2->c0;\n" +
-        "b3->a4;\n" +
-        "b3->c2;\n";
+        "a5->a3;\n" +
+        "a2->a5;\n" +
+        "a2->a4;\n" +
+        "a2->a3;\n" +
+        "a3->a2;\n" +
+        "a3->a0;\n" +
+        "a3->a5;\n" +
+        "a3->a1;\n" +
+        "a2->a9;\n" +
+        "a5->a9;\n" +
+        "b0->a8;\n" +
+        "b0->a6;\n" +
+        "b0->a7;\n" +
+        "b0->a2;\n" +
+        "b0->a0;\n";
 
     static DEFAULT_LAYOUT = Layouts.COSE_BILKENT;
 }

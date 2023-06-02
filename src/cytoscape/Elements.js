@@ -8,7 +8,6 @@ import Arrays from "../utils/Arrays";
 import Nodes from "./Nodes";
 import Optional from "../utils/Optional";
 import Cycle from "./Cycle";
-import JohnsonAlgorithm from "../algorithm/JohnsonAlgorithm";
 import FloydWarshall from "../algorithm/FloydWarshall";
 import BooleanUtils from "../utils/BooleanUtils";
 import VersionsCollisions from "../algorithm/VersionsConflicts";
@@ -16,7 +15,7 @@ import Conflict from "./Conflict";
 import LicensesRequest from "../algorithm/LicensesRequest";
 import StoredLicenses from "../algorithm/StoredLicenses";
 import LicenseProblems from "./LicenseProblems";
-import AppEvents from "../AppEvents";
+import TarjanAlgorithm from "../algorithm/TarjanAlgorithm";
 
 class Elements {
     constructor(nodes, edges, versioned) {
@@ -179,7 +178,7 @@ class Elements {
     }
 
     getCycles(): Cycle[] {
-        return new JohnsonAlgorithm(this).findElementaryCycles().cycles;
+        return new TarjanAlgorithm(this).findElementaryCycles().cycles;
     }
 
     findVersionsConflicts(hub): void {
