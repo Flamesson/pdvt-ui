@@ -12,11 +12,18 @@ import AppEvents from "../AppEvents";
 class FileManage extends Component {
     constructor(props) {
         super(props);
-
         this.fileUploadInputId = "graph-file";
-        this.state = {
-            file: null
-        };
+
+        if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+            let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
+            this.state = {
+                file: file
+            };
+        } else {
+            this.state = {
+                file: null
+            };
+        }
 
         this.handleFileChange = this.handleFileChange.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
@@ -25,34 +32,32 @@ class FileManage extends Component {
     }
 
     componentDidMount() {
-        let checkFile = () => {
-            if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
-                let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
-                this.setState({
-                    file: file
-                }, () => {
-                    this.updateRemoveFileButtonState();
-                });
-            } else {
-                this.setState({
-                    file: null
-                }, () => {
-                    this.updateRemoveFileButtonState();
-                })
-            }
-        };
-
         this.onInputChangedUserOrigin = (): void => {
-            checkFile();
+            this.checkFile();
         }
         this.props.hub.on(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
-
-        checkFile();
     }
 
     componentWillUnmount() {
         this.props.hub.removeListener(AppEvents.INPUT_CHANGED_USER_ORIGIN, this.onInputChangedUserOrigin);
     }
+
+    checkFile = () => {
+        if (extLocalStorage.isPresent(AppStorage.DATA_FILE)) {
+            let file = extLocalStorage.getFile(AppStorage.DATA_FILE);
+            this.setState({
+                file: file
+            }, () => {
+                this.updateRemoveFileButtonState();
+            });
+        } else {
+            this.setState({
+                file: null
+            }, () => {
+                this.updateRemoveFileButtonState();
+            })
+        }
+    };
 
     uploadFile(ignored) {
         let element = document.getElementById(this.fileUploadInputId);

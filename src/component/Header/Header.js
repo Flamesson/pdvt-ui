@@ -15,10 +15,6 @@ class Header extends AbstractComponent {
     constructor(props) {
         super(props);
 
-        this.toggle = this.toggle.bind(this);
-    }
-
-    componentDidMount() {
         let open;
         if (extLocalStorage.isAbsent(AppStorage.HEADER_OPENED)) {
             open = Header.DEFAULT_OPENED;
@@ -26,9 +22,11 @@ class Header extends AbstractComponent {
             open = Strings.asBoolean(extLocalStorage.getItem(AppStorage.HEADER_OPENED));
         }
 
-        this.setState({
+        this.state = {
             open: open
-        });
+        };
+
+        this.toggle = this.toggle.bind(this);
     }
 
     toggle(){

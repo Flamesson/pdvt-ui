@@ -6,19 +6,20 @@ import AppEvents from "../../AppEvents";
 import {withTranslation} from "react-i18next";
 
 class Flag extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state =  {
+            localeCode: this.getCurrentLocaleCode()
+        };
+    }
+
     componentDidMount() {
         this.props.hub.on(AppEvents.LOCALE_CHANGED, localeCode => {
             this.setState({
                 localeCode: localeCode
             });
         });
-
-        let currentLocaleCode: String = this.getCurrentLocaleCode();
-        if (Objects.isCorrect(currentLocaleCode)) {
-            this.setState({
-                localeCode: currentLocaleCode
-            });
-        }
     }
 
     getCurrentLocaleCode(): String {

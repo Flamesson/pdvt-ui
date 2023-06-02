@@ -20,16 +20,17 @@ class ParametersPanel extends Component {
     constructor(props) {
         super(props);
 
+        let open = extLocalStorage.isPresent(AppStorage.PARAMETERS_OPENED)
+            && Strings.asBoolean(extLocalStorage.getItem(AppStorage.PARAMETERS_OPENED));
+        this.state = {
+            open: open
+        };
+
         this.isOpen = this.isOpen.bind(this);
         this.toggle = this.toggle.bind(this);
     }
 
     componentDidMount(): void {
-        let open = extLocalStorage.isPresent(AppStorage.PARAMETERS_OPENED)
-            && Strings.asBoolean(extLocalStorage.getItem(AppStorage.PARAMETERS_OPENED));
-        this.setState({
-            open: open
-        });
         if (extLocalStorage.isPresent(AppStorage.PARAMETERS_ACTIVE_TAB)) {
             this.activeTab = extLocalStorage.getItem(AppStorage.PARAMETERS_ACTIVE_TAB);
         } else {

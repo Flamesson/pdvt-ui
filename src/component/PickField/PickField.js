@@ -24,6 +24,11 @@ class PickField extends Component {
     constructor(props) {
         super(props);
 
+        this.state = {
+            isOpen: false,
+            option: undefined
+        };
+
         this.optionsSupplier = props.optionsSupplier;
         this.options = props.options;
         this.onValueChanged = props.onValueChanged;
@@ -39,11 +44,6 @@ class PickField extends Component {
                 isOpen: false
             });
         })
-
-        this.setState({
-            isOpen: false,
-            option: undefined
-        });
 
         if (Objects.isCorrect(this.props.reference)) {
             this.props.reference(this);

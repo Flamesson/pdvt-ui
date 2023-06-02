@@ -21,6 +21,10 @@ class Search extends Component {
         super(props);
         this.cachedNodeWords = false;
 
+        this.state = {
+            searchMatchNodes: []
+        };
+
         this.debouncedUpdateSearch = this.debouncedUpdateSearch.bind(this);
         this.getStoredSearchQuery = this.getStoredSearchQuery.bind(this);
         this.getSearchQuery = this.getSearchQuery.bind(this);
@@ -32,9 +36,6 @@ class Search extends Component {
     }
 
     componentDidMount(): void {
-        this.setState({
-            searchMatchNodes: [],
-        });
         document.getElementById("parameters-search").value = this.getStoredSearchQuery();
 
         this.props.hub.on(AppEvents.CY_UPDATE, this.onCyUpdate);
