@@ -37,8 +37,7 @@ class Problems {
             return Optional.empty();
         }
 
-        //TODO: localize
-        let name = "Несвязанные узлы";
+        let name = this.t("problems.name.unlinked-nodes");
         return Optional.of(new Problem(name, <UnlinkedNodesProblem nodes={unlinked}/>))
     }
 
@@ -48,7 +47,7 @@ class Problems {
             return Optional.empty();
         }
 
-        let name = "Циклы зависимостей";
+        let name = this.t("problems.name.dependencies-cycles");
         return Optional.of(new Problem(name, <CyclesProblem cycles={cycles}/>));
     }
 
@@ -58,7 +57,7 @@ class Problems {
             return Optional.empty();
         }
 
-        let name = "Конфликты зависимостей";
+        let name = this.t("problems.name.versions-conflicts");
         return Optional.of(new Problem(name, <ConflictsProblem conflicts={conflicts}/>));
     }
 
@@ -70,8 +69,7 @@ class Problems {
                     return Optional.empty();
                 }
 
-                logger.warn("LICENSE PROBLEMS! " + problems.length);
-                let name = "Лицензирование";
+                let name = this.t("problems.name.licenses");
                 return Optional.of(new Problem(name, <LicenseProblem problems={problems}/>));
             });
     }

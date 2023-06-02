@@ -5,7 +5,6 @@ import {ListGroup, ListGroupItem} from "react-bootstrap";
 import {ReactNode} from "react";
 import LicenseProblems from "../../cytoscape/LicenseProblems";
 import Arrays from "../../utils/Arrays";
-import set from "cytoscape/src/set";
 import Sets from "../../utils/Sets";
 
 class LicensesProblem extends AbstractProblem {
@@ -47,24 +46,26 @@ class LicensesProblem extends AbstractProblem {
     }
 
     mapInfection(infection: Node): ReactNode {
+        const t = this.props.t;
         return <ListGroupItem key={infection.getId()} className={"d-flex flex-row justify-content-between"}>
             <div>{infection.getLabel()}</div>
-            <div>(лицензия - {infection.data.license ? infection.data.license : infection.data.specifiedLicense + " (указано вами)"})</div>
+            <div>({t("problems.licenses.license")} - {infection.data.license ? infection.data.license : infection.data.specifiedLicense + " " + t("problems.licenses.your-data")})</div>
         </ListGroupItem>;
     }
 
     renderProblems(): React.ReactNode {
+        const t = this.props.t;
         return <div>
-            <h5>Возможны проблемы с лицензированием: </h5>
+            <h5>{t("problems.licenses.problems-header")} </h5>
             <div className={"mt-4 d-flex flex-row"}>
                 <div className={"w-100"}>
-                    <h6>Модули с проблемной лицензией</h6>
+                    <h6>{t("problems.licenses.problems-infections-header")}</h6>
                     <ListGroup>
                         {this.collectInfections().map(this.mapInfection)}
                     </ListGroup>
                 </div>
                 <div className={"w-100"}>
-                    <h6>Модули, зависящие от проблемных</h6>
+                    <h6>{t("problems.licenses.problems-infected-header")}</h6>
                     <ListGroup>
                         {this.collectInfected().map((node: Node) => <ListGroupItem key={node.getId()}>{node.getLabel()}</ListGroupItem>)}
                     </ListGroup>
@@ -75,25 +76,28 @@ class LicensesProblem extends AbstractProblem {
 
 
     renderReasons(): React.ReactNode {
+        const t = this.props.t;
         return <div>
-            Основной причиной является невнимательность, нежелание или незнание специалистов о необходимости проверки лицензий при подключении новых зависимостей. В таких случаях лицензированию попросту не уделяется должного внимания.
+            {t("problems.licenses.reasons-1")}
         </div>;
     }
 
 
     renderSolution(): React.ReactNode {
+        const t = this.props.t;
         return <div>
-            <p>Необходимо контролировать используемые модули, проверять лицензию, под которой они выпускаются и применять их соответственно вашему приложению. Если вы обнаружили зависимость с неподходящим типом лицензии - попробуйте найти аналогичную функциональность в другом фреймворке/библиотеке или выполнить условия лицензии.</p>
-            <p>Требования со стороны лицензий могут разительно отличаться - некоторые библиотеки с открытым исходным кодом требуют того, чтобы ваш проект тоже имел открытый исходный код, некоторые нельзя использовать в коммерческих проектах. Важно внимательно читать эти условия.</p>
-            <p>Возможны ситуации, когда продукт выпускается под несколькими лицензиями. Пример — использование некоторых версий LGPL лицензий вместе с коммерческим проприетарным (закрытым) ПО.</p>
-            <p>Желательно консультироваться с юристом, поскольку в данном вопросе возможны неочевидные юридические нюансы.</p>
+            <p>{t("problems.licenses.solution-1")}</p>
+            <p>{t("problems.licenses.solution-2")}</p>
+            <p>{t("problems.licenses.solution-3")}</p>
+            <p>{t("problems.licenses.solution-4")}</p>
         </div>;
     }
 
 
     renderConsequences(): React.ReactNode {
+        const t = this.props.t;
         return <div>
-            В долгосрочной перспективе такая ситуация может привести к юридическим проблемам или даже репутационным и финансовым потерям как правообладателя, так и пользователя. Возможны судебные разбирательства.
+            <p>{t("problems.licenses.consequences-4")}</p>
         </div>;
     }
 }

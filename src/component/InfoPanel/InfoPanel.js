@@ -6,6 +6,7 @@ import AbstractComponent from "../AbstractComponent";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import Strings from "../../utils/Strings";
+import {withTranslation} from "react-i18next";
 
 class InfoPanel extends AbstractComponent {
     constructor(props) {
@@ -57,18 +58,19 @@ class InfoPanel extends AbstractComponent {
     }
 
     render() {
+        const t = this.props.t;
         let open = this.getOrElse(state => state.open, false);
         return <div id={"info-panel-container"}>
             <div id={"info-panel"}>
                 <div className={"toggle chevron" + (open ? " open" : "")} onClick={this.toggle}/>
                 <div id={"info"} className={"info" + (!open ? " closed" : "")}>
-                    <h5>Всего</h5>
-                    <label>Узлов: {this.getOrElse(state => state.nodes, 0)}</label><br/>
-                    <label>Ребер: {this.getOrElse(state => state.edges, 0)}</label>
+                    <h5>{t("info-panel.total")}</h5>
+                    <label>{t("info-panel.nodes")}: {this.getOrElse(state => state.nodes, 0)}</label><br/>
+                    <label>{t("info-panel.edges")}: {this.getOrElse(state => state.edges, 0)}</label>
                 </div>
             </div>
         </div>;
     }
 }
 
-export default InfoPanel;
+export default withTranslation()(InfoPanel);

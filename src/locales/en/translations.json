@@ -129,6 +129,7 @@
   "tab.licenses.caption": "Licenses",
   "tab.mobile-plain.caption": "Graph (text)",
   "tab.mobile-file.caption": "Graph (file)",
+  "button.perform-analysis.caption": "Perform analyze",
   "graph-editor": {
     "title": "Graph Editor",
     "nodeSectionTitle": "Nodes",
@@ -196,5 +197,66 @@
     "show-solution": "Deploy Solution",
     "hide-consequences": "Hide problems",
     "show-consequences": "Expand problems"
+  },
+  "info-panel": {
+    "total": "Total",
+    "nodes": "Nodes",
+    "edges": "Edges"
+  },
+  "problems": {
+    "name": {
+      "unlinked-nodes": "Unlinked nodes",
+      "dependencies-cycles": "Dependency Cycles",
+      "versions-conflicts": "Dependency Conflicts",
+      "licenses": "Licensing"
+    },
+    "conflicts": {
+      "intermediate-nodes-header": "Modules that depend on conflicting functionality:",
+      "end-nodes-header": "Conflicting artifacts:",
+      "problems-header": "Version conflicts detected. List of conflicts:",
+      "reasons-header": "Version conflicts can occur for various reasons. Here are some of them:",
+      "reasons-1": "1) Different requirements: Different dependencies may require different versions of the same library or package. For example, one dependency may require version 1.0 and another may require version 2.0. This can lead to conflict when two different versions are incompatible.",
+      "reasons-2": "2) Implicit dependencies: If different dependencies have hidden or implicit dependencies on the same package, this can also cause a version conflict. If one dependency requires a specific version of a package and another dependency requires a different version of the same package, there is a problem.",
+      "reasons-3": "3) Upgrading dependencies: Upgrading dependencies in a project may cause conflicts. If the updated version of a dependency is incompatible with existing project dependencies, compatibility issues and version conflicts may occur.",
+      "solution-1": "Upgrading versions: Try manually updating dependencies to their compatible versions.",
+      "solution-2": "Many dependency management tools such as maven, npm, yarn, and pnpm can automatically resolve dependency conflicts. They use dependency resolution algorithms to find compatible versions and use them. For example, maven uses the <a href= {\"https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html\"}>nearest-wins</a> for conflict resolution.",
+      "consequences-1": "Different versions of dependencies may have incompatible changes in interface, functionality, or behavior. This may result in compilation or runtime errors because code written for one version of a dependency may not work with another version. Version incompatibilities can lead to unpredictable behavior and errors in the application.",
+      "consequences-2": "Code duplication: If different modules or libraries use different versions of the same dependency, this can lead to code duplication in the project. Each version of the dependency will be downloaded and used separately, which can increase the size and complexity of the project support. Code duplication can also lead to consistency and compatibility issues between modules."
+    },
+    "cycles": {
+      "problems-header": "Dependency cycles found. List of cycles:",
+      "reasons-header": "Similar problem can occur like this:",
+      "reasons-1": "1) Incorrect separation of concerns: When different parts of the code are too tightly coupled to each other, they may have circular dependencies. Insufficient separation of concerns between components can lead to this situation.",
+      "reasons-2": "2) Errors during development: Misuse or incorrect linking of components can lead to circular dependencies. This can happen when dependencies are injected incorrectly.",
+      "reasons-3": "3) An error occurred during design or development, the module was not needed or was not linked to the right place.",
+      "reasons-4": "4) You are using a version of the app that contains a bug that prevents it from generating the list of dependencies properly.",
+      "solution-1": "If you have a circular dependency, you probably have a design problem and duties are not segregated properly. You should try to properly redesign the components so that their hierarchy is well designed and there is no need for circular dependencies .",
+      "solution-2": "Review your project structure and its modules. Try to isolate the core functionality and minimize cross dependencies between modules. Separate functionality into independent layers or components to reduce interdependencies.",
+      "consequences-1": "The issue is not critical, but may degrade maintainability, testability, and speed of development."
+    },
+    "licenses": {
+      "your-data": "Specified by you",
+      "license": "license",
+      "problems-header": "Possible licensing issues:",
+      "problems-infections-header": "Modules with a problematic license",
+      "problems-infected-header": "Problems dependent modules",
+      "reasons-1": "The main reason is the inattention, unwillingness or ignorance of specialists about the need to check licenses when adding new dependencies. In such cases, licensing is simply not given due attention.",
+      "solution-1": "It is necessary to control the modules used, check the license under which they are released and apply them according to your application. If you find a dependency with the wrong type of license, try to find similar functionality in another framework/library or follow the terms of the license." ,
+      "solution-2": "License requirements can vary wildly - some open source libraries require your project to be open source as well, some cannot be used in commercial projects. It is important to read these terms carefully.",
+      "solution-3": "Situations are possible when a product is released under several licenses. An example is the use of some versions of LGPL licenses together with commercial proprietary (closed) software.",
+      "solution-4": "It is advisable to consult a lawyer, as there may be some non-obvious legal nuances in this matter.",
+      "consequences-1": "In the long term, this situation can lead to legal problems or even reputational and financial losses for both the copyright holder and the user. Litigation is possible."
+    },
+    "unlinked": {
+      "problems-header": "There are unrelated nodes in the graph. Here is a list of such nodes:",
+      "reasons-header": "This can happen for the following reasons:",
+      "reasons-1": "1) A project can have an independent component, module or microservice that does not depend on other elements of the system and does not require interaction with them.",
+      "reasons-2": "2) As the project evolves, the code may become obsolete and some modules may become outdated.",
+      "reasons-3": "3) An error occurred during design or development, the module was not needed or was not linked to the right place.",
+      "reasons-4": "4) You are using a version of the dependency list generation application that contains a bug that prevents the dependency list from being generated properly.",
+      "solution-1": "If the module is not used, it should be archived or removed.",
+      "solution-2": "It may be necessary to analyze the dependencies of the components in the project.",
+      "consequences-1": "The presence of unused modules can lead to clutter, complicating the development and the project. Clutter reduces the speed of understanding the project and its parts."
+    }
   }
 }
