@@ -163,6 +163,7 @@
     "apply-button": "Apply",
     "edit-button": "Edit",
     "delete-button": "Delete",
+    "clear-button": "Clear",
     "generate-button": "Generate",
     "copy-button": "Copy",
     "code-label": "Your Code",

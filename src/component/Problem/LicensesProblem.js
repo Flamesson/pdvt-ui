@@ -45,7 +45,7 @@ class LicensesProblem extends AbstractProblem {
         return tmp;
     }
 
-    mapInfection(infection: Node): ReactNode {
+    mapInfection = (infection: Node): ReactNode => {
         const t = this.props.t;
         return <ListGroupItem key={infection.getId()} className={"d-flex flex-row justify-content-between"}>
             <div>{infection.getLabel()}</div>

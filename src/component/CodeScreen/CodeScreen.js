@@ -223,6 +223,14 @@ class CodeScreen extends Component {
         this.setState({ isDeleteModalOpen: false });
     }
 
+    clearCode = () => {
+        extLocalStorage.remove(AppStorage.SAVED_CODE);
+        this.setState({
+            code: Code.empty(),
+            dto: CodeDto.empty()
+        });
+    }
+
     render() {
         const { code, isCreateModalOpen, isApplyModalOpen, isDeleteModalOpen, loading } = this.state;
         const { t } = this.props;
@@ -257,8 +265,11 @@ class CodeScreen extends Component {
                     <Button variant={"secondary"} onClick={this.handleGenerate} className={"mr-2"}>
                         {t('code-screen.generate-button')}
                     </Button>
-                    <Button variant="danger" onClick={this.handleDeleteCode}>
+                    <Button variant="danger" onClick={this.handleDeleteCode} className={"mr-2"}>
                         {t('code-screen.delete-button')}
+                    </Button>
+                    <Button variant={"danger"} onClick={this.clearCode}>
+                        {t('code-screen.clear-button')}
                     </Button>
                 </div>
                 {isCreateModalOpen &&
