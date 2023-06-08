@@ -10,7 +10,6 @@ class CreateCodeModal extends Component {
 
         this.state = {
             specialValue: '',
-            password: '',
             validated: false,
             valid: false
         };
@@ -20,21 +19,16 @@ class CreateCodeModal extends Component {
         this.setState({ specialValue: e.target.value });
     };
 
-    handleChangePassword = (e) => {
-        this.setState({ password: e.target.value });
-    };
-
     handleCreateCode = () => {
         if (this.state.valid === false) {
             return;
         }
 
-        const { specialValue, password } = this.state;
-        let dto = new CodeDto(specialValue, password, password.length);
+        const { specialValue } = this.state;
+        let dto = new CodeDto(specialValue);
         this.props.onCreate(dto);
         this.setState({
             specialValue: "",
-            password: ""
         });
     };
 
@@ -58,7 +52,7 @@ class CreateCodeModal extends Component {
 
     render() {
         const { show, onClose, t } = this.props;
-        const { specialValue, password } = this.state;
+        const { specialValue } = this.state;
 
         return (
             <Modal show={show} onHide={onClose}>
@@ -73,11 +67,6 @@ class CreateCodeModal extends Component {
                             <Form.Control.Feedback type="invalid">
                                 {t("code-screen.fill-code")}
                             </Form.Control.Feedback>
-                        </Form.Group>
-
-                        <Form.Group controlId="formPassword" className={"mb-4"}>
-                            <Form.Label>{t('code-screen.password-label')}</Form.Label>
-                            <Form.Control type="password" value={password} onChange={this.handleChangePassword} />
                         </Form.Group>
 
                         <Button type={"submit"} variant="primary" className={"mr-3"}>

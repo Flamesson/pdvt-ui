@@ -1,41 +1,28 @@
 import React, { Component } from 'react';
-import {Button, Container, Spinner} from 'react-bootstrap';
+import {Button, Container} from 'react-bootstrap';
 import { v4 as uuidv4 } from 'uuid';
 import { withTranslation } from 'react-i18next';
 import CreateCodeModal from './CreateCodeModal';
 import CopyButton from "../CopyButton/CopyButton";
-import axios from "axios";
 import {toast} from "react-toastify";
-import Objects from "../../utils/Objects";
 import Code from "./Code";
 import CodeDto from "./CodeDto";
 import extLocalStorage from "../../utils/ext.local.storage";
 import AppStorage from "../../AppStorage";
 import TextComponent from "./TextComponent";
-import ApplyCodeModal from "./ApplyCodeModal";
-import DeleteCodeModal from "./DeleteCodeModal";
 import AppEvents from "../../AppEvents";
 import Base64 from "../../utils/Base64";
 import logger from "../../utils/Logger";
 
 const REACT_APP_SERVER_ADDRESS: String = process.env.REACT_APP_SERVER_ADDRESS;
 const SERVER_URL = "http://" + REACT_APP_SERVER_ADDRESS;
-const PLAIN_TEXT_HEADERS = {
-    headers: {
-        'Content-Type': 'text/plain'
-    }
-};
 
 class CodeScreen extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            isEditModalOpen: false,
-            isApplyModalOpen: false,
             isCreateModalOpen: false,
-            isDeleteModalOpen: false,
-            loading: false,
             code: Code.empty(),
             dto: CodeDto.empty()
         };
@@ -55,176 +42,47 @@ class CodeScreen extends Component {
 
     saveCodeToLocalStorage = () => {
         extLocalStorage.setItem(AppStorage.SAVED_CODE, this.state.code.getRaw());
-
-        logger.warn("Before emit: " + JSON.stringify(this.state.code));
-
         this.props.hub.emit(AppEvents.CODE_CHANGED, this.state.code);
     }
 
     deleteCodeFromLocalStorage = () => {
         extLocalStorage.remove(AppStorage.SAVED_CODE);
-        extLocalStorage.remove(AppStorage.SAVED_PASS_LENGTH);
     }
 
     handleCreateCode = () => {
         this.setState({ isCreateModalOpen: true });
     };
 
-    handleApplyCode = () => {
-        this.setState({ isApplyModalOpen: true });
-    }
-
-    handleDeleteCode = () => {
-        this.setState({ isDeleteModalOpen: true });
-    }
-
-    handleApply = (dto: CodeDto) => {
-        const t = this.props.t;
-        const generatedCode = this.generateCode(dto.codeword, dto.password);
-        this.setState({
-            isApplyModalOpen: false,
-            loading: true
-        }, () => {
-            axios.post(SERVER_URL + `/client/${dto.codeword}/check-exists`, generatedCode, PLAIN_TEXT_HEADERS)
-                .then(response => {
-                    let result = response.data;
-                    if (result === false) {
-                        this.setState({
-                            loading: false
-                        }, () => {
-                            toast.error(t("code-screen.code-not-exists", { position: "top-center" }));
-                        });
-                    } else if (result === true) {
-                        this.setState({
-                            code: new Code(generatedCode),
-                            dto: dto,
-                            loading: false
-                        }, () => {
-                            this.saveCodeToLocalStorage();
-                            toast.info(t("code-screen.applied-code"));
-                        });
-                    }
-                })
-                .catch(this.onApplyError);
-        });
-    }
-
     handleCreate = (dto: CodeDto) => {
         const t = this.props.t;
-        const generatedCode = this.generateCode(dto.codeword, dto.password);
+        const generatedCode = this.generateCode(dto.codeword);
         this.setState({
             isCreateModalOpen: false,
-            isEditModalOpen: false,
-            loading: true
+            code: new Code(generatedCode),
+            dto: dto
         }, () => {
-            axios.post(SERVER_URL + `/client/${dto.codeword}/create-if-absent`, generatedCode, PLAIN_TEXT_HEADERS)
-                .then(ignored => {
-                    this.setState({
-                        code: new Code(generatedCode),
-                        dto: dto,
-                        loading: false
-                    }, () => {
-                        this.saveCodeToLocalStorage();
-                        toast.info(t("code-screen.good-response"));
-                    });
-                })
-                .catch(this.onCreateError);
+            this.saveCodeToLocalStorage();
+            toast.info(t("code-screen.good-response"));
+            if (this.copyFunc) {
+                this.copyFunc(this.state.code.getRaw());
+            }
         });
     };
 
-    handleDelete = (dto: CodeDto) => {
-        const t = this.props.t;
-        const generatedCode = this.generateCode(dto.codeword, dto.password);
-        this.setState({
-            isDeleteModalOpen: false,
-            loading: true
-        }, () => {
-            axios.post(SERVER_URL + `/client/${dto.codeword}/delete`, generatedCode, PLAIN_TEXT_HEADERS)
-                .then(ignored => {
-                    this.setState({
-                        code: Code.empty(),
-                        dto: CodeDto.empty(),
-                        loading: false
-                    }, () => {
-                        this.deleteCodeFromLocalStorage();
-                        toast.info(t("code-screen.successfully-deleted"));
-                    });
-                })
-                .catch(this.onApplyError);
-        });
-    }
-
-    onApplyError = (error) => {
-        this.onError(error,
-            "code-screen.no-connection-to-backend",
-            "code-screen.apply-bad-request",
-            "code-screen.apply-bad-request",
-            "code-screen.request-failed"
-        );
-    }
-
-    onCreateError = (error) => {
-        this.onError(error,
-            "code-screen.no-connection-to-backend",
-            "code-screen.bad-request",
-            "code-screen.bad-request",
-            "code-screen.request-failed"
-        );
-    }
-
-    onError = (error, onDisconnectedKey, onForbiddenKey, onBadRequestKey, onDefaultKey): void => {
-        this.setState({
-            loading: false
-        }, () => {
-            let disconnected = Objects.isNotCorrect(error.response);
-            let badRequest = Objects.isCorrect(error.response) && error.response.status === 400;
-            let forbidden = Objects.isCorrect(error.response) && error.response.status === 403;
-
-            const t = this.props.t;
-            let key;
-            if (disconnected) {
-                key = onDisconnectedKey;
-            } else if (badRequest) {
-                key = onBadRequestKey;
-            } else if (forbidden) {
-                key = onForbiddenKey;
-            } else {
-                key = onDefaultKey;
-            }
-
-            toast.error(t(key), { position: "top-center" })
-        });
-    }
-
     handleGenerate = () => {
-        this.handleCreate(new CodeDto(uuidv4().toString(), null, 0));
+        this.handleCreate(new CodeDto(uuidv4().toString()));
     }
 
-    generateCode = (specialValue, password): String => {
-        let toEncode;
-        if (password) {
-            toEncode = `${specialValue.length}.${SERVER_URL.length}.${password.length}.${specialValue}${SERVER_URL}${password}`
-        } else {
-            toEncode = `${specialValue.length}.${SERVER_URL.length}.0.${specialValue}${SERVER_URL}`
-        }
-
-        return Base64.encodeText(toEncode);
+    generateCode = (specialValue): String => {
+        return Base64.encodeText(`${specialValue.length}.${SERVER_URL.length}.${specialValue}${SERVER_URL}`);
     };
 
     closeCreateModal = () => {
         this.setState({ isCreateModalOpen: false });
     };
 
-    closeApplyModal = () => {
-        this.setState({ isApplyModalOpen: false });
-    };
-
-    closeDeleteModal = () => {
-        this.setState({ isDeleteModalOpen: false });
-    }
-
     clearCode = () => {
-        extLocalStorage.remove(AppStorage.SAVED_CODE);
+        this.deleteCodeFromLocalStorage();
         this.setState({
             code: Code.empty(),
             dto: CodeDto.empty()
@@ -232,21 +90,16 @@ class CodeScreen extends Component {
     }
 
     render() {
-        const { code, isCreateModalOpen, isApplyModalOpen, isDeleteModalOpen, loading } = this.state;
+        const { code, isCreateModalOpen } = this.state;
         const { t } = this.props;
 
         return (
             <Container className={"mt-4"}>
-                {loading ? <div className={"d-flex flex-row justify-content-center"}>
-                    <Spinner as="span" className={"mr-4"} animation="border" size={"m"} role="status" aria-hidden="true" />
-                    <p className="text-3">{t("code-screen.request-to-backend")}</p>
-                </div> : <div/>}
-
                 <div className={"mb-4"}>
                     {code.notEmpty() ?
                         <div className={"d-flex flex-column justify-content-center align-items-center"}>
                             <div className={"d-flex flex-row justify-content-center align-items-start"}>
-                                <CopyButton content={code.getRaw()} size={24}/>
+                                <CopyButton content={code.getRaw()} size={24} copyFunc={func => this.copyFunc = func }/>
                                 <h4 className={"ml-4 text-break"}>{t('code-screen.your-code')}: </h4>
                             </div>
                             <TextComponent text={code.getRaw()}/>
@@ -259,14 +112,8 @@ class CodeScreen extends Component {
                     <Button variant="primary" onClick={this.handleCreateCode} className={"mr-2"}>
                         {t('code-screen.create-button')}
                     </Button>
-                    <Button variant="primary" onClick={this.handleApplyCode} className={"mr-2"}>
-                        {t('code-screen.apply-button')}
-                    </Button>
                     <Button variant={"secondary"} onClick={this.handleGenerate} className={"mr-2"}>
                         {t('code-screen.generate-button')}
-                    </Button>
-                    <Button variant="danger" onClick={this.handleDeleteCode} className={"mr-2"}>
-                        {t('code-screen.delete-button')}
                     </Button>
                     <Button variant={"danger"} onClick={this.clearCode}>
                         {t('code-screen.clear-button')}
@@ -277,20 +124,6 @@ class CodeScreen extends Component {
                         show={isCreateModalOpen}
                         onClose={this.closeCreateModal}
                         onCreate={this.handleCreate}
-                    />
-                }
-                {isApplyModalOpen &&
-                    <ApplyCodeModal
-                        show={isApplyModalOpen}
-                        onClose={this.closeApplyModal}
-                        onApply={this.handleApply}
-                    />
-                }
-                {isDeleteModalOpen &&
-                    <DeleteCodeModal
-                        show={isDeleteModalOpen}
-                        onClose={this.closeDeleteModal}
-                        onDelete={this.handleDelete}
                     />
                 }
             </Container>

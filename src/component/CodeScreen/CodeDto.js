@@ -1,7 +1,6 @@
 class CodeDto {
-    constructor(codeword, password) {
+    constructor(codeword) {
         this.codeword = codeword;
-        this.password = password;
     }
 
     static empty() {

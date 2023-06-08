@@ -97,7 +97,7 @@ class LicensesProblem extends AbstractProblem {
     renderConsequences(): React.ReactNode {
         const t = this.props.t;
         return <div>
-            <p>{t("problems.licenses.consequences-4")}</p>
+            <p>Неправильное использование лицензий может привести к ресурсным - финансовым, репутационным потерям. </p>
         </div>;
     }
 }

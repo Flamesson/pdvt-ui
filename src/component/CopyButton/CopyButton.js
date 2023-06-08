@@ -14,8 +14,14 @@ class CopyButton extends AbstractComponent {
         }
     }
 
-    handleCopy = () => {
-        const { t, content } = this.props;
+    componentDidMount() {
+        if (this.props.copyFunc) {
+            this.props.copyFunc(this.handleCopyContent);
+        }
+    }
+
+    handleCopyContent = (content) => {
+        const { t } = this.props;
 
         navigator.clipboard.writeText(content).then(() => {
             toast.success(t('copy-button.success'));
@@ -46,6 +52,10 @@ class CopyButton extends AbstractComponent {
                 }, 5000);
             });
         });
+    }
+
+    handleCopy = () => {
+        this.handleCopyContent(this.props.content);
     };
 
     getSize = () => {
